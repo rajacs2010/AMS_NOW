@@ -1,4 +1,4 @@
-<?PHP
+<?php
 require_once("./include/membersite_config.php");
 
 if(!$fgmembersite->CheckLogin())
