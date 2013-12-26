@@ -2579,7 +2579,7 @@ $(document).ready(function() {
 	 <input type="hidden" name="formsaveval" id="formsaveval" value="Edit" /> <!-- This will give the value when form is submitted, otherwise it will empty -->	 
 	 <input type="hidden" name="edit_id_val" id="edit_id_val" /> <!-- This is the partial saved value for the building to edit again when partial save button is clicked -->
      <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
-     <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='include/empty.php'"/>&nbsp;&nbsp;&nbsp;&nbsp;
+     <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=2'"/>&nbsp;&nbsp;&nbsp;&nbsp;
 	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_building.php'"/></td>
 	 </td>
      </tr>
