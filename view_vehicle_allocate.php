@@ -8,7 +8,7 @@ if(!$fgmembersite->CheckLogin()) {
     exit;
 }
 if ($fgmembersite->usertype() == 1) {
-	$header_file='./layout/admin_header_bms.php';
+	$header_file='./layout/admin_header_fms.php';
 }
 if(file_exists($header_file)) {
 	include_once($header_file);
@@ -51,7 +51,7 @@ function colviewajax(page,params){   // For pagination and sorting of the Collec
 	var sortorder		=	splitparam[1];
 	var ordercol		=	splitparam[2];
 	$.ajax({
-		url : "ajax_viewgenerator_maintain.php",
+		url : "ajax_vehicle_allocation_type.php",
 		type: "get",
 		dataType: "text",
 		data : { "searchname" : searchname, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
@@ -66,7 +66,7 @@ function searchcolviewajax(page){  // For pagination and sorting of the Collecti
 	var searchname	=	$("input[name='searchname']").val();
 	//alert(Product_name);
 	$.ajax({
-		url : "ajax_viewgenerator_maintain.php",
+		url : "ajax_vehicle_allocation_type.php",
 		type: "get",
 		dataType: "text",
 		data : { "searchname" : searchname, "page" : page },
@@ -90,15 +90,15 @@ function show_confirm(name) {
 if(isset($_GET['delete_id']) && intval($_GET['delete_id'])) {
 	if ($_GET['delete'] ==1) {
 		$id=$_GET['delete_id'];
-		$query = "SELECT * FROM generator_maintain where id=$id"; 
+		$query = "SELECT * FROM vehicle_allocation_type where id=$id"; 
 		$result = mysql_query($query);
 		if($result === FALSE) {
 			die(mysql_error()); // TODO: better error handling
 		}
-	if(!mysql_query("delete FROM generator_maintain where id=$id")) {
+	if(!mysql_query("delete FROM vehicle_allocation_type where id=$id")) {
 		die('Error: ' . mysql_error());
 	}
-	$fgmembersite->RedirectToURL("view_generator_maintain.php?success=delete");
+	$fgmembersite->RedirectToURL("view_vehicle_allocate.php?success=delete");
 	// 
 	//echo "hi";
 	}
@@ -106,9 +106,9 @@ if(isset($_GET['delete_id']) && intval($_GET['delete_id'])) {
 if($_REQUEST['searchname']!='') {
 	$var = @$_REQUEST['searchname'] ;
 	$trimmed = trim($var);	
-	$qry="SELECT a.id,a.status,a.due_date,a.done_date,a.next_due_date,b.generator_code,b.description FROM generator_maintain a ,generator b  where  a.generator_code=b.id and a.status like '%".$trimmed."%'";
+	$qry="SELECT a.name as allocate_name,b.name as dep_name,c.emp_name,c.id,c.emp_code  FROM allocation_type a,department b ,vehicle_allocation_type c  where c.allocation_type_id=a.id and c.department_id=b.id and emp_name like '%".$trimmed."%'";
 } else { 
-	$qry="SELECT a.id,a.status,a.due_date,a.done_date,a.next_due_date,b.generator_code,b.description FROM generator_maintain a ,generator b  where  a.generator_code=b.id"; 
+	$qry="SELECT a.name as allocate_name,b.name as dep_name,c.emp_name,c.id,c.emp_code  FROM allocation_type a,department b ,vehicle_allocation_type c  where c.allocation_type_id=a.id and c.department_id=b.id"; 
 }
 $results=mysql_query($qry);
 $num_rows= mysql_num_rows($results);			
@@ -161,16 +161,16 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 
 <div id="mainareadaily">
 <div class="mcf"></div>
-<div><h2 align="center">GENERATOR MAINTENANCE</h2></div> 
+<div><h2 align="center">VEHICLE ALLOCATION TYPE</h2></div> 
 
 <div id="containerprforcd">
 
-<span style="float:left;"><input type="button" name="kdproduct" value="Add Generator Maintenance" class="buttonsbig1" onclick="window.location='generator_maintain.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=2'"></span>
+<span style="float:left;"><input type="button" name="kdproduct" value="Add Vehicle Allocation" class="buttonsbig1" onclick="window.location='vehicle_allocation_type.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
 
 <div class="clearfix"></div>
 
 <div id="search">
-        <input type="text" name="searchname" id="searchname" value="<?php echo $_REQUEST['searchname']; ?>" autocomplete='off' placeholder='Search By Status'/>
+        <input type="text" name="searchname" id="searchname" value="<?php echo $_REQUEST['searchname']; ?>" autocomplete='off' placeholder='Search By Employee Name'/>
         <input type="button" class="buttonsg" onclick="searchcolviewajax('<?php echo $Page; ?>');" value="GO"/>
  </div>
   <div class="clearfix"></div>
@@ -188,13 +188,11 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 				} else {
 					$sortorderby = 'ASC';
 				}
-				$paramsval	=	$searchname."&".$sortorderby."&generator_code"; ?>
-				<th nowrap="nowrap" class="rounded" onClick="colviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Generator Code<img src="images/sort.png" width="13" height="13" /></th>
-				<th nowrap="nowrap" >Generator Name</th>
-				<th nowrap="nowrap" >Maintenance Due Date</th>
-				<th nowrap="nowrap" >Status</th>
-				<th nowrap="nowrap" >Done Date</th>
-				<th nowrap="nowrap" >Next Due Date</th>
+				$paramsval	=	$searchname."&".$sortorderby."&allocate_name"; ?>
+				<th nowrap="nowrap" class="rounded" onClick="colviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Allocation Type<img src="images/sort.png" width="13" height="13" /></th>
+				<th nowrap="nowrap" >Department</th>
+				<th nowrap="nowrap" >Employee Code</th>
+				<th nowrap="nowrap" >Employee Name</th>
 				<th nowrap="nowrap" >Edit</th>
 				<th nowrap="nowrap" >Delete</th>
 			</tr>
@@ -209,21 +207,19 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 			$id= $fetch['id'];
 			?>
 			<tr>				
-				<td><?php echo $fetch['generator_code'];?></td>
-				<td><?php echo $fgmembersite->upperstate($fetch['description']); ?></td>
-				<td><?php echo $fetch['due_date'];?></td>
-				<td><?php echo $fetch['status'];?></td>
-				<td><?php echo $fetch['done_date'];?></td>
-				<td><?php echo $fetch['next_due_date'];?></td>	
+				<td><?php echo $fetch['allocate_name'];?></td>
+				<td><?php echo $fgmembersite->upperstate($fetch['dep_name']); ?></td>
+				<td><?php echo $fetch['emp_code'];?></td>
+				<td><?php echo $fetch['emp_name'];?></td>
 				<td >
-				<a href="edit_generator_maintain.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>
+				<a href="edit_vehicle_allocate.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>
 				</td>
 				<td>
-				<a href="view_generator_maintain.php?delete_id=<?php echo $fetch['id'];?>&delete=1"><img src="images/trash.png" alt="" title="" width="11" height="11" onclick="return show_confirm('<?php echo $fgmembersite->upperstate($fetch['description']); ?>');"/></a>
+				<a href="view_vehicle_allocate.php?delete_id=<?php echo $fetch['id'];?>&delete=1"><img src="images/trash.png" alt="" title="" width="11" height="11" onclick="return show_confirm('<?php echo $fgmembersite->upperstate($fetch['allocate_name']); ?>');"/></a>
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 
-			}else{  echo "<tr><td align='center' colspan='8'><b>No records found</b></td></tr>";}  ?>
+			}else{  echo "<tr><td align='center' colspan='6'><b>No records found</b></td></tr>";}  ?>
 			</tbody>
 			</table>
 			 </div>   

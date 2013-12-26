@@ -118,6 +118,7 @@ $user_id=$_SESSION['user_id'];
 $allocation_type_id=$_POST['allocation_type_id'];
 $department_id=$_POST['department_id'];
 $empcode=$_POST['incharge_empcode'];
+$edit_id=$_POST['edit_id'];
 $fgmembersite->DBLogin();
 				$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
 				or die("Opps some thing went wrong");
@@ -127,15 +128,37 @@ $fgmembersite->DBLogin();
 				{
 				$emp_name=$row['first_name'];
 				}
-
+$current_date=date("Y-m-d H:i:s");
 if ($allocation_type_id!= "")
 {
 $fgmembersite->DBLogin();
-if(!mysql_query('INSERT INTO vehicle_allocation_type (allocation_type_id,department_id,emp_code,emp_name,created_by)VALUES ("'.$allocation_type_id.'","'.$department_id.'","'.$empcode.'","'.$emp_name.'","'.$user_id.'")'))
+if(!mysql_query('UPDATE vehicle_allocation_type SET allocation_type_id="'.$allocation_type_id.'",department_id="'.$department_id.'",emp_code="'.$empcode.'",emp_name="'.$emp_name.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
 {
 die('Error: ' . mysql_error());
 }
-	$fgmembersite->RedirectToURL("view_vehicle_allocate.php?success=create");
+	$fgmembersite->RedirectToURL("view_vehicle_allocate.php?success=update");
+}
+}
+?>
+
+<?php
+if(isset($_GET['id']) && intval($_GET['id'])) 
+{
+$id=$_GET['id'];
+$query = "SELECT * FROM vehicle_allocation_type where id=$id"; 
+
+$result = mysql_query($query);
+if($result === FALSE) {
+    die(mysql_error()); // TODO: better error handling
+}
+
+while($row = mysql_fetch_array($result))
+{
+
+$allocation_type_id=$row['allocation_type_id'];
+$department_id=$row['department_id'];
+$empcode=$row['emp_code'];
+$emp_name=$row['emp_name'];
 }
 }
 ?>
@@ -162,14 +185,18 @@ die('Error: ' . mysql_error());
 			<td>
 			<?php
 				$result_state=mysql_query("select * from allocation_type");
-					echo '<select name="allocation_type_id" id="allocation_type_id" tabindex="1">';
-					echo '<option value="0">--Select--</option>';
-					while($row=mysql_fetch_array($result_state))
-					{
-					echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
-
-					}
-					echo '</select>';
+				echo '<select name="allocation_type_id" id="allocation_type_id" tabindex="1">';
+				echo '<option value="0">--Select--</option>';
+				while($row=mysql_fetch_array($result_state))
+				{
+				if($row['id'] == $allocation_type_id){
+						  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }
+					 echo "<option value='".$row['id']."'".$isSelected.">".$row['name']."</option>";
+				}
+				echo '</select>';
 			?>
 			</td>
 			</tr>
@@ -189,7 +216,13 @@ die('Error: ' . mysql_error());
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_emp_id))
 				{
-				echo '<option value="'.$row['emp_code'].'">'.$row['emp_code'].'</option>';
+				if($row['emp_code'] == $empcode){
+							  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+						 } else {
+							  $isSelected = ''; // else we remove any tag
+						 }
+							
+							echo "<option value='".$row['emp_code']."'".$isSelected.">".$row['emp_code']."</option>";
 				}
 				echo '</select>';
 				?>
@@ -215,12 +248,16 @@ die('Error: ' . mysql_error());
 				$result_state=mysql_query("select * from department");
 				echo '<select name="department_id" id="department_id" tabindex="2">';
 				echo '<option value="0">--Select--</option>';
-					while($row=mysql_fetch_array($result_state))
-					{
-					echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
-
-					}
-					echo '</select>';		
+				while($row=mysql_fetch_array($result_state))
+				{
+				if($row['id'] == $department_id){
+						  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }
+					 echo "<option value='".$row['id']."'".$isSelected.">".$row['name']."</option>";
+				}
+				echo '</select>';	
 				?>					
 			  </td>
 			</tr>
@@ -228,7 +265,7 @@ die('Error: ' . mysql_error());
 				<td width="120">Employee Name</td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
 				<td>
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" tabindex="4"/></span>
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" tabindex="4" value="<?php echo $emp_name;?>"/></span>
 				</td>
 				</tr>				
 		   </table>
@@ -251,7 +288,8 @@ if($_GET['success']=="error") { ?>
 </div><!--- mytableformreceipt1 div end-->
 <table width="100%" style="clear:both">
   <tbody><tr height="50px;" align="center">
-	<td><input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
+	<td><input type='hidden' name='edit_id' id='edit_id' value='<?php echo $_GET['id'];?>'/>
+	<input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
 		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
 		 <input type="button" onclick="window.location='ams_temp.php?id=3'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
 		 <input type="button" onclick="window.location='view_vehicle_allocate.php'" class="buttons" value="View" name="View">
