@@ -1022,15 +1022,17 @@ $(document).ready(function() {
 		var year						=	$("#year").val();		
 		var model_currency				=	$("#model_currency").val();
 		var model_cost					=	$("#model_cost").val();											
-
+		
 		var	currentdate					=	new Date();
 
-		/*alert(currentdate.getFullYear());
-		alert(currentdate.getMonth());
-		alert(currentdate.getDate());*/
-		var currentdateval							=	currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
-		//alert(currentdateval);		
-		
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"-"+insurance_duedate.substring(3,5)+"-"+insurance_duedate.substring(0,2)).getTime();
+
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"-"+tax_renewal_date.substring(3,5)+"-"+tax_renewal_date.substring(0,2)).getTime();
+
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+
+		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+
 		if(vregno == '') {
 			$('.myalignbuild').html('ERR : Enter Registration No.');
 			$('#errormsgbuild').css('display','block');
@@ -1145,10 +1147,7 @@ $(document).ready(function() {
 			$("#insurance_date").focus();
 			return false;
 		}		
-		//if (insurance_duedate < currentdateval && insurance_duedate != currentdateval){
-		if (insurance_duedate < currentdateval){
-			//alert(insurance_duedate)			
-			//alert('edssdfsd');
+		if (insurance_duedateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Ins. Renewal Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1167,8 +1166,7 @@ $(document).ready(function() {
 			$("#tax_date").focus();
 			return false;
 		}
-		//if (tax_renewal_date < currentdateval && tax_renewal_date != currentdateval){
-		if (tax_renewal_date < currentdateval){
+		if (tax_renewal_dateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Tax Renewal Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1222,10 +1220,14 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		/*alert(currentdate.getFullYear());
-		alert(currentdate.getMonth());
-		alert(currentdate.getDate());*/
-		var currentdateval							=	currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"-"+insurance_duedate.substring(3,5)+"-"+insurance_duedate.substring(0,2)).getTime();
+
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"-"+tax_renewal_date.substring(3,5)+"-"+tax_renewal_date.substring(0,2)).getTime();
+
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+
+		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+
 		//alert(currentdateval);		
 		
 		if(vregno == '') {
@@ -1342,8 +1344,7 @@ $(document).ready(function() {
 			$("#insurance_date").focus();
 			return false;
 		}		
-		//if (insurance_duedate < currentdateval && insurance_duedate != currentdateval){
-		if (insurance_duedate < currentdateval){
+		if (insurance_duedateval < currentdatevalue){
 			alert('edssdfsd');
 			$('.myalignbuild').html('ERR : Ins. Renewal Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
@@ -1363,8 +1364,7 @@ $(document).ready(function() {
 			$("#tax_date").focus();
 			return false;
 		}
-		//if (tax_renewal_date < currentdateval && tax_renewal_date != currentdateval){
-		if (tax_renewal_date < currentdateval){
+		if (tax_renewal_dateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Tax Renewal Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1395,11 +1395,14 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		/*alert(currentdate.getFullYear());
-		alert(currentdate.getMonth());
-		alert(currentdate.getDate());*/
-		var currentdateval							=	currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
-		//alert(currentdateval);
+		var next_inspection_dateval 	=	new Date(next_inspection_date.substring(6,10)+"-"+next_inspection_date.substring(3,5)+"-"+next_inspection_date.substring(0,2)).getTime();
+
+		var pollution_inspection_dateval=	new Date(pollution_inspection_date.substring(6,10)+"-"+pollution_inspection_date.substring(3,5)+"-"+pollution_inspection_date.substring(0,2)).getTime();
+
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+
+		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		
 		
 		if (fit_date > currentdateval){
 			$('.myalignbuild').html('ERR : Fitness Date Greater Than Today');
@@ -1410,8 +1413,7 @@ $(document).ready(function() {
 			$("#fit_date").focus();
 			return false;
 		}
-		//if (next_inspection_date < currentdateval && next_inspection_date != currentdateval){
-		if (next_inspection_date < currentdateval){
+		if (next_inspection_dateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Fitness Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1430,8 +1432,7 @@ $(document).ready(function() {
 			$("#pollution_certificate_date").focus();
 			return false;
 		}
-		//if (pollution_inspection_date < currentdateval && pollution_inspection_date != currentdateval){
-		if (pollution_inspection_date < currentdateval){
+		if (pollution_inspection_dateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Pollution Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
