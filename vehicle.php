@@ -1948,4 +1948,5 @@ if(file_exists($footerfile)) {
 } else {
 	echo _FILENOTFOUNT.$footerfile;
 }
+//mysql_close($obj);
 ?>
