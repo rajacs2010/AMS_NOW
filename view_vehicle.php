@@ -29,10 +29,10 @@ if(file_exists($header_file)) {
 	exit;
 }
 
-if($_REQUEST['building_name']!='') {
-	$var = @$_REQUEST['Challan_Number'] ;
+if($_REQUEST['vehicle_company_name']!='') {
+	$var = @$_REQUEST['vehichle_reg_date'] ;
 	$trimmed = trim($var);	
-	$qry="SELECT id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,currency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle` WHERE building_name LIKE '%".$trimmed."%'";
+	$qry="SELECT id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,currency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle` WHERE vehicle_company_name LIKE '%".$trimmed."%'";
 } else { 
 	$qry="SELECT id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,currency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle`"; 
 }
@@ -50,7 +50,7 @@ $strPage = $_REQUEST[page];
 
 ########### pagins
 
-$Per_Page = 5;   // Records Per Page
+$Per_Page = 1;   // Records Per Page
 
 $Page = $strPage;
 if(!$strPage)
@@ -113,7 +113,8 @@ function vehviewajax(page,params){   // For pagination and sorting of the Collec
 	var sortorder				=	splitparam[1];
 	var ordercol				=	splitparam[2];
 	$.ajax({
-		url : "ajax_viewvehicle.php",
+		//url : "ajax_viewvehicle.php",
+		url : "ajax_viewveh.php",
 		type: "get",
 		dataType: "text",
 		data : { "vehicle_company_name" : vehicle_company_name, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
@@ -128,7 +129,8 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 	var vehicle_company_name	=	$("input[name='vehicle_company_name']").val();
 	//alert(Product_name);
 	$.ajax({
-		url : "ajax_viewvehicle.php",
+		//url : "ajax_viewvehicle.php",
+		url : "ajax_viewveh.php",
 		type: "get",
 		dataType: "text",
 		data : { "vehicle_company_name" : vehicle_company_name, "page" : page },
@@ -143,7 +145,7 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 
 <div id="mainareadaily">
 <div class="mcf"></div>
-<div><h2 align="center">BUILDING</h2></div> 
+<div><h2 align="center">VEHICLE</h2></div> 
 
 <div id="containerprforcd">
 
@@ -160,7 +162,7 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 			$query = "DELETE FROM `vehicle` WHERE id = $id";
 			//Run the query
 			$result = mysql_query($query) or die(mysql_error());
-			header("location:view_vehicle_sample.php?success=del");
+			header("location:view_vehicle.php?success=del");
 		 }		
 		?>
 		<div id="colviewajaxid">
@@ -179,7 +181,7 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 					$paramsval	=	$vehicle_company_name."&".$sortorderby."&vehichle_reg_date";
 				?>				
 				<th nowrap="nowrap" >Vehicle Regn. No.</th>
-				<th nowrap="nowrap" class="rounded" onClick="vehviewajax'<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Vehicle Regn. Date<img src="images/sort.png" width="13" height="13" /></th>
+				<th nowrap="nowrap" class="rounded" onClick="vehviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Vehicle Regn. Date<img src="images/sort.png" width="13" height="13" /></th>
 				
 				<th nowrap="nowrap">Vehicle Company Name</th>
 				<th nowrap="nowrap">Make</th>
@@ -188,7 +190,6 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 				<th nowrap="nowrap">Currency</th>
 				<th nowrap="nowrap">Cost</th>
 				<th align="right">Edit/Del</th>
-			</tr>
 			</tr>
 			</thead>
 			<tbody>
@@ -199,7 +200,6 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 			while($fetch = mysql_fetch_array($results_dsr)) {
 			if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
 			$id			=	$fetch['id'];
-			$bu_sta		=	$fetch['building_status'];
 			?>
 			<tr>
 				<td><?php echo $fetch['vehicle_regno']; ?></td>
