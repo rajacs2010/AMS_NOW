@@ -73,6 +73,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 			<li><a href="vehicle_assignment.php">Vehicle Assignment</a></li>
 			<li><a href="vehicle_status.php">Vehicle Status</a></li>
 			<li><a href="vendor.php">Vendor</a></li>
+			<li><a href="vehicle_transaction.php">Vehicle Transactions</a></li>
          </ul>
 		   
   </li>

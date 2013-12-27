@@ -30,7 +30,7 @@ if(file_exists($header_file)) {
 }
 
 if($_REQUEST['vehicle_company_name']!='') {
-	$var = @$_REQUEST['vehichle_reg_date'] ;
+	$var = @$_REQUEST['vehicle_company_name'] ;
 	$trimmed = trim($var);	
 	$qry="SELECT id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,currency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle` WHERE vehicle_company_name LIKE '%".$trimmed."%'";
 } else { 
@@ -39,7 +39,7 @@ if($_REQUEST['vehicle_company_name']!='') {
 $results=mysql_query($qry);
 $num_rows= mysql_num_rows($results);			
 
-$params			=	$vehichle_reg_date."&".$sortorder."&".$ordercol;
+$params			=	$vehicle_company_name."&".$sortorder."&".$ordercol;
 
 /********************************pagination start***********************************/
 $strPage = $_REQUEST[page];
@@ -104,7 +104,7 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 function delcall(id,name) {
 	var confirmdata		=	confirm("Are You Sure You Want to Delete : "+name);
 	if(confirmdata) {
-		window.location = "view_vehicle_sample.php?id="+id+"&del=del";
+		window.location = "view_vehicle.php?id="+id+"&del=del";
 	}
 }
 function vehviewajax(page,params){   // For pagination and sorting of the Collection Deposited view page
@@ -113,8 +113,8 @@ function vehviewajax(page,params){   // For pagination and sorting of the Collec
 	var sortorder				=	splitparam[1];
 	var ordercol				=	splitparam[2];
 	$.ajax({
-		//url : "ajax_viewvehicle.php",
-		url : "ajax_viewveh.php",
+		url : "ajax_viewvehicle.php",
+		//url : "ajax_viewveh.php",
 		type: "get",
 		dataType: "text",
 		data : { "vehicle_company_name" : vehicle_company_name, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
@@ -129,8 +129,8 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 	var vehicle_company_name	=	$("input[name='vehicle_company_name']").val();
 	//alert(Product_name);
 	$.ajax({
-		//url : "ajax_viewvehicle.php",
-		url : "ajax_viewveh.php",
+		url : "ajax_viewvehicle.php",
+		//url : "ajax_viewveh.php",
 		type: "get",
 		dataType: "text",
 		data : { "vehicle_company_name" : vehicle_company_name, "page" : page },

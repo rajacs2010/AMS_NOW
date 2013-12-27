@@ -9,18 +9,18 @@ if(!$fgmembersite->CheckLogin())
 }
 extract($_REQUEST);
 if($_REQUEST['vehicle_company_name']!='') {
-	$var = @$_REQUEST['vehichle_reg_date'] ;
+	$var = @$_REQUEST['vehicle_company_name'] ;
 	$trimmed = trim($var);	
 	$qry="SELECT id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,currency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle` WHERE vehicle_company_name LIKE '%".$trimmed."%'";
 } else { 
-	$qry="SELECT 	id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,c	urrency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle`";
-	echo $qry;
-	exit;
+	$qry="SELECT 	id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,currency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle`";	
 }
+//echo $qry;
+//exit;
 $results=mysql_query($qry);
 $num_rows= mysql_num_rows($results);
 
-$params			=	$vehichle_reg_date."&".$sortorder."&".$ordercol;
+$params			=	$vehicle_company_name."&".$sortorder."&".$ordercol;
 
 /********************************pagination start***********************************/
 $strPage = $_REQUEST[page];
