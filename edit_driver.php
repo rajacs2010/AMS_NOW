@@ -1,179 +1,190 @@
 <?PHP
 require_once("./include/membersite_config.php");
+require_once ("./include/ajax_pagination.php");
 $fgmembersite->DBLogin();
-if(!$fgmembersite->CheckLogin())
-{
+EXTRACT($_REQUEST);
+if(!$fgmembersite->CheckLogin()) {
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
-
-?>
-<?php
-if ($fgmembersite->usertype() == 1)
-{
-$header_file='./layout/admin_header.php';
+if ($fgmembersite->usertype() == 1) {
+	$header_file='./layout/admin_header_fms.php';
 }
-if(file_exists($header_file))
-{
-include_once($header_file);
-}
-else
-{
-$fgmembersite->RedirectToURL("index.php");
-exit;
+if(file_exists($header_file)) {
+	include_once($header_file);
+} else {
+	$fgmembersite->RedirectToURL("index.php");
+	exit;
 }
 ?>
-
-   <script src="scripts/date.js"></script>
-<link rel="stylesheet" href="style/date.css" media="screen">
-   <script type="text/javascript">
-	window.onload = function(){
-		new JsDatePick({
-			useMode:2,
-			target:"license_date",
-			dateFormat:"%Y-%m-%d"
-			/*selectedDate:{				This is an example of what the full configuration offers.
-				day:5,						For full documentation about these settings please see the full version of the code.
-				month:9,
-				year:2006
-			},
-			yearsRange:[1978,2020],
-			limitToToday:false,
-			cellColorScheme:"beige",
-			dateFormat:"%m-%d-%Y",
-			imgPath:"img/",
-			weekStartDay:1*/
-		});
-		
-                                new JsDatePick({
-                    useMode:2,
-                    target:"renewal_date",
-                    dateFormat:"%Y-%m-%d"
-
-                });
-				            
-		              
-	};
-</script>
 <script>
-function validateForm()
-{
-
-	var driver_name=document.getElementById("driver_name");
-	if(driver_name.value==0)
-	{
-	alert("Please select the name");
-	document.getElementById("driver_name").focus();
+function myFunction() {
+	document.getElementById("state").value="";
+	document.getElementById("state").focus();
 	return false;
-	}
-	var address1=document.getElementById("address1");
-	if(address1.value=="")
-	{
-	alert("Please enter the address line1");
-	document.getElementById("address1").focus();
-	return false;
-	}
-	var address2=document.getElementById("address2");
-	if(address2.value=="")
-	{
-	alert("Please enter the address line2");
-	document.getElementById("address2").focus();
-	return false;
-	}
-	var address3=document.getElementById("address3");
-	if(address3.value=="")
-	{
-	alert("Please enter the address line3");
-	document.getElementById("address3").focus();
-	return false;
-	}
-
-	var city_driver=document.getElementById("city_driver");
-	if(city_driver.value==0)
-	{
-	alert("Please select the city");
-	document.getElementById("city_driver").focus();
-	return false;
-	}
-	var contact_number=document.getElementById("contact_number");
-	if(contact_number.value=="")
-	{
-	alert("Please enter the contact number");
-	document.getElementById("contact_number").focus();
-	return false;
-	}
-	
-	var alt_contact_number=document.getElementById("alt_contact_number");
-	if(alt_contact_number.value=="")
-	{
-	alert("Please enter the alternate contact number");
-	document.getElementById("alt_contact_number").focus();
-	return false;
-	}
-	var licence_number=document.getElementById("licence_number");
-	if(licence_number.value=="")
-	{
-	alert("Please enter the licence number");
-	document.getElementById("licence_number").focus();
-	return false;
-	}
-	
-	var license_date=document.getElementById("license_date").value;
-	if(license_date==""||license_date==0 || !license_date)
-	{
-	alert("Please select the dlicense date");
-	document.getElementById("license_date").focus();
-	return false;
-	}
-	
-	var renewal_date=document.getElementById("renewal_date").value;
-	if(renewal_date==""||renewal_date==0 || !renewal_date)
-	{
-	alert("Please select the renewal date");
-	document.getElementById("renewal_date").focus();
-	return false;
-	}
-	
 }
-	</script>
+$(function () {
+	$('#closebutton').button({
+		icons: {
+			primary : "../images/close_pop.png",
+		},
+		text:false
+	});	
+	$('#closebutton').click(function(event) {
+		//alert('232');
+		$('#errormsgbuild').hide();
+		return false;
+	});		
+});
+$(function () {		
+	$('#clear').click(function(event) {
+		$('#desc').val()="";
+	});		
+});
+</script>
+<style>
+#closebutton {
+    background: url("images/close_pop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    color: rgba(0, 0, 0, 0);
+    position: relative;
+    right: -220px;
+    top: -35px;
+}
+</style>
+<script>
+$(document).ready(function() { 
+$("#incharge_empcode").change(function(event) {
+		var selvalue_incharge_empcode=document.getElementById("incharge_empcode").value;
+		if (selvalue_incharge_empcode != 0)
+		{
+			$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
+		}
+		else
+		{
+			document.getElementById("leadername").value = "";
+		}
+    });		
+	  });	
+	  
+	  $(document).ready(function() {
+	$("#city").change(function(event) {
+			var selvalue=document.getElementById("city").value;
+			if (selvalue != 0) {
+				$('#display_state').load('ajax_building.php?selvalue='+selvalue);
+			}
+			else {
+				document.getElementById("state").value = "";			
+			}
+		});	
+		});	
+	  </script>
+	  <script>
+function validateForm() 
+	{
+	var incharge_empcode=document.getElementById("incharge_empcode").value;
+	if(incharge_empcode==0)
+	{
+		$('.myalignbuild').html('ERR 0009 : Select Employee Code');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("incharge_empcode").focus();
+		return false;
+	}
+	var city=document.getElementById("city").value;
+	if(city==0)
+	{
+		$('.myalignbuild').html('ERR 0009 : Select City');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("city").focus();
+		return false;
+	}
+	var contact_number=document.getElementById("contact_number").value;
+	if(contact_number=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Enter The Contact Number');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("contact_number").focus();
+		return false;
+	}
+	var licence_number=document.getElementById("licence_number").value;
+	if(licence_number=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Enter The Licence Number');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("licence_number").focus();
+		return false;
+	}
+	var license_date=document.getElementById("license_date").value;
+	if(license_date=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Select The License Date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("license_date").focus();
+		return false;
+	}
+	var renewal_date=document.getElementById("renewal_date").value;
+	if(renewal_date=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Select The Renewal Date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("renewal_date").focus();
+		return false;
+	}
+	var enddate=document.getElementById("renewal_date").value;
+	var enddateval = enddate.substring(6,10)+"/"+enddate.substring(3,5)+"/"+enddate.substring(0,2);
+	var current_date=document.getElementById("hide_date").value;
+	 var current_dateval = current_date.substring(6,10)+"/"+current_date.substring(3,5)+"/"+current_date.substring(0,2);
 
-   <script type="text/javascript" language="javascript">
-   $(document).ready(function() {
-	$("#driver_name").change(function(event){
-	var selvalue_incharge_empcode=document.getElementById("driver_name").value;
-	if (selvalue_incharge_empcode != 0)
+	var date_check=new Date(enddateval).getTime() >= new Date(current_dateval).getTime();
+	if (date_check==false)
 	{
-          $('#display_empcode').load('ajax_driver.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
+	$('.myalignbuild').html('ERR 0009 :Date should be greater than or equal to current date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("renewal_date").focus();
+		return false;
 	}
-	else
-	{
-	document.getElementById("emp_code").value = "";
+	
+	
 	
 	}
-      });		
-   });
-   </script>
-   <script type="text/javascript" language="javascript">
-   $(document).ready(function() {
-	$("#city_driver").change(function(event){
-	var selvalue_driver=document.getElementById("city_driver").value;
-	if (selvalue_driver != 0)
-	{
-          $('#display_state_driver').load('ajax_driver.php?selvalue_driver='+selvalue_driver);
-	}
-	else
-	{
-	document.getElementById("state_driver").value = "";
-	
-	}
-      });		
-   });
-   </script>
+$(function () {		
+	$('#clear').click(function(event) {
+		$('#incharge_empcode').val()=0;
+		$('#city').val()=0;
+		$('#contact_number').val()="";
+		$('#alt_contact_number').val()="";
+		$('#licence_number').val()="";	
+		$('#address1').val()="";	
+		$('#address2').val()="";
+		$('#address3').val()="";		
+	});		
+});
+</script>
 <?php
-if(isset($_POST['save']))
-{
+if(isset($_POST['save'])) {
 $driver_code=$_POST['code'];
-$emp_code=$_POST['emp_code'];
+$emp_code=$_POST['incharge_empcode'];
 
 				$fgmembersite->DBLogin();
 				$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
@@ -188,7 +199,7 @@ $emp_code=$_POST['emp_code'];
 $address1=$_POST['address1'];
 $address2=$_POST['address2'];
 $address3=$_POST['address3'];
-$city_driver=$_POST['city_driver'];
+$city_driver=$_POST['city'];
 $contact_number=$_POST['contact_number'];
 $alt_contact_number=$_POST['alt_contact_number'];
 $licence_number=$_POST['licence_number'];
@@ -202,12 +213,8 @@ if(!mysql_query('update driver SET driver_code="'.$driver_code.'",emp_name="'.$e
 {
 die('Error: ' . mysql_error());
 }
-$fgmembersite->RedirectToURL("edit_driver.php?id=$edit_id&success=true");
-echo "&nbsp;";
-
+	$fgmembersite->RedirectToURL("view_driver.php?success=update");
 }
-
-
 
 ?>
 <?php
@@ -239,210 +246,207 @@ $state_name=$row['state_name'];
 }
 }
 ?>
+<!------------------------------- Form -------------------------------------------------->
+<div id="mainarea"><!--- mainarea  div start-->
+<div class="mcf"></div>
+<div align="center" class="headingsgr">DRIVER</div>
+<div id="mytableformreceipt1" align="center"><!--- mytableformreceipt1 div start-->
+<form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
+<fieldset class="alignment" align="left">
+  <legend><strong>Driver</strong></legend>
+<table width="50%" align="left"><!-- start--->
+			<tr height="30">
+			<td width="148">Driver Code</td>
+			<td>
+	<input type='text' name='code' id='code'  value="<?php echo $driver_code;?>" readonly="true" size="7"/>
+			</td>
+			</tr>
+</table><!-- end--->
 
-<div id="inside_content">
-&nbsp;
-<?php
-if(isset($_GET['success']))
-{
-if ($_GET['success']=="true")
-{
-
-?>
-<span class="success_message">Driver updated successfully</span>
-<?php
-}
-
-}
-?>
-&nbsp;
-<div class="header_bold">Edit driver creation</div>
-<div class="scroll_not">
-<form id='driver_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
-
-<table id="building_class" align="center" width="90%"CELLPADDING="3" CELLSPACING="0"  style=" border: 0px solid #00BFFF; border-top:0px;font-family: Arial;
-    font-size: 12px;"      >
-  <!--<tr>
-    <th style="background: url('images/th.png'); height: 29px;color:#ffffff;text-align: left;font-size: 14px;text-align:center">
-Building
-    </th
-<th style=" height: 29px;text-align: left;font-size: 14px;text-align:center">
-Building
-    </th>
-  </tr>-->
-  <tr>
-    <td align="center" style=" padding:30px 50px 30px 0px;">
-  
-
-<input type='hidden' name='submitted' id='submitted' value='1'/>
-             <!-- The inner table below is a container for form -->
-                <table style="font-family:Arial;" width="100%"  cellpadding="10px" class="htmlForm" cellspacing="0" border="0">
-
-                    <tr>
-						<td  width="150px"><label style="margin-left:0px;">Driver code<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='code' id='code' class="textbox" value="<?php echo $driver_code;?>" readonly="true"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Name<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<?php
-				$fgmembersite->DBLogin();
-				$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
-				or die("Opps some thing went wrong");
-				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-				echo '<select name="driver_name" id="driver_name" class="selectbox">';
-				echo '<option value="0">Please select a name</option>';
-				while($row=mysql_fetch_array($result_emp_id))
-				{
-				
-							
-							if($row['emp_code'] == $emp_code){
+	 <table width="50%" align="left"><!-- start--->
+			<tr height="30">
+		<td width="128">Employee Code*</td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td><?php
+			$fgmembersite->DBLogin();
+			$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
+			or die("Opps some thing went wrong");
+			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
+			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
+			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="1" class="selectbox">';
+			echo '<option value="0">--Select--</option>';
+			while($row=mysql_fetch_array($result_emp_id))
+			{
+			if($row['emp_code'] == $emp_code){
 							  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
 						 } else {
 							  $isSelected = ''; // else we remove any tag
 						 }
-						 echo "<option value='".$row['emp_code']."'".$isSelected.">".$row['first_name']."</option>";
+						 echo "<option value='".$row['emp_code']."'".$isSelected.">".$row['emp_code']."</option>";
+			}
+			echo '</select>';
+			?>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" value="<?php echo $emp_name;?>"/></span>
+		</td>
+    </tr>
+		</table><!-- end--->		
+</fieldset>
 
-				}
-				echo '</select>';
-				?>
-							</td>
-						<td  width="150px"><label style="margin-left:0px;">Employee code<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<div id="display_empcode">
-						<input type='text' name='emp_code' id='emp_code' class="textbox" value="<?php echo $emp_code; ?>"/>
-						</div>
-						</td>
-						
-						
-						
-                    </tr>
-					
-					<tr>
-						<td  width="150px"><label style="margin-left:0px;">Address line 1<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<textarea name='address1' id='address1' class="textbox"><?php echo $address1;?></textarea>
-					
-							</td>
-						
-						<td  width="150px"><label style="margin-left:0px;">Address line 2<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<textarea name='address2' id='address2' class="textbox"><?php echo $address2;?></textarea>
-					
-							</td>
-						<td  width="150px"><label style="margin-left:0px;">Address line 3<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<textarea name='address3' id='address3' class="textbox"><?php echo $address3;?></textarea>
-					
-							</td>
-			
-					</tr>
-					<tr>
-						<td  width="150px"><label style="margin-left:0px;">City<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<?php
-							$fgmembersite->DBLogin();
-							$result_state=mysql_query("SELECT a.id  as id ,a.name,b.name as state_name FROM city a, state b where a.state_id=b.id");
-							echo '<select name="city_driver" id="city_driver" >';
-							echo '<option value="0">Please select a  City</option>';
-							while($row=mysql_fetch_array($result_state))
-							{
-							if($row['id'] == $city_id){
+
+<fieldset align="left" class="alignment">
+  <legend><strong>Address</strong></legend>
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table>
+    <tr height="30">
+    <td width="120">Address Line 1</td>
+	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" <?php echo $address1;?> /></td>
+    </tr>
+    
+	<tr height="30">
+     <td width="120" >Line 2</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" <?php echo $address2;?> /></td>
+	</tr>
+
+	<tr height="30">
+     <td width="120">Line 3</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" <?php echo $address3;?> /></td>
+	</tr>
+</table>
+   </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Left Table End -------------------------------------->
+
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table> 
+  <tr height="30">
+		<td width="146">City*</td>
+		<td><?php
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT a.id  as id ,a.name,b.name as state_name FROM city a, state b where a.state_id=b.id");
+			echo '<select name="city" id="city" tabindex="5" >';
+			echo '<option value="0">--Select--</option>';
+			while($row=mysql_fetch_array($result_state)) {
+				if($row['id'] == $city_id){
 							  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
 						 } else {
 							  $isSelected = ''; // else we remove any tag
 						 }
 						 echo "<option value='".$row['id']."'".$isSelected.">".$row['name']."</option>";
-							
+			}
+			echo '</select>';
+			?>
+		</td>
+    </tr>
+  <tr height="30">
+     <td width="120" nowrap="nowrap">State</td>
+     <td>
+	<div id="display_state"><input type='text' type="text" name='state' id='state' readonly class="textbox" value="<?php echo $state_name; ?>"/></div>
+	 </td>
+	</tr>
+      </table>
+       </td>
+     </tr>
+</table>
+</fieldset>
 
-							}
-							echo '</select>';
-							?>
-						</td>
-						
-						<td  width="150px"><label style="margin-left:0px;">State<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<div id="display_state_driver">
-						
-						<input type='text' name='state_driver' id='state_driver' class="textbox" value="<?php echo $state_name;?>" />
-						
-						</div>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Contact number<em style="font-style:normal;color:red;">*</em></label></td>
-                       
-						<td>
-								<input type='text' name='contact_number' id='contact_number' class="textbox" value="<?php echo $contact_number;?>"/>
-							</td>
-						
-			
-					</tr>
-					<tr>
-					<td  width="150px"><label style="margin-left:0px;">Alternate contact number<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='alt_contact_number' id='alt_contact_number' class="textbox" value="<?php echo $alt_contact_number;?>"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Driving license number<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='licence_number' id='licence_number' class="textbox" value="<?php echo $license_number;?>"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">License date<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='license_date' id='license_date' class="textbox" value="<?php echo $license_date;?>"/>
-						</td>
-						
-					
-			
-					</tr>
-					
-					<tr>
-						
-						<td  width="150px"><label style="margin-left:0px;">Renewal date<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='renewal_date' id='renewal_date' class="textbox" value="<?php echo $renewal_date;?>"/>
-						</td>
-						
-					</tr>			
-		<tr >
-            <td  width="150px" >&nbsp;</td>
-            <td align="center" colspan="5">
-		<input type="hidden" name="edit_id" id="edit_id" value="<?php echo $_GET['id'];?>"/>
-			<input type='submit'  class="flatbutton" name='save' id="save" value='Save'/>
-			<input type='button'  class="flatbutton" name='view' id="view" value='View' onclick="location.href='view_driver.php'"/>
+<fieldset class="alignment" align="left">
+  <legend><strong>Contact Details</strong></legend>
+<table width="50%" align="left"><!-- start--->
+		
+  <tr height="30">
+    <td width="148">Contact Number*</td>
+    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" value="<?php echo $contact_number;?>"/></td>
+    </tr>
 	
-            </td>
-        </tr>
+</table><!-- end--->
+
+<table width="50%" align="left"><!-- start--->
 		
+<tr height="30">
+     <td width="148" nowrap="nowrap">Alternate Contact No.</td>
+     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="7" value="<?php echo $alt_contact_number;?>"/></td>
+	</tr>
+	
+	
+	
+</table><!-- end--->			
+</fieldset>
+<fieldset class="alignment" align="left">
+  <legend><strong>License Details</strong></legend>
+<table width="50%" align="left"><!-- start--->
 		
-                </table>
-                </form>            </td>
+  <tr height="30">
+    <td width="148">Driving License No.*</td>
+    <td><input type='text' name='licence_number' id='licence_number' tabindex="8" value="<?php echo $license_number;?>"/></td>
+    </tr>
+			
+<tr height="30">
+<td width="148" nowrap="nowrap">Renewal Date</td>
+     <td><input type='text' name='renewal_date' id='renewal_date' tabindex="10" class="datepicker" value="<?php echo $renewal_date;?>"/>
+	 <input type='hidden' name='hide_date' id='hide_date' tabindex="10" value="<?php echo date('d-m-Y'); ?>"/></td>
+	 </td>
+	 
+    
+	</tr>
+</table><!-- end--->
 
-        </tr>
+<table width="50%" align="left"><!-- start--->
+		
+<tr height="30">
+      <td width="148" nowrap="nowrap">License Date</td>
+     <td><input type='text' name='license_date' id='license_date' tabindex="9" class="datepicker" value="<?php echo $license_date;?>"/></td>
+	</tr>
+	
+</table><!-- end--->			
+</fieldset>
 
-
-
-
-    </table>
-	</form>
-
-
-
-</div>
-</div>
-
+<?php if($_GET['success']=="update") { ?>
+	<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
+	?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
+<?php } 
+if($_GET['success']=="error") { ?>
+	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+<?php }?>
+<br/>
+</div><!--- mytableformreceipt1 div end-->
+<table width="100%" style="clear:both">
+  <tbody><tr height="50px;" align="center">
+	<td><input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="hidden" name="edit_id" id="edit_id" value="<?php echo $_GET['id'];?>"/>
+		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='ams_temp.php?id=3'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='view_driver.php'" class="buttons" value="View" name="View">
+	</td>
+  </tr>
+  <tr>
+  <td>
+  <div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
+  <?php if($_GET['success']=="create") 
+{
+?>
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
+?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
+<?php }?>
+  </td>
+  </tr>
+</tbody></table>
+</form>
+</div><!--- mainarea  div end-->
 <?php
 $footerfile='./layout/footer.php';
-if(file_exists($footerfile))
-{
-include_once($footerfile);
-}
-else
-{
-echo _FILENOTFOUNT.$footerfile;
+if(file_exists($footerfile)) {
+	include_once($footerfile);
+} else {
+	echo _FILENOTFOUNT.$footerfile;
 }
 ?>

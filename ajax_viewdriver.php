@@ -1,179 +1,133 @@
 <?PHP
 require_once("./include/membersite_config.php");
-
+require_once ("./include/ajax_pagination.php");
+EXTRACT($_REQUEST);
+$fgmembersite->DBLogin();
+if(!$fgmembersite->CheckLogin()) {
+    $fgmembersite->RedirectToURL("index.php");
+    exit;
+}
+require_once("./include/membersite_config.php");
 if(!$fgmembersite->CheckLogin())
 {
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
+if($_REQUEST['searchname']!='') {
+	$var = @$_REQUEST['searchname'] ;
+	$trimmed = trim($var);	
+	$qry="SELECT * FROM driver where emp_name like '%".$trimmed."%'";
+} else { 
+	$qry="SELECT * FROM driver"; 
+}
+$results=mysql_query($qry);
+$num_rows= mysql_num_rows($results);			
+$params			=	$searchname."&".$sortorder."&".$ordercol;
 
+/********************************pagination start***********************************/
+$strPage = $_REQUEST[page];
+//$params = $_REQUEST[params];
+
+//if($_REQUEST[mode]=="Listing"){
+//$Num_Rows = mysql_num_rows ($res_search);
+
+########### pagins
+
+$Per_Page = 5;   // Records Per Page
+
+$Page = $strPage;
+if(!$strPage)
+{
+	$Page=1;
+}
+
+$Prev_Page = $Page-1;
+$Next_Page = $Page+1;
+
+$Page_Start = (($Per_Page*$Page)-$Per_Page);
+if($num_rows<=$Per_Page)
+{
+$Num_Pages =1;
+}
+else if(($num_rows % $Per_Page)==0)
+{
+$Num_Pages =($num_rows/$Per_Page) ;
+}
+else
+{
+$Num_Pages =($num_rows/$Per_Page)+1;
+$Num_Pages = (int)$Num_Pages;
+}
+if($sortorder == "")
+{
+	$orderby	=	"ORDER BY id DESC";
+} else {
+	$orderby	=	"ORDER BY $ordercol $sortorder";
+}
+$qry.=" $orderby LIMIT $Page_Start , $Per_Page";  //need to uncomment
+//exit;
+$results_dsr = mysql_query($qry) or die(mysql_error());
+/********************************pagination***********************************/
 ?>
-<link media="screen" rel="stylesheet" href="style/fixed_table_header/960.css">
-        <link media="screen" rel="stylesheet" href="style/fixed_table_header/defaultTheme.css">
-        <link media="screen" rel="stylesheet" href="style/fixed_table_header/myTheme.css">
-        <script src="scripts/fixed_table_header/jquery.min.js"></script>
-        <script src="scripts/fixed_table_header/jquery.fixedheadertable.min.js"></script>
-        <script src="scripts/fixed_table_header/demo.js"></script>
-		<script>
-		function show_confirm()
-{
-var r=confirm("Are you sure want to delete");
-if (r==true)
-  {
-  return true;
-  }
-else
-  {
-  return false;
-  }
-}
-</script>
-<?php
-	$fgmembersite->DBLogin();
-//PAGE NUMBER, RESULTS PER PAGE, AND OFFSET OF THE RESULTS
-if($_GET["page"]){
-    $pagenum = $_GET["page"];
-} else {
-    $pagenum = 1;
-}
-
-$rowsperpage = 7; //MAXIMUM RESULTS PER PAGE
-$offset = ($pagenum - 1) * $rowsperpage; //WHERE THE RESULTS START FROM
-
-//FOR RESULTS OF THE PAGE
-if($_GET["searchvalue"]){
-$search=$_GET["searchvalue"];
-    $q = mysql_query("SELECT * FROM driver where emp_name like '%$search%' ORDER BY id LIMIT $offset, $rowsperpage");
-} else {
-    $q = mysql_query("SELECT * FROM driver ORDER BY id LIMIT $offset, $rowsperpage");
-}
-
-$page_nums = mysql_num_rows($q); //NUMBER OF RESULTS FOR THE PAGE
-if ($page_nums!=0)
-{
-if($_GET["searchvalue"]){
-$search=$_GET["searchvalue"];
-	 $total_q = mysql_query("SELECT * FROM driver where emp_name like '%$search%' "); //FOR THE ALL RESULTS
-} else {
-    $total_q = mysql_query("SELECT * FROM driver"); //FOR THE ALL RESULTS
-}
-
-$total_nums = mysql_num_rows($total_q); //TOTAL NUMBER OF RESULTS
-$total_pages = ceil($total_nums/$rowsperpage); //NUMBER OF PAGES
-//<table class="myTable01">
-//IF PAGE NUMBER IS WITHIN THE FIRST AND LAST PAGES
-if($pagenum>=1&&$pagenum<=$total_pages)
-{
-
-echo '
-<table class="owntable">
+<div class="con2">
+<table width="100%">
 <thead>
 <tr>
-<th>Driver Code</th>
-<th>Name</th>
-<th>Employee Code</th>
-<th>Driving License Number</th>
-<th>Edit</th>
-<th>Delete</th>
-
-</tr>
-</thead>
-<tbody>';
-
-    while($r=mysql_fetch_array($q))
-    {
 	
-	
-        $driver_code = $r["driver_code"];
-		$emp_id = $r["id"];
-		$emp_name=$r["emp_name"];
-		$emp_code=$r["emp_code"];
-		$license_number=$r["license_number"];
-        echo '<tr><td>'.$driver_code.'</td><td>'.$emp_name.'</td><td>'.$emp_code.'</td><td>'.$license_number.'</td><td><a href=edit_driver.php?id='.$emp_id.'><img src="images/user_edit.png"/></a></td>
-		<td><a href=view_driver.php?delete_id='.$emp_id.'&delete=1><img src="images/delete.png" onclick="return show_confirm()"/></a></td></tr>';
-	
-    }
-    echo '</tbody></table>';
-    echo '<br>';
-    
-    //IF ANY RESULTS
-    if($total_nums)
-    {
-        $range = 4; //NUMBER OF PAGES TO BE SHOWN BEFORE AND AFTER THE CURRENT PAGE NUMBER
-        
-        //FIRST, PREVIOUS, NEXT, AND LAST LINKS
-        if($pagenum>1)
-        {
-            $page = $pagenum - 1;
-            $first = '<a class="page" id="1" >First</a> ';
-            $prev = '<a class="page" id="'.$page.'"><<</a> ';
-        }
-        if($pagenum<$total_pages)
-        {
-            $page = $pagenum + 1;
-            $next = '<a class="page" id="'.$page.'">>></a> ';
-            $last = '<a class="page" id="'.$total_pages.'">Last</a> ';
-        }
-        
-        //PAGINATION
-        for($page=($pagenum-$range); $page<=($pagenum+$range); $page++)
-        {
-            if($page>=1&&$page<=$total_pages)
-            {
-                if($page==$pagenum)
-                {
-                    $nav .= '<span class="pagenum">'.$page.'</span> ';
-                }
-                else
-                {
-                    $nav .= '<a class="page" id="'.$page.'">'.$page.'</a> ';
-                }
-            }
-        }
-    }
-    
-    //DISPAYS IN HTML
-	if ($total_nums>$rowsperpage)
-	{
-	 echo $first . $prev . $nav . $next . $last;
+	<?php //echo $sortorderby;
+	if($sortorder == 'ASC') {
+		$sortorderby = 'DESC';
+	} elseif($sortorder == 'DESC') {
+		$sortorderby = 'ASC';
+	} else {
+		$sortorderby = 'ASC';
 	}
-	
-} 
-else {
-    //OTHERWISE...
-    header("Location: ajax_viewdriver.php"); //WILL REDIRECT TO THE FIRST PAGE OF RESULTS
-}
-}
-else
-{
-$q_initial = mysql_query("SELECT * FROM driver");
-$page_nums_initial = mysql_num_rows($q_initial);
-if ($page_nums_initial !=0)
-{
-echo '
-<table class="owntable">
-<thead>
-<tr>
-<th>Driver Code</th>
-<th>Name</th>
-<th>Employee Code</th>
-<th>Driving License Number</th>
-<th>Edit</th>
-<th>Delete</th>
-
+	$paramsval	=	$searchname."&".$sortorderby."&driver_code"; ?>
+				<th nowrap="nowrap" class="rounded" onClick="colviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Driver Code<img src="images/sort.png" width="13" height="13" /></th>
+				<th nowrap="nowrap" >Name</th>
+				<th nowrap="nowrap" >Employee Code</th>
+				<th nowrap="nowrap" >Driving License Number</th>
+				<th nowrap="nowrap" >Edit</th>
+				<th nowrap="nowrap" >Delete</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td align="right" colspan="6">
-<font style="font-size: 16px;color:red;padding-right:230px;">No Records Found</font>
-</td>
-
-
+<?php
+if(!empty($num_rows)){
+	$slno	=	($Page-1)*$Per_Page + 1;
+$c=0;$cc=1;
+while($fetch = mysql_fetch_array($results_dsr)) {
+if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
+$id= $fetch['id'];
+?>
+<tr>				
+				<td><?php echo $fetch['driver_code'];?></td>
+				<td><?php echo $fgmembersite->upperstate($fetch['emp_name']); ?></td>
+				<td><?php echo $fetch['emp_code'];?></td>
+				<td><?php echo $fetch['license_number'];?></td>
+				<td >
+				<a href="edit_driver.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>
+				</td>
+				<td>
+				<a href="view_driver.php?delete_id=<?php echo $fetch['id'];?>&delete=1"><img src="images/trash.png" alt="" title="" width="11" height="11" onclick="return show_confirm('<?php echo $fetch['driver_code']; ?>');"/></a>
+				</td>
 </tr>
+<?php $c++; $cc++; $slno++; }		 
+}else{  echo "<tr><td align='center' colspan='6'><b>No records found</b></td></tr>";}  ?>
 </tbody>
 </table>
-';
-}
-}
-?>
+ </div>   
+ <div class="paginationfile" align="center">
+ <table>
+ <tr>
+ <th class="pagination" scope="col">          
+<?php 
+if(!empty($num_rows)){
+	rendering_pagination_common($Num_Pages,$Page,$Prev_Page,$Next_Page,$params,'colviewajax');   //need to uncomment
+} else { 
+	echo "&nbsp;"; 
+} ?>      
+</th>
+</tr>
+</table>
+</div>

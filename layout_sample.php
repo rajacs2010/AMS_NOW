@@ -17,260 +17,241 @@ if(file_exists($header_file)) {
 	exit;
 }
 ?>
-<script>
-function myFunction() {
-	document.getElementById("state").value="";
-	document.getElementById("state").focus();
-	return false;
+<style type="text/css">
+#containerprforcd {
+	padding:0px;
+	width:100%;
+	margin-left:auto;
+	margin-right:auto;
 }
-$(function () {
-	$('#closebutton').button({
-		icons: {
-			primary : "../images/close_pop.png",
-		},
-		text:false
-	});	
-	$('#closebutton').click(function(event) {
-		//alert('232');
-		$('#errormsgbuild').hide();
-		return false;
-	});		
-});
-$(function () {		
-	$('#clear').click(function(event) {
-		$('#desc').val()="";
-	});		
-});
-</script>
-<style>
-#closebutton {
-    background: url("images/close_pop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-    border: medium none;
-    color: rgba(0, 0, 0, 0);
-    position: relative;
-    right: -220px;
-    top: -35px;
+#mainareadaily {
+    background: none repeat scroll 0 0 #EBEBEB;
+    height: 500px;
+    width: 100%;
+}
+
+.buttonsbig1 {
+    background-color: #C1C1C1;
+    border: 1px solid #686868;
+    border-radius: 5px;
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2);
+    color: #000000;
+    cursor: pointer;
+    font-family: Calibri;
+    font-size: 12px;
+    height: 25px;
+    padding: 3px;
+    width: 160px;
 }
 </style>
 <script>
-$(document).ready(function() { 
-$("#incharge_empcode").change(function(event) {
-		var selvalue_incharge_empcode=document.getElementById("incharge_empcode").value;
-		if (selvalue_incharge_empcode != 0)
-		{
-			$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
+function colviewajax(page,params){   // For pagination and sorting of the Collection Deposited view page
+	var splitparam		=	params.split("&");
+	var searchname	=	splitparam[0];
+	var sortorder		=	splitparam[1];
+	var ordercol		=	splitparam[2];
+	$.ajax({
+		url : "ajax_viewdriver.php",
+		type: "get",
+		dataType: "text",
+		data : { "searchname" : searchname, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
+		success : function(dataval) {
+			var trimval		=	$.trim(dataval);
+			//alert(trimval);
+			$("#colviewajaxid").html(trimval);
 		}
-		else
-		{
-			document.getElementById("leadername").value = "";
+	});
+}
+function searchcolviewajax(page){  // For pagination and sorting of the Collection Deposited search in view page
+	var searchname	=	$("input[name='searchname']").val();
+	//alert(Product_name);
+	$.ajax({
+		url : "ajax_viewdriver.php",
+		type: "get",
+		dataType: "text",
+		data : { "searchname" : searchname, "page" : page },
+		success : function(dataval) {
+			var trimval		=	$.trim(dataval);
+			//alert(trimval);
+			$("#colviewajaxid").html(trimval);
 		}
-    });		
-	  });	
-	  </script>
-	  <script>
-function validateForm() {
-	var allocation_type_id=document.getElementById("allocation_type_id").value;
-	if(allocation_type_id==0)
-	{
-		$('.myalignbuild').html('ERR 0009 : Select Allocation Type');
-		$('#errormsgbuild').css('display','block');
-		setTimeout(function() {
-			$('#errormsgbuild').hide();
-		},5000);
-		document.getElementById("allocation_type_id").focus();
+	});
+}
+function show_confirm(name) {
+	var r=confirm("Are You Sure You Want to Delete : "+name);
+	if(r==true) {
+		return true;
+	} else {
 		return false;
 	}
-	
-	var department_id=document.getElementById("department_id").value;
-	if(department_id==0)
-	{
-	$('.myalignbuild').html('ERR 0009 : Select The Department');
-	$('#errormsgbuild').css('display','block');
-		setTimeout(function() {
-			$('#errormsgbuild').hide();
-		},5000);
-	document.getElementById("department_id").focus();
-	return false;
-	}
-	var incharge_empcode=document.getElementById("incharge_empcode").value;
-	if(incharge_empcode==0)
-	{
-		$('.myalignbuild').html('ERR 0009 : Select The Employee Code');
-		$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-		document.getElementById("incharge_empcode").focus();
-		return false;
-	}
-	}
-$(function () {		
-	$('#clear').click(function(event) {
-		$('#allocation_type_id').val()=0;
-		$('#department_id').val()=0;
-		$('#incharge_empcode').val()=0;				
-	});		
-});
+}
 </script>
 <?php
-if(isset($_POST['save'])) {
-$user_id=$_SESSION['user_id'];
-$allocation_type_id=$_POST['allocation_type_id'];
-$department_id=$_POST['department_id'];
-$empcode=$_POST['incharge_empcode'];
-$fgmembersite->DBLogin();
-				$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
-				or die("Opps some thing went wrong");
-				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-				$result_emp_id=mysql_query("select first_name from pim_emp_info where emp_code='$empcode'  order by emp_id",$bd);
-				while($row=mysql_fetch_array($result_emp_id))
-				{
-				$emp_name=$row['first_name'];
-				}
+if(isset($_GET['delete_id']) && intval($_GET['delete_id'])) {
+	if ($_GET['delete'] ==1) {
+		$id=$_GET['delete_id'];
+		$query = "SELECT * FROM driver where id=$id"; 
+		$result = mysql_query($query);
+		if($result === FALSE) {
+			die(mysql_error()); // TODO: better error handling
+		}
+	if(!mysql_query("delete FROM driver where id=$id")) {
+		die('Error: ' . mysql_error());
+	}
+	$fgmembersite->RedirectToURL("view_driver.php?success=delete");
+	// 
+	//echo "hi";
+	}
+}
+if($_REQUEST['searchname']!='') {
+	$var = @$_REQUEST['searchname'] ;
+	$trimmed = trim($var);	
+	$qry="SELECT * FROM driver where emp_name like '%".$trimmed."%'";
+} else { 
+	$qry="SELECT * FROM driver"; 
+}
+$results=mysql_query($qry);
+$num_rows= mysql_num_rows($results);			
+$params			=	$searchname."&".$sortorder."&".$ordercol;
 
-if ($allocation_type_id!= "")
+/********************************pagination start***********************************/
+$strPage = $_REQUEST[page];
+//$params = $_REQUEST[params];
+
+//if($_REQUEST[mode]=="Listing"){
+//$Num_Rows = mysql_num_rows ($res_search);
+
+########### pagins
+
+$Per_Page = 5;   // Records Per Page
+
+$Page = $strPage;
+if(!$strPage)
 {
-$fgmembersite->DBLogin();
-if(!mysql_query('INSERT INTO vehicle_allocation_type (allocation_type_id,department_id,emp_code,emp_name,created_by)VALUES ("'.$allocation_type_id.'","'.$department_id.'","'.$empcode.'","'.$emp_name.'","'.$user_id.'")'))
+	$Page=1;
+}
+
+$Prev_Page = $Page-1;
+$Next_Page = $Page+1;
+
+$Page_Start = (($Per_Page*$Page)-$Per_Page);
+if($num_rows<=$Per_Page) {
+	$Num_Pages =1;
+}
+else if(($num_rows % $Per_Page)==0)
 {
-die('Error: ' . mysql_error());
+	$Num_Pages =($num_rows/$Per_Page) ;
 }
-	$fgmembersite->RedirectToURL("view_vehicle_allocate.php?success=create");
+else {
+	$Num_Pages =($num_rows/$Per_Page)+1;
+	$Num_Pages = (int)$Num_Pages;
 }
+if($sortorder == "") {
+	$orderby	=	"ORDER BY id DESC";
+} else {
+	$orderby	=	"ORDER BY $ordercol $sortorder";
 }
+$qry.=" $orderby LIMIT $Page_Start , $Per_Page";  //need to uncomment
+//exit;
+$results_dsr = mysql_query($qry) or die(mysql_error());
+/********************************pagination***********************************/
 ?>
 
 <!------------------------------- Form -------------------------------------------------->
-<div id="mainarea"><!--- mainarea  div start-->
+
+<div id="mainareadaily">
 <div class="mcf"></div>
-<div align="center" class="headingsgr">VEHICLE ALLOCATION TYPE</div>
-<div id="mytableformreceipt1" align="center"><!--- mytableformreceipt1 div start-->
-<form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
-<fieldset class="alignment" align="left">
-  <legend><strong>Vehicle Allocation Type</strong></legend>
-  <br/>
-  <table width="100%">
-  <tr>
-  <td width="50%">
-		<table align="left">
-		 <tr>
-		  <td>
-		  <table>
-			<tr height="30">
-			<td width="120">Allocation Type*</td>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			<td>
-			<?php
-				$result_state=mysql_query("select * from allocation_type");
-					echo '<select name="allocation_type_id" id="allocation_type_id" tabindex="1">';
-					echo '<option value="0">--Select--</option>';
-					while($row=mysql_fetch_array($result_state))
-					{
-					echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+<div><h2 align="center">DRIVER</h2></div> 
 
-					}
-					echo '</select>';
-			?>
-			</td>
-			</tr>
-			
-		
-			<tr height="30">
-			 <td width="120">Employee Code*</td>
-			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			 <td>
-				<?php			 
-				$fgmembersite->DBLogin();
-				$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
-				or die("Opps some thing went wrong");
-				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-				echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="3">';
-				echo '<option value="0">--Select--</option>';
-				while($row=mysql_fetch_array($result_emp_id))
-				{
-				echo '<option value="'.$row['emp_code'].'">'.$row['emp_code'].'</option>';
+<div id="containerprforcd">
+
+<span style="float:left;"><input type="button" name="kdproduct" value="Add Driver" class="buttonsbig1" onclick="window.location='driver.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
+
+<div class="clearfix"></div>
+
+<div id="search">
+        <input type="text" name="searchname" id="searchname" value="<?php echo $_REQUEST['searchname']; ?>" autocomplete='off' placeholder='Search By Employee Name'/>
+        <input type="button" class="buttonsg" onclick="searchcolviewajax('<?php echo $Page; ?>');" value="GO"/>
+ </div>
+  <div class="clearfix"></div>
+<div class="mcf"></div>
+       <div id="colviewajaxid">
+			<div class="con2">
+			<table width="100%">
+			<thead>
+			<tr>				
+				<?php //echo $sortorderby;
+				if($sortorder == 'ASC') {
+					$sortorderby = 'DESC';
+				} elseif($sortorder == 'DESC') {
+					$sortorderby = 'ASC';
+				} else {
+					$sortorderby = 'ASC';
 				}
-				echo '</select>';
-				?>
-			</td>
+				$paramsval	=	$searchname."&".$sortorderby."&driver_code"; ?>
+				<th nowrap="nowrap" class="rounded" onClick="colviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Driver Code<img src="images/sort.png" width="13" height="13" /></th>
+				<th nowrap="nowrap" >Name</th>
+				<th nowrap="nowrap" >Employee Code</th>
+				<th nowrap="nowrap" >Driving License Number</th>
+				<th nowrap="nowrap" >Edit</th>
+				<th nowrap="nowrap" >Delete</th>
 			</tr>
-		   </table>
-		   </td>
-		 </tr>
-		</table>
-</td>
-<td width="40%" >
-
-	 <table >
-			 <tr>
-			  <td>
-			  <table>
-			  	<tr height="30">
-			 <td width="120">Division/Department*</td>
-			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			 <td>	
-				<?php		
-				$fgmembersite->DBLogin();				
-				$result_state=mysql_query("select * from department");
-				echo '<select name="department_id" id="department_id" tabindex="2">';
-				echo '<option value="0">--Select--</option>';
-					while($row=mysql_fetch_array($result_state))
-					{
-					echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
-
-					}
-					echo '</select>';		
-				?>					
-			  </td>
-			</tr>
-				<tr height="30">
-				<td width="120">Employee Name</td>
-				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
-				<td>
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" tabindex="4"/></span>
+			</thead>
+			<tbody>
+			<?php
+			if(!empty($num_rows)){
+				$slno	=	($Page-1)*$Per_Page + 1;
+			$c=0;$cc=1;
+			while($fetch = mysql_fetch_array($results_dsr)) {
+			if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
+			$id= $fetch['id'];
+			?>
+			<tr>				
+				<td><?php echo $fetch['driver_code'];?></td>
+				<td><?php echo $fgmembersite->upperstate($fetch['emp_name']); ?></td>
+				<td><?php echo $fetch['emp_code'];?></td>
+				<td><?php echo $fetch['license_number'];?></td>
+				<td >
+				<a href="edit_driver.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>
 				</td>
-				</tr>				
-		   </table>
-		   </td>
-		 </tr>
-		</table>		
- </td>	
-</tr>
-</table> 
-<br/>
-</fieldset>
-<?php if($_GET['success']=="update") { ?>
-	<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
-	?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
-<?php } 
-if($_GET['success']=="error") { ?>
-	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+				<td>
+				<a href="view_driver.php?delete_id=<?php echo $fetch['id'];?>&delete=1"><img src="images/trash.png" alt="" title="" width="11" height="11" onclick="return show_confirm('<?php echo $fgmembersite->upperstate($fetch['driver_code']); ?>');"/></a>
+				</td>
+			</tr>
+			<?php $c++; $cc++; $slno++; }		 
+			}else{  echo "<tr><td align='center' colspan='6'><b>No records found</b></td></tr>";}  ?>
+			</tbody>
+			</table>
+			 </div>   
+			 <div class="paginationfile" align="center">
+			 <table>
+			 <tr>
+			 <th class="pagination" scope="col">          
+			<?php 
+			if(!empty($num_rows)){
+				rendering_pagination_common($Num_Pages,$Page,$Prev_Page,$Next_Page,$params,'colviewajax');   //need to uncomment
+			} else { 
+				echo "&nbsp;"; 
+			} ?>      
+			</th>
+			</tr>
+			</table>
+		  </div>
+<?php if($_GET['success']=="delete") { ?>
+	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "Data Deleted Successfully"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+<?php } ?>
+<?php if($_GET['success']=="create") { ?>
+	<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
 <?php }?>
-<br/>
-</div><!--- mytableformreceipt1 div end-->
-<table width="100%" style="clear:both">
-  <tbody><tr height="50px;" align="center">
-	<td><input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
-		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
-		 <input type="button" onclick="window.location='ams_temp.php?id=3'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
-		 <input type="button" onclick="window.location='view_vehicle_allocate.php'" class="buttons" value="View" name="View">
-	</td>
-  </tr>
-  <tr>
-  <td>
-  <div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
-  <?php if($_GET['success']=="create") 
+<?php if($_GET['success']=="update") 
 {
 ?>
-<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
 ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
 <?php }?>
-  </td>
-  </tr>
-</tbody></table>
-</form>
-</div><!--- mainarea  div end-->
+</div>
+</div>
+</div>
 <?php
 $footerfile='./layout/footer.php';
 if(file_exists($footerfile)) {
