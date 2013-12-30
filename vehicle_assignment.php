@@ -1,260 +1,211 @@
 <?PHP
 require_once("./include/membersite_config.php");
+require_once ("./include/ajax_pagination.php");
 $fgmembersite->DBLogin();
-if(!$fgmembersite->CheckLogin())
-{
+EXTRACT($_REQUEST);
+if(!$fgmembersite->CheckLogin()) {
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
-
-?>
-<?php
-if ($fgmembersite->usertype() == 1)
-{
-$header_file='./layout/admin_header.php';
+if ($fgmembersite->usertype() == 1) {
+	$header_file='./layout/admin_header_fms.php';
 }
-if(file_exists($header_file))
-{
-include_once($header_file);
-}
-else
-{
-$fgmembersite->RedirectToURL("index.php");
-exit;
+if(file_exists($header_file)) {
+	include_once($header_file);
+} else {
+	$fgmembersite->RedirectToURL("index.php");
+	exit;
 }
 ?>
+<script>
+function myFunction() {
+	document.getElementById("state").value="";
+	document.getElementById("state").focus();
+	return false;
+}
+$(function () {
+	$('#closebutton').button({
+		icons: {
+			primary : "../images/close_pop.png",
+		},
+		text:false
+	});	
+	$('#closebutton').click(function(event) {
+		//alert('232');
+		$('#errormsgbuild').hide();
+		return false;
+	});		
+});
+$(function () {		
+	$('#clear').click(function(event) {
+		$('#desc').val()="";
+	});		
+});
+</script>
 <style>
-input[type="text"]:disabled
-{
-background:#dddddd;
+#closebutton {
+    background: url("images/close_pop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    color: rgba(0, 0, 0, 0);
+    position: relative;
+    right: -220px;
+    top: -35px;
 }
 </style>
-
-   <script src="scripts/date.js"></script>
-<link rel="stylesheet" href="style/date.css" media="screen">
-   <script type="text/javascript">
-	window.onload = function(){
-		new JsDatePick({
-			useMode:2,
-			target:"mduedate",
-			dateFormat:"%Y-%m-%d"
-			/*selectedDate:{				This is an example of what the full configuration offers.
-				day:5,						For full documentation about these settings please see the full version of the code.
-				month:9,
-				year:2006
-			},
-			yearsRange:[1978,2020],
-			limitToToday:false,
-			cellColorScheme:"beige",
-			dateFormat:"%m-%d-%Y",
-			imgPath:"img/",
-			weekStartDay:1*/
-		});
-		
-                                new JsDatePick({
-                    useMode:2,
-                    target:"donedate",
-                    dateFormat:"%Y-%m-%d"
-
-                });
-				        
-           new JsDatePick({
-                    useMode:2,
-                    target:"nextduedate",
-                    dateFormat:"%Y-%m-%d"
-
-                });						
-		              
-	};
-</script>
 <script>
-function validateForm()
-{
-		
-		var vehicle_regno=document.getElementById("vehicle_regno");
-		if(vehicle_regno.value==0)
+$(document).ready(function() { 
+$("#driver_id").change(function(event) {
+		var selvalue_incharge_empcode=document.getElementById("driver_id").value;
+		if (selvalue_incharge_empcode != 0)
 		{
-		alert("Please select the vehicle registration number");
+			$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode_driver='+selvalue_incharge_empcode);
+		}
+		else
+		{
+			document.getElementById("leadername").value = "";
+		}
+    });		
+	  });	
+	  
+	  </script>
+	  <script>
+function validateForm() 
+	{
+	var vehicle_regno=document.getElementById("vehicle_regno").value;
+	if(vehicle_regno==0)
+	{
+		$('.myalignbuild').html('ERR 0009 : Select Vehicle Registration Number');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
 		document.getElementById("vehicle_regno").focus();
 		return false;
-		}
-		var driver_code=document.getElementById("driver_code");
-		if(driver_code.value==0)
-		{
-		alert("Please select the driver code");
-		document.getElementById("driver_code").focus();
+	}
+	
+	var driver_id=document.getElementById("driver_id").value;
+	if(driver_id==0)
+	{
+		$('.myalignbuild').html('ERR 0009 : Select Driver Code');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("driver_id").focus();
 		return false;
-		}
-		
-		var mdate=document.getElementById("mdate").value;
-		if(mdate==""||mdate==0 || !mdate)
-		{
-		alert("Please select the date");
+	}
+	
+	var mdate=document.getElementById("mdate").value;
+	if(mdate=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Select The Date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
 		document.getElementById("mdate").focus();
 		return false;
-		}
+	}
 	
-		var assignment_type=document.getElementById("assignment_type");
-		if(assignment_type.value==0)
-		{
-		alert("Please select the assignment type");
+	var assignment_type=document.getElementById("assignment_type").value;
+	if(assignment_type==0)
+	{
+		$('.myalignbuild').html('ERR 0009 : Select Assignment Type');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
 		document.getElementById("assignment_type").focus();
 		return false;
-		}
+	}
 	
-		var from_date=document.getElementById("from_date").value;
-		if(from_date==""||from_date==0 || !from_date)
-		{
-		alert("Please select the from date");
+	var from_date=document.getElementById("from_date").value;
+	if(from_date=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Select The From Date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
 		document.getElementById("from_date").focus();
 		return false;
-		}
-		
-		
-		var to_date=document.getElementById("to_date").value;
-		if(to_date==""||to_date==0 || !to_date)
-		{
-		alert("Please select the to date");
-		document.getElementById("to_date").focus();
-		return false;
-		}
-		var from_date_replace=from_date.replace(/-/g,',');
-		var to_date_replace=to_date.replace(/-/g,',');
-		from_date_new = new Date(from_date_replace);
-		to_date_new = new Date(to_date_replace);
-		if(from_date_new.getTime() <= to_date_new.getTime())
-		{
-		
-		var desc=document.getElementById("desc");
-		if(desc.value=="")
-		{
-		alert("Please enter the assignment description");
-		document.getElementById("desc").focus();
-		return false;
-		}
-		else
-		{
-		return true;
-		}
-		
+	}
 	
-		}
-		else
-		{
-		alert("Please select the to date greater than or equal to from date");
+	
+	var to_date=document.getElementById("to_date").value;
+	if(to_date=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Select The To Date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
 		document.getElementById("to_date").focus();
 		return false;
-		}
+	}
+	var enddate=document.getElementById("to_date").value;
+	var enddateval = enddate.substring(6,10)+"/"+enddate.substring(3,5)+"/"+enddate.substring(0,2);
+	var current_date=document.getElementById("from_date").value;
+	 var current_dateval = current_date.substring(6,10)+"/"+current_date.substring(3,5)+"/"+current_date.substring(0,2);
 
-}
+	var date_check=new Date(enddateval).getTime() >= new Date(current_dateval).getTime();
+	if (date_check==false)
+	{
+	$('.myalignbuild').html('ERR 0009 :To Date should be greater than or equal to From Date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("to_date").focus();
+		return false;
+	}
+	
+	}
+$(function () {		
+	$('#clear').click(function(event) {
+		$('#vehicle_regno').val()=0;
+		$('#driver_id').val()=0;
+		$('#assignment_type').val()=0;
+		$('#desc').val()="";			
+	});		
+});
 </script>
-
- <script type="text/javascript">
-	window.onload = function(){
-		new JsDatePick({
-			useMode:2,
-			target:"mdate",
-			dateFormat:"%Y-%m-%d"
-			/*selectedDate:{				This is an example of what the full configuration offers.
-				day:5,						For full documentation about these settings please see the full version of the code.
-				month:9,
-				year:2006
-			},
-			yearsRange:[1978,2020],
-			limitToToday:false,
-			cellColorScheme:"beige",
-			dateFormat:"%m-%d-%Y",
-			imgPath:"img/",
-			weekStartDay:1*/
-		});
-				new JsDatePick({
-                    useMode:2,
-                    target:"from_date",
-                    dateFormat:"%Y-%m-%d"
-
-                });
-				              new JsDatePick({
-                    useMode:2,
-                    target:"to_date",
-                    dateFormat:"%Y-%m-%d"
-
-                });			
-		              
-	};
-</script>
-
-
 <?php
-if(isset($_POST['save']))
+if(isset($_POST['save'])) 
 {
 $code=$_POST['code'];
 $vehicle_regno=$_POST['vehicle_regno'];
-$driver_code=$_POST['driver_code'];
+$driver_code=$_POST['driver_id'];
 $mdate=$_POST['mdate'];
 $assignment_type=$_POST['assignment_type'];
 $from_date=$_POST['from_date'];
 $to_date=$_POST['to_date'];
 $desc=$_POST['desc'];
 $user_id=$_SESSION['user_id'];
-
 if(!mysql_query('insert into vehicle_assignment SET  assignment_no="'.$code.'",vehicle_registration_id="'.$vehicle_regno.'",driver_code_id="'.$driver_code.'",assignment_date="'.$mdate.'",assignment_type_id="'.$assignment_type.'",from_date="'.$from_date.'",to_date="'.$to_date.'",assignment_desc="'.$desc.'",created_by="'.$user_id.'"'))
 {
 die('Error: ' . mysql_error());
-}
-$fgmembersite->RedirectToURL("vehicle_assignment.php?success=true");
-}
+}	
+$fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 
-
+}
 
 ?>
 
-<div id="inside_content">
-&nbsp;
-<?php
-if(isset($_GET['success']))
-{
-if ($_GET['success']=="true")
-{
-
-?>
-<span class="success_message">Vehicle assignment created successfully</span>
-<?php
-}
-
-}
-?>
-&nbsp;
-<div class="header_bold">Vehicle assignment</div>
-<br/>
-<br/>
-<div class="scroll_not">
-<form id='vehicle_assign_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
-
-<table id="building_class" align="center" width="90%"CELLPADDING="3" CELLSPACING="0"  style=" border: 0px solid #00BFFF; border-top:0px;font-family: Arial;
-    font-size: 12px;">
-  <!--<tr>
-    <th style="background: url('images/th.png'); height: 29px;color:#ffffff;text-align: left;font-size: 14px;text-align:center">
-Building
-    </th
-<th style=" height: 29px;text-align: left;font-size: 14px;text-align:center">
-Building
-    </0
-	th>
-  </tr>-->
-  <tr>
-    <td align="center" style=" padding:30px 50px 30px 0px;">
-  
-
-<input type='hidden' name='submitted' id='submitted' value='1'/>
-             <!-- The inner table below is a container for form -->
-                <table style="font-family:Arial;" width="100%"  cellpadding="10px" class="htmlForm" cellspacing="0" border="0">
-					
-					
-					<tr>
-						<td  width="150px"><label style="margin-left:0px;">Assignment number<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<?php
-		 if(!isset($_GET[id]) && $_GET[id] == '') {
+<!------------------------------- Form -------------------------------------------------->
+<div id="mainarea"><!--- mainarea  div start-->
+<div class="mcf"></div>
+<div align="center" class="headingsgr">VEHICLE ASSIGNMENT</div>
+<div id="mytableformreceipt1" align="center"><!--- mytableformreceipt1 div start-->
+<form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
+<fieldset class="alignment" align="left">
+  <legend><strong>Vehicle Assignment</strong></legend>
+<table width="50%" align="left"><!-- start--->
+			<tr height="30">
+		<td width="128">Assignment number</td>
+		<td>
+		<?php
+		if(!isset($_GET[id]) && $_GET[id] == '') {
 			$cusid					=	"SELECT  assignment_no FROM  vehicle_assignment ORDER BY id DESC";			
 			$cusold					=	mysql_query($cusid) or die(mysql_error());
 			$cuscnt					=	mysql_num_rows($cusold);
@@ -279,125 +230,141 @@ Building
 			}
 		}
 	?>
-						<input type='text' name='code' id='code' class="textbox" value="<?php echo $customer_code;?>" readonly="true"/>
-						</td>
-						
-						<td  width="150px"><label style="margin-left:0px;">Vehicle registration<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<?php
-							$result_state=mysql_query("SELECT id,vehicle_regno from vehicle");
-							echo '<select name="vehicle_regno" id="vehicle_regno" >';
-							echo '<option value="0">Please select a  vehicle reg no</option>';
+	<input type='text' name='code' id='code' readonly ="true" value="<?php echo $customer_code; ?>" size="7"/>
+		</td>
+    </tr>
+	<tr height="30">
+			<td width="148">Driver Code</td>
+			<td>
+	<?php
+	$result_state=mysql_query("select * from driver");
+				echo '<select name="driver_id" id="driver_id" tabindex="2">';
+				echo '<option value="0">--Select--</option>';
+					while($row=mysql_fetch_array($result_state))
+					{
+					echo '<option value="'.$row['id'].'">'.$row['driver_code'].'</option>';
+
+					}
+					echo '</select>';
+					?>
+			</td>
+			</tr>
+			
+			<tr height="30">
+			<td width="148">Date</td>
+			<td>
+		<input type='text' name='mdate' id='mdate' class="datepicker"  tabindex="3" value="<?php echo date('d-m-Y');?>"/>
+		
+			</td>
+			</tr>
+			<tr height="30">
+			<td width="148">From Date</td>
+			<td>
+		<input type='text' name='from_date' id='from_date' tabindex="5" class="datepicker" value="<?php echo date('d-m-Y');?>"/>
+		
+			</td>
+			</tr>
+			<tr height="30">
+			<td width="148">Assignment Description</td>
+			<td>
+		<input type='text' name='desc' id='desc' autocomplete="off" tabindex="7"/>
+		
+			</td>
+			</tr> 
+			
+</table><!-- end--->
+
+	 <table width="50%" align="left"><!-- start--->
+			<tr height="30">
+		<td width="180">Vehicle Registration No.*</td>
+	
+		<td>
+		<?php 
+		$fgmembersite->DBLogin();
+		$result_state=mysql_query("SELECT id,vehicle_regno from vehicle");
+							echo '<select name="vehicle_regno" id="vehicle_regno" style="width:80px;" tabindex="1" >';
+							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{
 							echo '<option value="'.$row['id'].'">'.$row['vehicle_regno'].'</option>';
 
 							}
 							echo '</select>';
-							?>
-							</td>
-							
-                          <td  width="150px"><label style="margin-left:0px;">Driver code<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<?php
-							$result_state=mysql_query("SELECT id,driver_code from driver");
-							echo '<select name="driver_code" id="driver_code" >';
-							echo '<option value="0">Please select a  driver code</option>';
-							while($row=mysql_fetch_array($result_state))
-							{
-							echo '<option value="'.$row['id'].'">'.$row['driver_code'].'</option>';
-
-							}
-							echo '</select>';
-							?>
-							</td>
-						
-					</tr>	
-					
-					
-					<tr>
+			?>
+		</td>
+    </tr>
+	<tr height="30">
+		<td width="128">Driver Name</td>
 	
-							
-						<td  width="150px"><label style="margin-left:0px;">Date<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='mdate' id='mdate' class="textbox"/>
-						</td>
-					<td  width="150px"><label style="margin-left:0px;">Assignment type<em style="font-style:normal;color:red;">*</em></label></td>
-								   
-						<td>
-							<?php
-							$fgmembersite->DBLogin();
-							$result_state=mysql_query("select * from assignment_type");
-							echo '<select name="assignment_type" id="assignment_type" class="selectbox">';
-							echo '<option value="0">Please select a  assignment type</option>';
+		<td>
+	<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly ="true"/></span>
+		</td>
+    </tr>
+			<tr height="30">
+		<td width="128">Assignment Type*</td>
+	
+		<td>
+		<?php 
+		$fgmembersite->DBLogin();
+		$result_state=mysql_query("select * from assignment_type");
+							echo '<select name="assignment_type" id="assignment_type" style="width:80px;" tabindex="4">';
+							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{
 							echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
 
 							}
 							echo '</select>';
-							?>
-						</td>
-						
-						<td  width="150px"><label style="margin-left:0px;">From date<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='from_date' id='from_date' class="textbox"/>
-						</td>
-			
-					</tr>
-					<tr>
-						<td  width="150px"><label style="margin-left:0px;">To date<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='to_date' id='to_date' class="textbox"/>
-						</td>
-
-					<td  width="150px"><label style="margin-left:0px;">Assignment description<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<textarea id="desc" name="desc" class="areatext"></textarea>
-						</td>						
-					
-						
-						
-					</tr>
-					
-									
-		<tr >
-            <td  width="150px" >&nbsp;</td>
-            <td align="center" colspan="5">
-	<br/><br/><br/><br/><br/><br/><br/><br/>
-			<input type='submit'  class="flatbutton" name='save' id="save" value='Save'/>
-			<input type='button'  class="flatbutton" name='view' id="view" value='View' onclick="location.href='view_vehicle_assignment.php'"/>
-	
-            </td>
-        </tr>
+			?>
+		</td>
+    </tr>
+	<tr height="30">
+			<td width="148">To Date</td>
+			<td>
+		<input type='text' name='to_date' id='to_date' class="datepicker" tabindex="6" value="<?php echo date('d-m-Y');?>"/>
 		
-		
-                </table>
-                </form>            </td>
-
-        </tr>
-
+			</td>
+			</tr>
+		</table><!-- end--->		
+</fieldset>
 
 
-
-    </table>
-	</form>
-
-
-
-</div>
-</div>
-
+<?php if($_GET['success']=="update") { ?>
+	<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
+	?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
+<?php } 
+if($_GET['success']=="error") { ?>
+	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+<?php }?>
+<br/>
+</div><!--- mytableformreceipt1 div end-->
+<table width="100%" style="clear:both">
+  <tbody><tr height="50px;" align="center">
+	<td><input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='ams_temp.php?id=3'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='view_vehicle_assignment.php'" class="buttons" value="View" name="View">
+	</td>
+  </tr>
+  <tr>
+  <td>
+  <div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
+  <?php if($_GET['success']=="create") 
+{
+?>
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
+?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
+<?php }?>
+  </td>
+  </tr>
+</tbody></table>
+</form>
+</div><!--- mainarea  div end-->
 <?php
 $footerfile='./layout/footer.php';
-if(file_exists($footerfile))
-{
-include_once($footerfile);
-}
-else
-{
-echo _FILENOTFOUNT.$footerfile;
+if(file_exists($footerfile)) {
+	include_once($footerfile);
+} else {
+	echo _FILENOTFOUNT.$footerfile;
 }
 ?>

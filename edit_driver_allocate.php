@@ -191,7 +191,7 @@ while($row = mysql_fetch_array($result))
   <legend><strong>Driver Allocation</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="148">Driver Code</td>
+			<td width="148">Driver Code*</td>
 			<td>
 	<?php
 	$result_state=mysql_query("select * from driver");
