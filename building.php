@@ -1971,8 +1971,7 @@ $(document).ready(function() {
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
-			echo '<option value="'.$row['emp_code'].'">'.$row['emp_code'].'</option>';
-
+				echo '<option value="'.$row['emp_code'].'">'.$row['emp_code'].'</option>';
 			}
 			echo '</select>';
 			?>

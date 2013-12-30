@@ -10,7 +10,7 @@ if(!$fgmembersite->CheckLogin())
 extract($_REQUEST);
 if($_REQUEST['building_name']!='') {
 	$var = @$_REQUEST['building_name'] ;
-	$trimmed = trim($var);	
+	$trimmed = trim($var);
 	$qry="SELECT di.id AS DIID,ge.generator_code AS GE_CODE,ge.description AS GE_NAME,bu.building_code AS BU_CODE,bu.building_name AS BU_NAME,date,transaction_number,diesel_volume,di.currency AS CURR,Diesel_cost FROM `diesel` di LEFT JOIN building bu ON di.building_code = bu.id LEFT JOIN generator ge ON di.generator_code = ge.id WHERE bu.building_name LIKE '%".$trimmed."%'";
 } else { 
 	$qry="SELECT di.id AS DIID,ge.generator_code AS GE_CODE,ge.description AS GE_NAME,bu.building_code AS BU_CODE,bu.building_name  AS BU_NAME,date,transaction_number,diesel_volume,di.currency AS CURR,Diesel_cost FROM `diesel` di LEFT JOIN building bu ON di.building_code = bu.id LEFT JOIN generator ge ON di.generator_code = ge.id"; 

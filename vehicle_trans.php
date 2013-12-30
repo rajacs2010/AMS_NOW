@@ -636,7 +636,7 @@ $(document).live('ready',function() {
 	 <input type="hidden" name="edit_id" id="edit_id" /> <!-- This is the partial saved id of the building table when partial save is completed, it will get the id from the db (ajax) -->
      <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
      <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=3'"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_vehicle_transaction.php'"/></td>
+	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_diesel.php'"/></td>
 	 </td>
      </tr>
   </table>
