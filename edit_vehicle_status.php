@@ -79,21 +79,41 @@ $(function () {
 <?php
 if(isset($_POST['save'])) 
 {
+$edit_id=$_POST['edit_id'];
 $user_id=$_SESSION['user_id'];
 $vehicle_reg_id=$_POST['vehicle_reg_id'];
 $status_id=$_POST['status_id'];
+$current_date=date("Y-m-d H:i:s");
 if ($vehicle_reg_id != "")
 {
-if(!mysql_query('INSERT INTO vehicle_status (vehicle_reg_id,status_id,created_by)VALUES ("'.$vehicle_reg_id.'","'.$status_id.'","'.$user_id.'")'))
+if(!mysql_query('UPDATE vehicle_status SET vehicle_reg_id="'.$vehicle_reg_id.'",status_id="'.$status_id.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
 {
 die('Error: ' . mysql_error());
 }
-	$fgmembersite->RedirectToURL("view_vehicle_status.php?success=create");
+	$fgmembersite->RedirectToURL("view_vehicle_status.php?success=update");
 }
 }
 
 ?>
+<?php
+if(isset($_GET['id']) && intval($_GET['id'])) 
+{
+$id=$_GET['id'];
+$query = "SELECT * FROM vehicle_status where id=$id"; 
 
+$result = mysql_query($query);
+if($result === FALSE) {
+    die(mysql_error()); // TODO: better error handling
+}
+
+while($row = mysql_fetch_array($result))
+{
+	$vehicle_reg_id=$row['vehicle_reg_id'];
+	$status_id=$row['status_id'];
+	
+}
+}
+?>
 <!------------------------------- Form -------------------------------------------------->
 <div id="mainarea"><!--- mainarea  div start-->
 <div class="mcf"></div>
@@ -112,7 +132,12 @@ die('Error: ' . mysql_error());
 					echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{
-					echo '<option value="'.$row['id'].'">'.$row['vehicle_regno'].'</option>';
+					if($row['id'] == $vehicle_reg_id){
+						  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }
+					 echo "<option value='".$row['id']."'".$isSelected.">".$row['vehicle_regno']."</option>";
 
 					}
 					echo '</select>';
@@ -133,7 +158,12 @@ die('Error: ' . mysql_error());
 					echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{
-					echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+					if($row['id'] == $status_id){
+						  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }
+					 echo "<option value='".$row['id']."'".$isSelected.">".$row['name']."</option>";
 
 					}
 					echo '</select>';
@@ -156,6 +186,7 @@ if($_GET['success']=="error") { ?>
 <table width="100%" style="clear:both">
   <tbody><tr height="50px;" align="center">
 	<td><input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type='hidden' name='edit_id' id='edit_id' value='<?php echo $_GET['id'];?>'/>
 		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
 		 <input type="button" onclick="window.location='ams_temp.php?id=3'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
 		 <input type="button" onclick="window.location='view_vehicle_status.php'" class="buttons" value="View" name="View">
