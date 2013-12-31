@@ -706,7 +706,7 @@ if(isset($_FILES["car_reg_attach"]["name"])) {
 		if(!mysql_query('UPDATE vehicle SET vehicle_regno="'.$vregno.'",vehichle_reg_date="'.$vdate.'",vehicle_comp_id="'.$comp_id.'",vehicle_company_name="'.$company_name.'",insurance_number="'.$insurance_number.'",insurance_company="'.$insurance_company.'",insurance_date="'.$insurance_date.'",currency="'.$currency.'",insurance_amount="'.$insurance_amount.'",insurance_duedate="'.$insurance_duedate.'",tax_number="'.$tax_number.'",tax_authority="'.$tax_authority.'",tax_date="'.$tax_date.'",tax_currency="'.$tax_currency.'",tax_amount="'.$tax_amount.'",tax_renewal_date="'.$tax_renewal_date.'",fitness_certificate_no="'.$fit_certificate_no.'",fit_date="'.$fit_date.'",next_inspection_date="'.$next_inspection_date.'",certification_currency="'.$certification_currency.'",fitness_certification_cost="'.$certification_cost.'",pollution_certificate_no="'.$pollution_certificate_no.'",pollution_certificate_date="'.$pollution_certificate_date.'",pollution_inspection_date="'.$pollution_inspection_date.'",pollution_currency="'.$pollution_currency.'",pollution_certificate_cost="'.$pollution_certificate_cost.'",make="'.$make.'",model="'.$model.'",year="'.$year.'",model_currency="'.$model_currency.'",model_cost="'.$model_cost.'",maintain_currency="'.$maintain_currency.'",total_maintain_cost="'.$total_maintain_cost.'",cost_month="'.$cost_month.'",total_fuel_cost="'.$total_fuel_cost.'",cost_month_fuel="'.$cost_month_fuel.'",car_reg_attach="'.$car_reg_attach.'",insurance_attach="'.$insurance_attach.'",tax_attach="'.$tax_attach.'",pollution_attach="'.$pollution_attach.'",fitness_attach="'.$fitness_attach.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" ')) {
 			die('Error: ' . mysql_error());
 		}
-		$fgmembersite->RedirectToURL("view_vehicle_sample.php?success=update");
+		$fgmembersite->RedirectToURL("view_vehicle.php?success=update");
 		echo "&nbsp;";
 	} elseif($edit_id_val != '') {
 		if(!mysql_query('UPDATE vehicle SET vehicle_regno="'.$vregno.'",vehichle_reg_date="'.$vdate.'",vehicle_comp_id="'.$comp_id.'",vehicle_company_name="'.$company_name.'",insurance_number="'.$insurance_number.'",insurance_company="'.$insurance_company.'",insurance_date="'.$insurance_date.'",currency="'.$currency.'",insurance_amount="'.$insurance_amount.'",insurance_duedate="'.$insurance_duedate.'",tax_number="'.$tax_number.'",tax_authority="'.$tax_authority.'",tax_date="'.$tax_date.'",tax_currency="'.$tax_currency.'",tax_amount="'.$tax_amount.'",tax_renewal_date="'.$tax_renewal_date.'",fitness_certificate_no="'.$fit_certificate_no.'",fit_date="'.$fit_date.'",next_inspection_date="'.$next_inspection_date.'",certification_currency="'.$certification_currency.'",fitness_certification_cost="'.$certification_cost.'",pollution_certificate_no="'.$pollution_certificate_no.'",pollution_certificate_date="'.$pollution_certificate_date.'",pollution_inspection_date="'.$pollution_inspection_date.'",pollution_currency="'.$pollution_currency.'",pollution_certificate_cost="'.$pollution_certificate_cost.'",make="'.$make.'",model="'.$model.'",year="'.$year.'",model_currency="'.$model_currency.'",model_cost="'.$model_cost.'",maintain_currency="'.$maintain_currency.'",total_maintain_cost="'.$total_maintain_cost.'",cost_month="'.$cost_month.'",total_fuel_cost="'.$total_fuel_cost.'",cost_month_fuel="'.$cost_month_fuel.'",car_reg_attach="'.$car_reg_attach.'",insurance_attach="'.$insurance_attach.'",tax_attach="'.$tax_attach.'",pollution_attach="'.$pollution_attach.'",fitness_attach="'.$fitness_attach.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" ')) {
@@ -717,7 +717,7 @@ if(isset($_FILES["car_reg_attach"]["name"])) {
 			alert("Data Saved Successfully");
 		</script>
 		<?php
-		$fgmembersite->RedirectToURL("edit_vehicle_sample.php?id=$edit_id&secpage=1");
+		$fgmembersite->RedirectToURL("edit_vehicle.php?id=$edit_id&secpage=1");
 		echo "&nbsp;";
 	}
 }
@@ -1095,10 +1095,14 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		/*alert(currentdate.getFullYear());
-		alert(currentdate.getMonth());
-		alert(currentdate.getDate());*/
-		var currentdateval							=	currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"-"+insurance_duedate.substring(3,5)+"-"+insurance_duedate.substring(0,2)).getTime();
+
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"-"+tax_renewal_date.substring(3,5)+"-"+tax_renewal_date.substring(0,2)).getTime();
+
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+
+		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		
 		//alert(currentdateval);		
 		
 		if(vregno == '') {
@@ -1215,8 +1219,7 @@ $(document).ready(function() {
 			$("#insurance_date").focus();
 			return false;
 		}		
-		if (insurance_duedate < currentdateval && insurance_duedate != currentdateval){
-			alert('edssdfsd');
+		if (insurance_duedateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Ins. Renewal Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1235,7 +1238,7 @@ $(document).ready(function() {
 			$("#tax_date").focus();
 			return false;
 		}
-		if (tax_renewal_date < currentdateval && tax_renewal_date != currentdateval){
+		if (tax_renewal_dateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Tax Renewal Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1289,10 +1292,14 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		/*alert(currentdate.getFullYear());
-		alert(currentdate.getMonth());
-		alert(currentdate.getDate());*/
-		var currentdateval							=	currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"-"+insurance_duedate.substring(3,5)+"-"+insurance_duedate.substring(0,2)).getTime();
+
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"-"+tax_renewal_date.substring(3,5)+"-"+tax_renewal_date.substring(0,2)).getTime();
+
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+
+		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+
 		//alert(currentdateval);		
 		
 		if(vregno == '') {
@@ -1409,8 +1416,8 @@ $(document).ready(function() {
 			$("#insurance_date").focus();
 			return false;
 		}		
-		if (insurance_duedate < currentdateval && insurance_duedate != currentdateval){
-			alert('edssdfsd');
+		if (insurance_duedateval < currentdatevalue){
+			//alert('edssdfsd');
 			$('.myalignbuild').html('ERR : Ins. Renewal Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1429,7 +1436,7 @@ $(document).ready(function() {
 			$("#tax_date").focus();
 			return false;
 		}
-		if (tax_renewal_date < currentdateval && tax_renewal_date != currentdateval){
+		if (tax_renewal_dateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Tax Renewal Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1448,7 +1455,8 @@ $(document).ready(function() {
 	$("#seca").on("click", function() {
 		//alert("232");
 		var fit_date					=	$("#fit_date").val();
-		var next_inspection_date		=	$("#next_inspection_date").val();	
+		var next_inspection_date		=	$("#next_inspection_date").val();
+		//alert(next_inspection_date);	
 		var pollution_certificate_date	=	$("#pollution_certificate_date").val();
 		var pollution_inspection_date	=	$("#pollution_inspection_date").val();
 		var fit_certificate_no			=	$("#fit_certificate_no").val();				
@@ -1460,11 +1468,14 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		/*alert(currentdate.getFullYear());
-		alert(currentdate.getMonth());
-		alert(currentdate.getDate());*/
-		var currentdateval							=	currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
-		//alert(currentdateval);
+		var next_inspection_dateval 	=	new Date(next_inspection_date.substring(6,10)+"-"+next_inspection_date.substring(3,5)+"-"+next_inspection_date.substring(0,2)).getTime();
+
+		var pollution_inspection_dateval=	new Date(pollution_inspection_date.substring(6,10)+"-"+pollution_inspection_date.substring(3,5)+"-"+pollution_inspection_date.substring(0,2)).getTime();
+
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+
+		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		
 		
 		if (fit_date > currentdateval){
 			$('.myalignbuild').html('ERR : Fitness Date Greater Than Today');
@@ -1475,7 +1486,7 @@ $(document).ready(function() {
 			$("#fit_date").focus();
 			return false;
 		}
-		if (next_inspection_date < currentdateval && next_inspection_date != currentdateval){
+		if (next_inspection_dateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Fitness Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1494,7 +1505,7 @@ $(document).ready(function() {
 			$("#pollution_certificate_date").focus();
 			return false;
 		}
-		if (pollution_inspection_date < currentdateval && pollution_inspection_date != currentdateval){
+		if (pollution_inspection_dateval < currentdatevalue){
 			$('.myalignbuild').html('ERR : Pollution Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {

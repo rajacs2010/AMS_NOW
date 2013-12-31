@@ -59,7 +59,6 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 		$others					=	$_POST['bought_id'];
 	} 
 	$user_id					=	$_SESSION['user_id'];
-	$fgmembersite->DBLogin();
 	//echo 'INSERT INTO vehicle_transaction SET vehicle_reg_id="'.$vehicle_reg_id.'",transaction_date="'.$transaction_date.'",transaction_type_id="'.$transaction_type_id.'",transaction_number="'.$transaction_number.'",vendor_id="'.$vendor_id.'",uom_id="'.$uom_id.'",units="'.$units.'",currency_id="'.$currency_id.'",rate="'.$rate.'",cost="'.$cost.'",trans_desc="'.$desc.'",bought_by="'.$bought_by.'",emp_code="'.$emp_code.'",driver_code_id="'.$driver_code_id.'",others="'.$others.'",created_by="'.$user_id.'" '; 
 	//exit;
 	if(!mysql_query('INSERT INTO vehicle_transaction SET vehicle_reg_id="'.$vehicle_reg_id.'",transaction_date="'.$transaction_date.'",transaction_type_id="'.$transaction_type_id.'",transaction_number="'.$transaction_number.'",vendor_id="'.$vendor_id.'",uom_id="'.$uom_id.'",units="'.$units.'",currency_id="'.$currency_id.'",rate="'.$rate.'",cost="'.$cost.'",trans_desc="'.$desc.'",bought_by="'.$bought_by.'",emp_code="'.$emp_code.'",driver_code_id="'.$driver_code_id.'",others="'.$others.'",created_by="'.$user_id.'" ')) {
@@ -68,7 +67,6 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	echo'<script> window.location="view_vehicle_transaction.php?success=true"; </script> ';
 }
 ?>
-<link href="css/popup.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 .confirmMAp {
 	margin:0 auto;
@@ -155,7 +153,6 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 }
 </style>
 <script type="text/javascript" language="javascript">
-
 $(document).live('ready',function() {
 	$("#vendor_id").change(function(event){
 		var selvalue_vendor_id=document.getElementById("vendor_id").value;

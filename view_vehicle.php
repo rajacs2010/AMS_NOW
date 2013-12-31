@@ -213,7 +213,7 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 								
 				<td align="right" nowrap="nowrap">
 
-				<a href="edit_vehicle_sample.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="edit_vehicle.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
 				<!-- <a href="view_building.php?id=<?php echo $fetch['id'];?>&del=del" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a> -->
 				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['id']; ?>','<?php echo $fgmembersite->upperstate($fetch['vehicle_company_name']); ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
 				</td>
