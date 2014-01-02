@@ -73,4 +73,16 @@ while($row = mysql_fetch_array($result_emp_id))
 <input type='text' name='leadername' id='leadername' class="textbox" value="<?php echo $first_name; ?>" readonly="true"/>
 <?php
 }
+if($_GET["selvalue_incharge_empcode_driver"])
+{
+$selvalue=$_GET["selvalue_incharge_empcode_driver"];
+$result=mysql_query("SELECT emp_name from driver where id=$selvalue");
+						   while($row=mysql_fetch_array($result))
+							{
+							$emp_name=$row['emp_name'];
+							}
+?>
+<input type='text' name='leadername' id='leadername' value="<?php echo $emp_name; ?>" readonly="true"/>
+<?php
+}
 ?>
