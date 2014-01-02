@@ -301,7 +301,7 @@ while($row = mysql_fetch_array($result))
 			?>
 			<tr>
 				
-				<td><?php echo $fetch['name'];?></td>
+				<td><?php echo $fgmembersite->upperstate($fetch['name']);?></td>
 				
 				<td align="right">
 				<a href="status.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>

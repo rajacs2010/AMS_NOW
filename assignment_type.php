@@ -215,7 +215,7 @@ while($row = mysql_fetch_array($result))
 <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" id="validation"  onsubmit="return validateForm();">
 <table>
   <tr height="60px">
-     <td class="pclr" width="100">Assignment Type*</td>
+     <td class="pclr" width="100" nowrap="nowrap">&nbsp;Assignment Type*&nbsp;&nbsp;</td>
      <td>
 	 
 	 <?php if(isset($_GET['id'])){ ?>
@@ -301,7 +301,7 @@ while($row = mysql_fetch_array($result))
 			?>
 			<tr>
 				
-				<td><?php echo $fetch['name'];?></td>
+				<td><?php echo $fgmembersite->upperstate($fetch['name']);?></td>
 				
 				<td align="right">
 				<a href="assignment_type.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>
