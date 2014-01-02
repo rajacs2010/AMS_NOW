@@ -41,6 +41,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 		   <li><a href="status.php">Status</a>
 		   <li><a href="transaction_type.php">Transaction Type</a>
 		   <li><a href="department.php">Division/Department</a>
+		   <li><a href="uom.php">Uom</a>
       </ul>
 </li>
           <!--  <li><a href="../valueSets/branch.php">Branch</a></li>
