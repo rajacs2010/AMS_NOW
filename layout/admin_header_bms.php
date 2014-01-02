@@ -40,6 +40,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 		   <li><a href="city.php">City</a>
 		   <li><a href="building_type.php">Building Type</a>
 		   <li><a href="currency.php">Currency</a>
+		   <li><a href="status_bms.php">Status</a>
       </ul>
 </li>
           <!--  <li><a href="../valueSets/branch.php">Branch</a></li>

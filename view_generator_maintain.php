@@ -106,9 +106,9 @@ if(isset($_GET['delete_id']) && intval($_GET['delete_id'])) {
 if($_REQUEST['searchname']!='') {
 	$var = @$_REQUEST['searchname'] ;
 	$trimmed = trim($var);	
-	$qry="SELECT a.id,a.status,a.due_date,a.done_date,a.next_due_date,b.generator_code,b.description FROM generator_maintain a ,generator b  where  a.generator_code=b.id and a.status like '%".$trimmed."%'";
+	$qry="SELECT a.id,a.status,a.due_date,a.done_date,a.next_due_date,b.generator_code,b.description,c.name FROM generator_maintain a ,generator b,status_bms c  where  a.generator_code=b.id and a.status=c.id and c.name like '%".$trimmed."%'";
 } else { 
-	$qry="SELECT a.id,a.status,a.due_date,a.done_date,a.next_due_date,b.generator_code,b.description FROM generator_maintain a ,generator b  where  a.generator_code=b.id"; 
+	$qry="SELECT a.id,a.status,a.due_date,a.done_date,a.next_due_date,b.generator_code,b.description,c.name FROM generator_maintain a ,generator b,status_bms c  where  a.generator_code=b.id and a.status=c.id"; 
 }
 $results=mysql_query($qry);
 $num_rows= mysql_num_rows($results);			
@@ -212,7 +212,7 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 				<td><?php echo $fetch['generator_code'];?></td>
 				<td><?php echo $fgmembersite->upperstate($fetch['description']); ?></td>
 				<td><?php echo $fetch['due_date'];?></td>
-				<td><?php echo $fetch['status'];?></td>
+				<td><?php echo $fetch['name'];?></td>
 				<td><?php echo $fetch['done_date'];?></td>
 				<td><?php echo $fetch['next_due_date'];?></td>	
 				<td >

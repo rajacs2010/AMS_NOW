@@ -76,8 +76,8 @@ function validateForm() {
 		return false;
 	}	
 	var status=document.getElementById("status");
-	if(status.value=="") {
-		$('.myalignbuild').html('ERR 0009 : Enter Status');
+	if(status.value==0) {
+		$('.myalignbuild').html('ERR 0009 : Select Status');
 		$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
 					$('#errormsgbuild').hide();
@@ -110,7 +110,7 @@ $(function () {
 	$('#clear').click(function(event) {
 		$('#generator_code').val()=0;
 		$('#mduedate').val()="";
-		$('#status').val()="";
+		$('#status').val()=0;
 		$('#donedate').val()="";
 		$('#nextduedate').val()="";
 		$('#desc').val()="";	
@@ -214,8 +214,20 @@ if(isset($_POST['save'])) {
 			 <td width="120">Status*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
-				
-				<input type="text" name="status" id="status" size="30" autocomplete='off' tabindex="3" value="<?php echo $status;?>"  />
+				<?php
+	$result_state=mysql_query("SELECT id,name from status_bms");
+				echo '<select name="status" id="status" tabindex="3">';
+				echo '<option value="0">--Select--</option>';
+				while($row=mysql_fetch_array($result_state)) {
+					if($row['id'] == $status) {
+						  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+					} else {
+						  $isSelected = ''; // else we remove any tag
+					}
+					echo "<option value='".$row['id']."'".$isSelected.">".$row['name']."</option>";
+					}
+				echo '</select>';
+?>
 				
 			  </td>
 		   </tr>
