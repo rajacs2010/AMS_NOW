@@ -303,19 +303,19 @@ $state_name=$row['state_name'];
     <tr height="30">
     <td width="120">Address Line 1</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" <?php echo $address1;?> /></td>
+    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" value="<?php echo $address1;?>" /></td>
     </tr>
     
 	<tr height="30">
      <td width="120" >Line 2</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" <?php echo $address2;?> /></td>
+     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" value="<?php echo $address2;?>" /></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Line 3</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" <?php echo $address3;?> /></td>
+     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" value="<?php echo $address3;?>" /></td>
 	</tr>
 </table>
    </td>
