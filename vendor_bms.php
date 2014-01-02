@@ -8,7 +8,7 @@ if(!$fgmembersite->CheckLogin()) {
     exit;
 }
 if ($fgmembersite->usertype() == 1) {
-	$header_file='./layout/admin_header_fms.php';
+	$header_file='./layout/admin_header_bms.php';
 }
 if(file_exists($header_file)) {
 	include_once($header_file);
@@ -119,11 +119,11 @@ $contact_number=$_POST['contact_number'];
 $alt_contact_number=$_POST['alt_contact_number'];
 $user_id=$_SESSION['user_id'];
 $fgmembersite->DBLogin();
-if(!mysql_query('insert into vendor SET vendor_code="'.$vendor_code.'",name="'.$vendor_name.'",address1="'.$address1.'",address2="'.$address2.'",address3="'.$address3.'",city_id="'.$city_vendor.'",contact_number="'.$contact_number.'",alt_contact_number="'.$alt_contact_number.'",created_by="'.$user_id.'" '))
+if(!mysql_query('insert into vendor_bms SET vendor_code="'.$vendor_code.'",name="'.$vendor_name.'",address1="'.$address1.'",address2="'.$address2.'",address3="'.$address3.'",city_id="'.$city_vendor.'",contact_number="'.$contact_number.'",alt_contact_number="'.$alt_contact_number.'",created_by="'.$user_id.'" '))
 {
 die('Error: ' . mysql_error());
 }
-	$fgmembersite->RedirectToURL("view_vendor.php?success=create");
+	$fgmembersite->RedirectToURL("view_vendor_bms.php?success=create");
 }
 
 ?>
@@ -142,7 +142,7 @@ die('Error: ' . mysql_error());
 			<td>
 			<?php
 		 if(!isset($_GET[id]) && $_GET[id] == '') {
-			$cusid					=	"SELECT vendor_code FROM  vendor ORDER BY id DESC";			
+			$cusid					=	"SELECT vendor_code FROM  vendor_bms ORDER BY id DESC";			
 			$cusold					=	mysql_query($cusid) or die(mysql_error());
 			$cuscnt					=	mysql_num_rows($cusold);
 			//$cuscnt					=	0; // comment if live
@@ -150,7 +150,7 @@ die('Error: ' . mysql_error());
 				$row_cus					  =	 mysql_fetch_array($cusold);
 				$cusnumber	  =	$row_cus['vendor_code'];
 
-				$getcusno						=	abs(str_replace("VE",'',strstr($cusnumber,"VE")));
+				$getcusno						=	abs(str_replace("VB",'',strstr($cusnumber,"VB")));
 				$getcusno++;
 				if($getcusno < 10) {
 					$createdcode	=	"00".$getcusno;
@@ -160,9 +160,9 @@ die('Error: ' . mysql_error());
 					$createdcode	=	$getcusno;
 				}
 
-				$customer_code				=	"VE".$createdcode;
+				$customer_code				=	"VB".$createdcode;
 			} else {
-				$customer_code				=	"VE001";
+				$customer_code				=	"VB001";
 			}
 		}
 	?>
@@ -278,8 +278,8 @@ if($_GET['success']=="error") { ?>
   <tbody><tr height="50px;" align="center">
 	<td><input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
 		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
-		 <input type="button" onclick="window.location='ams_temp.php?id=3'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
-		 <input type="button" onclick="window.location='view_vendor.php'" class="buttons" value="View" name="View">
+		 <input type="button" onclick="window.location='ams_temp.php?id=2'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='view_vendor_bms.php'" class="buttons" value="View" name="View">
 	</td>
   </tr>
   <tr>

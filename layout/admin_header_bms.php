@@ -66,6 +66,7 @@ error_reporting(E_ALL & ~E_NOTICE);
  <li><a href="#"><span style="padding-left:10px;">MASTER DATA</span></a>
     <ul>
            <li><a href="building.php">Building</a></li>
+		   <li><a href="vendor_bms.php">Vendor</a></li>
             <li><a href="generator.php">Generator</a></li>
             <li><a href="generator_maintain.php">Generator Maintenance</a></li>
             <li><a href="diesel.php">Diesel</a></li>

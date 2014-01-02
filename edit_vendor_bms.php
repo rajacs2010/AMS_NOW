@@ -8,7 +8,7 @@ if(!$fgmembersite->CheckLogin()) {
     exit;
 }
 if ($fgmembersite->usertype() == 1) {
-	$header_file='./layout/admin_header_fms.php';
+	$header_file='./layout/admin_header_bms.php';
 }
 if(file_exists($header_file)) {
 	include_once($header_file);
@@ -18,7 +18,6 @@ if(file_exists($header_file)) {
 }
 ?>
 <script>
-
 $(function () {
 	$('#closebutton').button({
 		icons: {
@@ -32,7 +31,11 @@ $(function () {
 		return false;
 	});		
 });
-
+$(function () {		
+	$('#clear').click(function(event) {
+		$('#desc').val()="";
+	});		
+});
 </script>
 <style>
 #closebutton {
@@ -44,7 +47,21 @@ $(function () {
     top: -35px;
 }
 </style>
-<script>  
+
+<script>	
+	  $(document).ready(function() {
+
+			var selvalue=document.getElementById("city").value;
+			if (selvalue != 0) {
+				$('#display_state').load('ajax_building.php?selvalue='+selvalue);
+			}
+			else {
+				document.getElementById("state").value = "";			
+			}
+
+		});	
+	  </script>
+<script>	
 	  $(document).ready(function() {
 	$("#city").change(function(event) {
 			var selvalue=document.getElementById("city").value;
@@ -103,7 +120,7 @@ $(function () {
 		$('#licence_number').val()="";	
 		$('#address1').val()="";	
 		$('#address2').val()="";
-		$('#address3').val()="";		
+		$('#address3').val()="";			
 	});		
 });
 </script>
@@ -118,20 +135,45 @@ $city_vendor=$_POST['city'];
 $contact_number=$_POST['contact_number'];
 $alt_contact_number=$_POST['alt_contact_number'];
 $user_id=$_SESSION['user_id'];
+$edit_id=$_POST['edit_id'];
+$current_date=date("Y-m-d H:i:s");
 $fgmembersite->DBLogin();
-if(!mysql_query('insert into vendor SET vendor_code="'.$vendor_code.'",name="'.$vendor_name.'",address1="'.$address1.'",address2="'.$address2.'",address3="'.$address3.'",city_id="'.$city_vendor.'",contact_number="'.$contact_number.'",alt_contact_number="'.$alt_contact_number.'",created_by="'.$user_id.'" '))
+if(!mysql_query('update vendor_bms SET vendor_code="'.$vendor_code.'",name="'.$vendor_name.'",address1="'.$address1.'",address2="'.$address2.'",address3="'.$address3.'",city_id="'.$city_vendor.'",contact_number="'.$contact_number.'",alt_contact_number="'.$alt_contact_number.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
 {
 die('Error: ' . mysql_error());
 }
-	$fgmembersite->RedirectToURL("view_vendor.php?success=create");
+	$fgmembersite->RedirectToURL("view_vendor_bms.php?success=update");
 }
 
 ?>
+<?php
+if(isset($_GET['id']) && intval($_GET['id'])) 
+{
+$id=$_GET['id'];
+$query = "SELECT * from vendor_bms where id=$id"; 
 
+$result = mysql_query($query);
+if($result === FALSE) {
+    die(mysql_error()); // TODO: better error handling
+}
+
+while($row = mysql_fetch_array($result))
+{
+$vendor_code=$row['vendor_code'];
+$name=$row['name'];
+$address1=$row['address1'];
+$address2=$row['address2'];
+$address3=$row['address3'];
+$city_id=$row['city_id'];
+$contact_number=$row['contact_number'];
+$alt_contact_number=$row['alt_contact_number'];
+}
+}
+?>
 <!------------------------------- Form -------------------------------------------------->
 <div id="mainarea"><!--- mainarea  div start-->
 <div class="mcf"></div>
-<div align="center" class="headingsgr">Vendor</div>
+<div align="center" class="headingsgr">VENDOR</div>
 <div id="mytableformreceipt1" align="center"><!--- mytableformreceipt1 div start-->
 <form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 <fieldset class="alignment" align="left">
@@ -140,33 +182,7 @@ die('Error: ' . mysql_error());
 			<tr height="30">
 			<td width="148">Vendor Code</td>
 			<td>
-			<?php
-		 if(!isset($_GET[id]) && $_GET[id] == '') {
-			$cusid					=	"SELECT vendor_code FROM  vendor ORDER BY id DESC";			
-			$cusold					=	mysql_query($cusid) or die(mysql_error());
-			$cuscnt					=	mysql_num_rows($cusold);
-			//$cuscnt					=	0; // comment if live
-			if($cuscnt > 0) {
-				$row_cus					  =	 mysql_fetch_array($cusold);
-				$cusnumber	  =	$row_cus['vendor_code'];
-
-				$getcusno						=	abs(str_replace("VE",'',strstr($cusnumber,"VE")));
-				$getcusno++;
-				if($getcusno < 10) {
-					$createdcode	=	"00".$getcusno;
-				} else if($getcusno < 100) {
-					$createdcode	=	"0".$getcusno;
-				} else {
-					$createdcode	=	$getcusno;
-				}
-
-				$customer_code				=	"VE".$createdcode;
-			} else {
-				$customer_code				=	"VE001";
-			}
-		}
-	?>
-	<input type='text' name='code' id='code'  value="<?php echo $customer_code;?>" readonly="true" size="7"/>
+	<input type='text' name='code' id='code'  value="<?php echo $vendor_code;?>" readonly="true" size="7"/>
 			</td>
 			</tr>
 </table><!-- end--->
@@ -175,7 +191,8 @@ die('Error: ' . mysql_error());
 			<tr height="30">
 		<td width="128">Vendor Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='name' id='name' tabindex="1"/>
+		<td>
+		<input type='text' name='name' id='name' tabindex="1" value="<?php echo $name;?>"/>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -191,19 +208,19 @@ die('Error: ' . mysql_error());
     <tr height="30">
     <td width="120">Address Line 1</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" class="areatext" /></td>
+    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" value="<?php echo $address1;?>" /></td>
     </tr>
     
 	<tr height="30">
      <td width="120" >Line 2</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" class="areatext" /></td>
+     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" value="<?php echo $address2;?>" /></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Line 3</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" class="areatext" /></td>
+     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" value="<?php echo $address3;?>" /></td>
 	</tr>
 </table>
    </td>
@@ -224,7 +241,12 @@ die('Error: ' . mysql_error());
 			echo '<select name="city" id="city" tabindex="5" >';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+				if($row['id'] == $city_id){
+							  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+						 } else {
+							  $isSelected = ''; // else we remove any tag
+						 }
+						 echo "<option value='".$row['id']."'".$isSelected.">".$row['name']."</option>";
 			}
 			echo '</select>';
 			?>
@@ -248,7 +270,7 @@ die('Error: ' . mysql_error());
 		
   <tr height="30">
     <td width="148">Contact Number*</td>
-    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" /></td>
+    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" value="<?php echo $contact_number;?>"/></td>
     </tr>
 	
 </table><!-- end--->
@@ -257,7 +279,7 @@ die('Error: ' . mysql_error());
 		
 <tr height="30">
      <td width="148" nowrap="nowrap">Alternate Contact No.</td>
-     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="7"/></td>
+     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="7" value="<?php echo $alt_contact_number;?>"/></td>
 	</tr>
 	
 	
@@ -277,9 +299,10 @@ if($_GET['success']=="error") { ?>
 <table width="100%" style="clear:both">
   <tbody><tr height="50px;" align="center">
 	<td><input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="hidden" name="edit_id" id="edit_id" value="<?php echo $_GET['id'];?>"/>
 		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
-		 <input type="button" onclick="window.location='ams_temp.php?id=3'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
-		 <input type="button" onclick="window.location='view_vendor.php'" class="buttons" value="View" name="View">
+		 <input type="button" onclick="window.location='ams_temp.php?id=2'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='view_vendor_bms.php'" class="buttons" value="View" name="View">
 	</td>
   </tr>
   <tr>

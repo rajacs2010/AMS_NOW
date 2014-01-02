@@ -660,7 +660,7 @@ $renewaldate=$row['contract_renewaldate'];
 			 <td>
 				
 				<?php
-									$result_state=mysql_query("SELECT id,vendor_code from vendor");
+									$result_state=mysql_query("SELECT id,vendor_code from vendor_bms");
 									echo '<select name="vendor_code" id="vendor_code" tabindex="12" >';
 									echo '<option value="0">--Select--</option>';
 									while($row=mysql_fetch_array($result_state))
@@ -989,7 +989,7 @@ $renewaldate=$row['contract_renewaldate'];
 			 <td>
 				
 				<?php
-									$result_state=mysql_query("SELECT id,vendor_code from vendor");
+									$result_state=mysql_query("SELECT id,vendor_code from vendor_bms");
 									echo '<select name="vendor_code_landlord" id="vendor_code_landlord" tabindex="11" >';
 									echo '<option value="0">--Select--</option>';
 									while($row=mysql_fetch_array($result_state))
