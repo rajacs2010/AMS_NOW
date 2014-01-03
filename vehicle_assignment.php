@@ -234,7 +234,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 		</td>
     </tr>
 	<tr height="30">
-			<td width="148">Driver Code</td>
+			<td width="148">Driver Code*</td>
 			<td>
 	<?php
 	$result_state=mysql_query("select * from driver");
@@ -253,21 +253,21 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 			<tr height="30">
 			<td width="148">Date</td>
 			<td>
-		<input type='text' name='mdate' id='mdate' class="datepicker"  tabindex="3" value="<?php echo date('d-m-Y');?>"/>
+		<input type='text' name='mdate' id='mdate' class="datepicker" size="10" tabindex="3" value="<?php echo date('d-m-Y');?>"/>
 		
 			</td>
 			</tr>
 			<tr height="30">
 			<td width="148">From Date</td>
 			<td>
-		<input type='text' name='from_date' id='from_date' tabindex="5" class="datepicker" value="<?php echo date('d-m-Y');?>"/>
+		<input type='text' name='from_date' id='from_date' tabindex="5" size="10" class="datepicker" value="<?php echo date('d-m-Y');?>"/>
 		
 			</td>
 			</tr>
 			<tr height="30">
 			<td width="148">Assignment Description</td>
 			<td>
-		<input type='text' name='desc' id='desc' autocomplete="off" tabindex="7"/>
+		<input type='text' name='desc' id='desc' autocomplete="off" tabindex="7" size="30"/>
 		
 			</td>
 			</tr> 
@@ -321,7 +321,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 	<tr height="30">
 			<td width="148">To Date</td>
 			<td>
-		<input type='text' name='to_date' id='to_date' class="datepicker" tabindex="6" value="<?php echo date('d-m-Y');?>"/>
+		<input type='text' name='to_date' id='to_date' class="datepicker" tabindex="6" size="10" value="<?php echo date('d-m-Y');?>"/>
 		
 			</td>
 			</tr>

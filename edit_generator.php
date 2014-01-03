@@ -547,7 +547,7 @@ $renewaldate=$row['contract_renewaldate'];
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				
-				<input type="text" name="model" id="model" size="30" autocomplete='off' tabindex="5"  value="<?php echo $model;?>"/>
+				<input type="text" name="model" id="model" size="10" autocomplete='off' tabindex="5"  value="<?php echo $model;?>"/>
 				
 			  </td>
 			</tr>
@@ -574,7 +574,7 @@ $renewaldate=$row['contract_renewaldate'];
 				 <td width="120">Make*</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
-					<input type='text' name='make' id='make' size="30" tabindex="4" value="<?php echo $make;?>" autocomplete="off" />
+					<input type='text' name='make' id='make' size="10" tabindex="4" value="<?php echo $make;?>" autocomplete="off" />
 				  </td>
 				</tr>
 				<tr height="30">
@@ -582,7 +582,7 @@ $renewaldate=$row['contract_renewaldate'];
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
 					
-					<input type='text' name='rating' id='rating' size="30" tabindex="6" value="<?php echo $rating;?>" autocomplete="off"/>
+					<input type='text' name='rating' id='rating' size="10" tabindex="6" value="<?php echo $rating;?>" autocomplete="off"/>
 					
 				  </td>
 				</tr>
@@ -601,21 +601,22 @@ $renewaldate=$row['contract_renewaldate'];
   <tr height="30">
   <td width="142">Owned/Landlord/Rented*</td>
   <td>
-  <select name="genrator_status" id="genrator_status" tabindex="7">
-		<option value="0">--Select--</option>
 		<?php 
-			if ($genrator_status=='1') { ?>
-				<option value="1" selected="selected">Owned</option>
-			<?php } else { ?>
-				 <option value="1">Owned</option>
+			if ($genrator_status=='1') 
+				{ ?>
+			
+				<input type='hidden' name='genrator_status' id='genrator_status' value="<?php echo "1";?>" size="15"  readonly="true" tabindex="7" autocomplete="off"/>
+				<input type='text' name='genrator_status1' id='genrator_status1' value="<?php echo "Owned";?>" size="7"  readonly="true" tabindex="7" autocomplete="off"/>
+			<?php 
+				}
+			if($genrator_status=='2') 
+				{ 	?>
+		
+				<input type='hidden' name='genrator_status' id='genrator_status' value="<?php echo "2";?>" size="15"  readonly="true" tabindex="7" autocomplete="off"/>
+				<input type='text' name='genrator_status1' id='genrator_status1' value="<?php echo "Landlord/Rented";?>" size="15"  readonly="true" tabindex="7" autocomplete="off"/>
 			<?php }
-			if($genrator_status=='2') { ?>
-				<option value="2" selected="selected">Landlord/Rented</option>
-			<?php } else { ?>
-				 <option value="2">Landlord/Rented</option>
-			<?php } 
 		?>							
-	</select>
+	
   </td>
  </tr>
 </table> 
@@ -642,14 +643,14 @@ $renewaldate=$row['contract_renewaldate'];
 			?>
 			<td><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
 			<td>			
-				<input type='text' name='total_currency' id='total_currency' value="<?php echo $currency_name;?>" size="7"  readonly="true" tabindex="9" autocomplete="off"/>					
+				<input type='text' name='total_currency' id='total_currency' value="<?php echo $currency_name;?>" size="4"  readonly="true" tabindex="9" autocomplete="off"/>					
 			 </td>
 		   </tr>
 			<tr height="30">
 				<td width="120">Date Of Purchase*</td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				<td>			
-					<input type='text' name='datepurchase' id='datepurchase' class="datepicker" size="15" tabindex="8" value="<?php echo $datepurchase;?>" autocomplete="off"/>			
+					<input type='text' name='datepurchase' id='datepurchase' class="datepicker" size="10" tabindex="8" value="<?php echo $datepurchase;?>" autocomplete="off"/>			
 				</td>
 			</tr>
 			
@@ -693,7 +694,7 @@ $renewaldate=$row['contract_renewaldate'];
 			 <td><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
 			 <td>
 			
-							<input type='text' name='total_currency' id='total_currency' value="<?php echo $currency_name;?>" size="7"  readonly="true" tabindex="9" autocomplete="off"/>	
+							<input type='text' name='total_currency' id='total_currency' value="<?php echo $currency_name;?>" size="4"  readonly="true" tabindex="9" autocomplete="off"/>	
 				
 			  </td>
 			</tr>
@@ -703,7 +704,7 @@ $renewaldate=$row['contract_renewaldate'];
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				
-				<input type="text" name="renewaldate" id="renewaldate"  class="datepicker" size="15" autocomplete='off' tabindex="16" value="<?php echo $renewaldate;?>" />
+				<input type="text" name="renewaldate" id="renewaldate"  class="datepicker" size="10" autocomplete='off' tabindex="16" value="<?php echo $renewaldate;?>" />
 				
 			  </td>
 			</tr>
@@ -834,7 +835,7 @@ $renewaldate=$row['contract_renewaldate'];
 							}
 							
 							?>
-							<input type='text' name='maintain_currency' id='maintain_currency' value="<?php echo $currency_name;?>" size="7" tabindex="12" readonly="true"/>	
+							<input type='text' name='maintain_currency' id='maintain_currency' value="<?php echo $currency_name;?>" size="4" tabindex="12" readonly="true"/>	
 				
 			  </td>
 			</tr>
@@ -1021,7 +1022,7 @@ $renewaldate=$row['contract_renewaldate'];
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				
-				<input type="text" name="renewaldate_landlord" id="renewaldate_landlord"  class="datepicker" size="15" autocomplete='off' tabindex="15" value="<?php echo $renewaldate;?>"/>
+				<input type="text" name="renewaldate_landlord" id="renewaldate_landlord"  class="datepicker" size="10" autocomplete='off' tabindex="15" value="<?php echo $renewaldate;?>"/>
 				
 			  </td>
 			</tr>

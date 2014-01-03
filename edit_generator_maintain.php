@@ -191,7 +191,7 @@ if(isset($_POST['save'])) {
 		  <td>
 		  <table>
 		<tr height="30">
-			<td width="120">Generator Code</td>
+			<td width="120">Generator Code*</td>
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td>
 			<?php
@@ -232,13 +232,9 @@ if(isset($_POST['save'])) {
 			  </td>
 		   </tr>
 		   <tr height="30">
-			 <td width="120">Next Due Date*</td>
-			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			 <td>
-				
-				<input type="text" name="nextduedate" id="nextduedate" size="30" autocomplete='off' tabindex="5" class="datepicker"  value="<?php echo $next_due_date;?>"/>
-				
-			  </td>
+		    <td width="120">Done Date*</td>
+					 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					 <td><input type='text' name='donedate' id='donedate' size="10" tabindex="5" autocomplete="off" class="datepicker" value="<?php echo $done_date;?>"/></td>
 			</tr>
 			<tr height="30">
 			 <td width="120">Currency</td>
@@ -252,7 +248,7 @@ if(isset($_POST['save'])) {
 				?>
 			 <td><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
 			 <td>			
-				<input type='text' name='add_currency' id='add_currency' value="<?php echo $currency_name;?>" size="7"  readonly="true" tabindex="7" autocomplete="off"/>				
+				<input type='text' name='add_currency' id='add_currency' value="<?php echo $currency_name;?>" size="4"  readonly="true" tabindex="7" autocomplete="off"/>				
 			 </td>
 			</tr>
 		   </table>
@@ -268,22 +264,26 @@ if(isset($_POST['save'])) {
 				<tr height="30">
 					<td width="120">Maintenance Due Date*</td>
 					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
-					<td><input type="text" name="mduedate" id="mduedate" size="30" autocomplete='off' tabindex="2" class="datepicker" value="<?php echo $due_date;?>"/></td>
+					<td><input type="text" name="mduedate" id="mduedate" size="10" autocomplete='off' tabindex="2" class="datepicker" value="<?php echo $due_date;?>"/></td>
 				</tr>				
 				<tr height="30">
-					 <td width="120">Done Date*</td>
+					   <td width="120">Description</td>
 					 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					 <td><input type='text' name='donedate' id='donedate' size="30" tabindex="4" autocomplete="off" class="datepicker" value="<?php echo $done_date;?>"/></td>
+					 <td><input type='text' name='desc' id='desc' size="30" tabindex="4" autocomplete="off" value="<?php echo $description;?>"/></td>
 				</tr>
 				<tr height="30">
-					 <td width="120">Description</td>
-					 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					 <td><input type='text' name='desc' id='desc' size="30" tabindex="6" autocomplete="off" value="<?php echo $description;?>"/></td>
+					 <td width="120">Next Due Date*</td>
+			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			 <td>
+				
+				<input type="text" name="nextduedate" id="nextduedate" size="10" autocomplete='off' tabindex="6" class="datepicker"  value="<?php echo $next_due_date;?>"/>
+				
+			  </td>
 				</tr>
 				<tr height="30">
 					 <td width="120">Additional Cost</td>
 					 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					 <td><input type="text" name="addcost" id="addcost" style="text-align:right;" size="30" autocomplete='off' tabindex="8" value="<?php echo $cost;?>"/></td>
+					 <td><input type="text" name="addcost" id="addcost" style="text-align:right;" size="10" autocomplete='off' tabindex="8" value="<?php echo $cost;?>"/></td>
 			     </tr>
 				</table>
 			  </td>
