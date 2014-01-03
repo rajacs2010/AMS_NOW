@@ -124,7 +124,7 @@ while($row = mysql_fetch_array($result))
   <legend><strong>Vehicle Status</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="148">Vehicle Registration No*</td>
+			<td width="148">Vehicle Regn. No*</td>
 			<td>
 	<?php
 					$result_state=mysql_query("select * from vehicle");
