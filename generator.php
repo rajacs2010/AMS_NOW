@@ -492,7 +492,7 @@ if(isset($_POST['save'])) {
 			 <td width="120">Model*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
-				<input type="text" name="model" id="model" size="30" autocomplete='off' tabindex="5" />				
+				<input type="text" name="model" id="model" size="10" autocomplete='off' tabindex="5" />				
 			  </td>
 			</tr>
 
@@ -519,7 +519,7 @@ if(isset($_POST['save'])) {
 				 <td width="120">Make*</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
-					<input type='text' name='make' id='make' size="30" tabindex="4" autocomplete="off" />
+					<input type='text' name='make' id='make' size="10" tabindex="4" autocomplete="off" />
 				  </td>
 				</tr>
 				<tr height="30">
@@ -527,7 +527,7 @@ if(isset($_POST['save'])) {
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
 					
-					<input type='text' name='rating' id='rating' size="30" tabindex="6" autocomplete="off"/>
+					<input type='text' name='rating' id='rating' size="10" tabindex="6" autocomplete="off"/>
 					
 				  </td>
 				</tr>
@@ -578,14 +578,14 @@ if(isset($_POST['save'])) {
 				?>
 			 <td><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
 			 <td>			
-				<input type='text' name='total_currency' id='total_currency' value="<?php echo $currency_name;?>" size="7"  readonly="true" tabindex="8" autocomplete="off"/>				
+				<input type='text' name='total_currency' id='total_currency' value="<?php echo $currency_name;?>" size="4"  readonly="true" tabindex="8" autocomplete="off"/>				
 			  </td>
 			</tr>						
 			<tr height="30">
 			<td width="120">Date Of Purchase*</td>
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td>			
-				<input type='text' name='datepurchase' id='datepurchase' value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="15" tabindex="10" autocomplete="off"/>	
+				<input type='text' name='datepurchase' id='datepurchase' value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="10" tabindex="10" autocomplete="off"/>	
 			</td>
 			</tr>
 			<tr height="30">
@@ -615,14 +615,14 @@ if(isset($_POST['save'])) {
 			?>
 			 <td><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
 			 <td>
-				<input type='text' name='maintain_currency' id='maintain_currency' value="<?php echo $currency_name;?>" size="7"  readonly ="true" tabindex="13" autocomplete="off"/>					
+				<input type='text' name='maintain_currency' id='maintain_currency' value="<?php echo $currency_name;?>" size="4"  readonly ="true" tabindex="13" autocomplete="off"/>					
 			  </td>
 			</tr>			
 			<tr height="30">
 			 <td width="120">Contract Renewal Date*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
-				<input type="text" name="renewaldate" id="renewaldate" value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="15" autocomplete='off' tabindex="16" autocomplete="off"/>				
+				<input type="text" name="renewaldate" id="renewaldate" value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="10" autocomplete='off' tabindex="16" autocomplete="off"/>				
 			  </td>
 			</tr>
 		   </table>
@@ -721,7 +721,7 @@ if(isset($_POST['save'])) {
 						$symbol= $row['symbol'];
 					}					
 				?>
-				<input type='text' name='maintain_currency' id='maintain_currency' value="<?php echo $currency_name;?>" size="7" tabindex="12" readonly="true"/>				
+				<input type='text' name='maintain_currency' id='maintain_currency' value="<?php echo $currency_name;?>" size="4" tabindex="12" readonly="true"/>				
 			  </td>
 			</tr>
 				<tr height="30">
@@ -786,7 +786,7 @@ if(isset($_POST['save'])) {
 			 <td width="120">Contract Renewal Date*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
-				<input type="text" name="renewaldate_landlord" id="renewaldate_landlord"  value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="15" autocomplete='off' tabindex="15"/>				
+				<input type="text" name="renewaldate_landlord" id="renewaldate_landlord"  value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="10" autocomplete='off' tabindex="15"/>				
 			  </td>
 			</tr>
 			   </table>

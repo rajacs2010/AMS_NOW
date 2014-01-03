@@ -259,21 +259,21 @@ $assignment_desc=$row['assignment_desc'];
 			<tr height="30">
 			<td width="148">Date</td>
 			<td>
-		<input type='text' name='mdate' id='mdate' class="datepicker"  tabindex="3" value="<?php echo $assignment_date;?>"/>
+		<input type='text' name='mdate' id='mdate' class="datepicker" size="10"  tabindex="3" value="<?php echo $assignment_date;?>"/>
 		
 			</td>
 			</tr>
 			<tr height="30">
 			<td width="148">From Date</td>
 			<td>
-		<input type='text' name='from_date' id='from_date' tabindex="5" class="datepicker" value="<?php echo $from_date;?>"/>
+		<input type='text' name='from_date' id='from_date' tabindex="5"  size="10" class="datepicker" value="<?php echo $from_date;?>"/>
 		
 			</td>
 			</tr>
 			<tr height="30">
 			<td width="148">Assignment Description</td>
 			<td>
-		<input type='text' name='desc' id='desc' autocomplete="off" tabindex="7" value="<?php echo $assignment_desc;?>"/>
+		<input type='text' name='desc' id='desc' autocomplete="off" tabindex="7"  size="30" value="<?php echo $assignment_desc;?>"/>
 		
 			</td>
 			</tr> 
@@ -336,7 +336,7 @@ $assignment_desc=$row['assignment_desc'];
 	<tr height="30">
 			<td width="148">To Date</td>
 			<td>
-		<input type='text' name='to_date' id='to_date' class="datepicker" tabindex="6" value="<?php echo $to_date;?>"/>
+		<input type='text' name='to_date' id='to_date' class="datepicker" tabindex="6" size="10" value="<?php echo $to_date;?>"/>
 		
 			</td>
 			</tr>
