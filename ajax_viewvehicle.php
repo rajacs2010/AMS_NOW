@@ -31,7 +31,7 @@ $strPage = $_REQUEST[page];
 
 ########### pagins
 
-$Per_Page = 1;   // Records Per Page
+$Per_Page = 5;   // Records Per Page
 
 $Page = $strPage;
 if(!$strPage) {

@@ -1583,7 +1583,13 @@ $(document).ready(function() {
     
     <tr height="30">
 		<td width="120" >Currency </td>
-		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
+		<td>
+		<?php
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$model_currency'");
+			$row=mysql_fetch_array($result_state);
+		?>
+		<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
 		<td><input type='text' name='model_currency' id='model_currency' value="<?php $fgmembersite->DBLogin(); echo $fgmembersite->getdbval($model_currency,'name','id','currency'); ?>"  readonly class="textbox"/></td>
 	</tr>
@@ -1665,7 +1671,7 @@ $(document).ready(function() {
 	<tr height="30">
      <?php
 			$fgmembersite->DBLogin();
-			$result_state=mysql_query("SELECT * FROM currency");
+			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$currency'");
 			$row=mysql_fetch_array($result_state);
 		?>
 		<td width="120" >Currency </td>

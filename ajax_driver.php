@@ -13,6 +13,28 @@ $emp_code=$_GET["selvalue_incharge_empcode"];
 <input type='text' name='emp_code' id='emp_code' class="textbox" value="<?php echo $emp_code; ?>" readonly="true"/>
 <?php
 }
+if($_GET["selvalue_assno_start"]) {
+	$selvalue=$_GET["selvalue_assno_start"];
+	
+	$result=mysql_query("SELECT from_date from vehicle_assignment WHERE id = $selvalue");
+		while($row=mysql_fetch_array($result)) {
+			$assno_start_date=$row['from_date'];
+		}
+	?>
+	<input type='text' name='starting_date' id='starting_date' class="textbox" value="<?php echo $assno_start_date; ?>" readonly="true"/>
+	<?php
+}
+if($_GET["selvalue_assno_end"]) {
+	$selvalue=$_GET["selvalue_assno_end"];
+	
+	$result=mysql_query("SELECT to_date from vehicle_assignment WHERE id = $selvalue");
+		while($row=mysql_fetch_array($result)) {
+			$assno_end_date=$row['to_date'];
+		}
+	?>
+	<input type='text' name='ending_date' id='ending_date' class="textbox" value="<?php echo $assno_end_date; ?>" readonly="true"/>
+	<?php
+}
 if($_GET["emp_bought_id"]) {
 	$selvalue=$_GET["emp_bought_id"];
 	
@@ -26,6 +48,16 @@ if($_GET["emp_bought_id"]) {
 	}
 	?>
 	<input type='text' name='emp_nameval' id='emp_nameval' class="textbox" value="<?php echo $first_name; ?>" readonly="true" />
+	<?php
+}
+if($_GET["selvalue_driver_code"]) {
+	$selvalue=$_GET["selvalue_driver_code"];
+	$result=mysql_query("SELECT emp_name from driver WHERE id = $selvalue");
+		while($row=mysql_fetch_array($result)) {
+			$driver_nameval=$row['emp_name'];
+		}
+	?>
+	<input type='text' name='driver_nameval' id='driver_nameval' class="textbox" value="<?php echo $driver_nameval; ?>" readonly="true"/>
 	<?php
 }
 if($_GET["driver_bought_id"]) {

@@ -6,7 +6,6 @@ ini_set("display_errors",true);
 error_reporting(E_ALL & ~E_NOTICE);
 
 extract($_REQUEST);
-
 /*echo "<pre>";
 print_r($_REQUEST);
 echo "</pre>";
@@ -26,16 +25,19 @@ if ($fgmembersite->usertype() == 1)	{
 	$header_file='./layout/admin_header_fms.php';
 }
 
+$query_edit				=	"SELECT id,vehicle_reg_no,assignment_number,driver_code,trip_no,trip_desc,starting_date,starting_time,ending_date,ending_time,starting_reading,ending_reading,total_distance,UOM_log,desc_log FROM vehicle_log WHERE id = '$id'";			
+$res_edit				=	mysql_query($query_edit) or die(mysql_error());
+$row_edit				=	mysql_fetch_array($res_edit);
+
 if(file_exists($header_file)) {
 	include_once($header_file);
 } else {
 	$fgmembersite->RedirectToURL("index.php");
 	exit;
 }
-if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
+if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {	
 	$fgmembersite->DBLogin();
-	$vehicle_reg_no			=	$_POST['vehicle_reg_no'];
-	$assignment_number		=	$_POST['assignment_number'];
+	$vehicle_reg_no			=	$_POST['vehicle_reg_no'];	
 	$driver_code			=	$_POST['driver_code'];
 	$trip_no				=	$_POST['trip_no'];
 	$trip_desc				=	$_POST['trip_desc'];
@@ -48,14 +50,14 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	$total_distance			=	$_POST['total_distance'];
 	$UOM_log				=	$_POST['uom_log'];
 	$desc_log				=	$_POST['desc_log'];
-
-	$user_id					=	$_SESSION['user_id'];
-	//echo 'INSERT INTO vehicle_log SET vehicle_reg_no="'.$vehicle_reg_no.'",assignment_number="'.$assignment_number.'",driver_code="'.$driver_code.'",trip_no="'.$trip_no.'",trip_desc="'.$trip_desc.'",starting_date="'.$starting_date.'",starting_time="'.$starting_time.'",ending_date="'.$ending_date.'",ending_time="'.$ending_time.'",starting_reading="'.$starting_reading.'",ending_reading="'.$ending_reading.'",total_distance="'.$total_distance.'",UOM_log="'.$UOM_log.'",desc_log="'.$desc_log.'",created_by="'.$user_id.'" '; 
+	
+	$user_id				=	$_SESSION['user_id'];
+	//echo 'INSERT INTO vehicle_transaction SET vehicle_reg_id="'.$vehicle_reg_id.'",transaction_date="'.$transaction_date.'",transaction_type_id="'.$transaction_type_id.'",transaction_number="'.$transaction_number.'",vendor_id="'.$vendor_id.'",uom_id="'.$uom_id.'",units="'.$units.'",currency_id="'.$currency_id.'",rate="'.$rate.'",cost="'.$cost.'",trans_desc="'.$desc.'",bought_by="'.$bought_by.'",emp_code="'.$emp_code.'",driver_code_id="'.$driver_code_id.'",others="'.$others.'",created_by="'.$user_id.'" '; 
 	//exit;
-	if(!mysql_query('INSERT INTO vehicle_log SET vehicle_reg_no="'.$vehicle_reg_no.'",assignment_number="'.$assignment_number.'",driver_code="'.$driver_code.'",trip_no="'.$trip_no.'",trip_desc="'.$trip_desc.'",starting_date="'.$starting_date.'",starting_time="'.$starting_time.'",ending_date="'.$ending_date.'",ending_time="'.$ending_time.'",starting_reading="'.$starting_reading.'",ending_reading="'.$ending_reading.'",total_distance="'.$total_distance.'",UOM_log="'.$UOM_log.'",desc_log="'.$desc_log.'",created_by="'.$user_id.'" ')) {
+	if(!mysql_query('UPDATE vehicle_log SET vehicle_reg_no="'.$vehicle_reg_no.'",driver_code="'.$driver_code.'",trip_no="'.$trip_no.'",trip_desc="'.$trip_desc.'",starting_date="'.$starting_date.'",starting_time="'.$starting_time.'",ending_date="'.$ending_date.'",ending_time="'.$ending_time.'",starting_reading="'.$starting_reading.'",ending_reading="'.$ending_reading.'",total_distance="'.$total_distance.'",UOM_log="'.$UOM_log.'",desc_log="'.$desc_log.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
 	die('Error: ' . mysql_error());
 }
-	echo'<script> window.location="view_vehicle_log.php?success=create"; </script> ';
+	echo'<script> window.location="view_vehicle_log.php?success=update"; </script> ';
 }
 ?>
 <style type="text/css">
@@ -423,7 +425,7 @@ $(document).live('ready',function() {
 <div class="mcf"></div>
 <div align="center" class="headingsgr">VEHICLE LOG</div>
 <div id="mytableformbuild" align="center">
-<form id='diesel_save' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8' >
+<form id='diesel_save' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 <div class="scroll_box">
 <div id="firstdiv">
 <table width="100%" align="left">
@@ -439,26 +441,39 @@ $(document).live('ready',function() {
     <td width="120" nowrap="nowrap">Vehicle Regn. No.*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><?php
-		$result_state=mysql_query("select id,vehicle_regno from vehicle");
+		$result_state=mysql_query("select * from vehicle");
 		echo '<select name="vehicle_reg_no" id="vehicle_reg_no" tabindex="1">';
 		echo '<option value="0">--Select--</option>';
-		while($row=mysql_fetch_array($result_state)) {
-			echo '<option value="'.$row['id'].'">'.$row['vehicle_regno'].'</option>';
+		while($row=mysql_fetch_array($result_state))
+		{
+			if($row['id'] == $row_edit['vehicle_reg_no']){
+					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+				 } else {
+					  $isSelected = ''; // else we remove any tag
+				 }							
+			echo "<option value='".$row['id']."'".$isSelected.">".$row['vehicle_regno']."</option>";
 		}
 		echo '</select>';
 	?>
 	</td>
     </tr>
-    
+	
 	<tr height="30">
      <td width="120">Driver Code*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><?php
+     <td>
+     	<input type='hidden' name='edit_id' id='edit_id' value="<?php echo $row_edit['id'];?>" />
+	<?php
 			$result_state=mysql_query("SELECT id,driver_code FROM driver");
 			echo '<select name="driver_code" id="driver_code" tabindex="3">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$row['driver_code'].'</option>';
+				if($row['id'] == $row_edit['driver_code']){
+					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+				 } else {
+					  $isSelected = ''; // else we remove any tag
+				 }							
+				echo "<option value='".$row['id']."'".$isSelected.">".$row['driver_code']."</option>";
 			}
 			echo '</select>';
       	?>
@@ -468,33 +483,8 @@ $(document).live('ready',function() {
 	<tr height="30">
 		<td width="120" >Trip Number</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><?php
-		 if(!isset($_GET[id]) && $_GET[id] == '') {
-			$cusid					=	"SELECT trip_no FROM  vehicle_log ORDER BY id DESC";			
-			$cusold					=	mysql_query($cusid) or die(mysql_error());
-			$cuscnt					=	mysql_num_rows($cusold);
-			//$cuscnt					=	0; // comment if live
-			if($cuscnt > 0) {
-				$row_cus			=	 mysql_fetch_array($cusold);
-				$cusnumber	  		=	$row_cus['trip_no'];
-
-				$getcusno			=	abs(str_replace("TRIP",'',strstr($cusnumber,"TRIP")));
-				$getcusno++;
-				if($getcusno < 10) {
-					$createdcode	=	"00".$getcusno;
-				} else if($getcusno < 100) {
-					$createdcode	=	"0".$getcusno;
-				} else {
-					$createdcode	=	$getcusno;
-				}
-
-				$customer_code				=	"TRIP".$createdcode;
-			} else {
-				$customer_code				=	"TRIP001";
-			}
-		}
-	?>
-   <input type='text' name='trip_no' id='trip_no' style="width:80px;" class="textbox" value="<?php echo $customer_code;?>" readonly="true"/>
+		<td>
+   <input type='text' name='trip_no' id='trip_no' style="width:80px;" class="textbox" value="<?php echo $row_edit['trip_no'];?>" readonly="true"/>
        </td>
 	</tr>
 
@@ -503,9 +493,9 @@ $(document).live('ready',function() {
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
      	<span id="display_starting_date">
-     	<input type="text" name="starting_date" id="starting_date" size="10" value="<?php echo date('d-m-Y'); ?>" readonly tabindex="5" autocomplete="off" />
+     	<input type="text" name="starting_date" id="starting_date" size="10" value="<?php echo $row_edit['starting_date']; ?>" readonly tabindex="5" autocomplete="off" />
      	</span>
-     	<input type="text" name="starting_time" id="starting_time" size="5" maxlength="5" class="textbox" tabindex="6" autocomplete="off" />(Eg: 19:47)
+     	<input type="text" name="starting_time" id="starting_time" value="<?php echo $row_edit['starting_time']; ?>" size="5" maxlength="5" class="textbox" tabindex="6" autocomplete="off" />(Eg: 19:47)
      </td>
 	</tr>
 	
@@ -513,23 +503,23 @@ $(document).live('ready',function() {
      <td width="120">Starting Reading*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
-		<input type="text" name="starting_reading" id="starting_reading" tabindex="9" class="textbox" autocomplete="off" style="text-align:right;" />
+		<input type="text" name="starting_reading" id="starting_reading" value="<?php echo $row_edit['starting_reading']; ?>" tabindex="9" class="textbox" autocomplete="off" style="text-align:right;" />
 	 </td>
 	</tr>
 	
 	<tr height="30">
      <td width="120">Total Distance</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='total_distance' id='total_distance' readonly class="textbox" autocomplete="off" style="text-align:right;" /></td>
+     <td><input type='text' name='total_distance' id='total_distance' value="<?php echo $row_edit['total_distance']; ?>" readonly class="textbox" autocomplete="off" style="text-align:right;" /></td>
 	</tr>
 	
 	<tr height="30">
      <td width="120">Travel Description</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='desc_log' id='desc_log' size="42" class="textbox" tabindex="12" autocomplete="off" />
+     <td><input type='text' name='desc_log' id='desc_log' value="<?php echo ucfirst($row_edit['desc_log']); ?>" size="42" class="textbox" tabindex="12" autocomplete="off" />
 	 </td>
 	</tr>
-	
+			
    </table>
    </td>
  </tr>
@@ -541,18 +531,11 @@ $(document).live('ready',function() {
  <tr>
   <td>
    <table>
+   
    <tr height="30">
      <td width="120">Assignment No.*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><?php
-			$result_state=mysql_query("SELECT id,assignment_no FROM vehicle_assignment");
-			echo '<select name="assignment_number" id="assignment_number" tabindex="2">';
-			echo '<option value="0">--Select--</option>';
-			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$row['assignment_no'].'</option>';
-			}
-			echo '</select>';
-      	?>
+     <td><input type='text' name='assignment_number' id='assignment_number' value="<?php echo $fgmembersite->getdbval($row_edit['assignment_number'], 'assignment_no', 'id', 'vehicle_assignment'); ?>" readonly size="8" class="textbox" tabindex="12" autocomplete="off" />
      </td>
 	</tr>
    
@@ -561,7 +544,7 @@ $(document).live('ready',function() {
 		 <td width="120" nowrap="nowrap">Driver Name</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td><div id="display_driver_id">
-			<input type='text' name='driver_nameval' id='driver_nameval' readonly autocomplete="off" class="textbox" />
+			<input type='text' name='driver_nameval' id='driver_nameval' value="<?php echo $fgmembersite->getdbval($row_edit['driver_code'], 'emp_name', 'id', 'driver'); ?>" readonly autocomplete="off" class="textbox" />
 			</div></td>
 	</tr>
      
@@ -569,7 +552,7 @@ $(document).live('ready',function() {
 		<td width="120">Trip Description</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><div id="display_vendor_id">
-			<input type='text' name='trip_desc' id='trip_desc' size="42" tabindex="4" autocomplete="off" class="textbox" />
+			<input type='text' name='trip_desc' id='trip_desc' value="<?php echo ucfirst($row_edit['trip_desc']); ?>" size="42" tabindex="4" autocomplete="off" class="textbox" />
 			</div>
 		</td>
     </tr>
@@ -579,16 +562,16 @@ $(document).live('ready',function() {
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td>
 		 	<span id="display_ending_date">
-		 	<input type='text' name='ending_date' id='ending_date' size="10" value="<?php echo date('d-m-Y'); ?>" readonly class="textbox" tabindex="7" autocomplete="off" />
+		 	<input type='text' name='ending_date' id='ending_date' size="10" value="<?php echo $row_edit['ending_date']; ?>" readonly class="textbox" tabindex="7" autocomplete="off" />
 		 	</span>
-		 	<input type='text' name='ending_time' id='ending_time' size="5" maxlength="5" class="textbox" tabindex="8" autocomplete="off" />(Eg: 19:47)
+		 	<input type='text' name='ending_time' id='ending_time' value="<?php echo $row_edit['ending_time']; ?>" size="5" maxlength="5" class="textbox" tabindex="8" autocomplete="off" />(Eg: 19:47)
 		 </td>
 	</tr>
 	
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Ending Reading*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='ending_reading' id='ending_reading' class="textbox" tabindex="10" autocomplete="off"  style="text-align:right;"/></td>
+		 <td><input type='text' name='ending_reading' id='ending_reading' value="<?php echo $row_edit['ending_reading']; ?>" class="textbox" tabindex="10" autocomplete="off"  style="text-align:right;"/></td>
 	</tr>
 	
 	<tr height="30">
@@ -600,12 +583,18 @@ $(document).live('ready',function() {
 			echo '<select name="uom_log" id="uom_log" tabindex="11">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+				if($row['id'] == $row_edit['UOM_log']){
+					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+				 } else {
+					  $isSelected = ''; // else we remove any tag
+				 }							
+				echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 			}
 			echo '</select>';
 			?>
 		</td>
-	</tr>	
+	</tr>
+
    </table>
   </td>
  </tr>
@@ -628,10 +617,9 @@ $(document).live('ready',function() {
       <td nowrap="nowrap">	  
 	  <input type="submit" name="part_save" id="part_save" class="buttons" value="Save" />&nbsp;&nbsp;&nbsp;&nbsp;
 	 <input type="hidden" name="formsaveval" id="formsaveval" /> <!-- This will give the value when form is submitted, otherwise it will empty -->
-	 <input type="hidden" name="edit_id" id="edit_id" /> <!-- This is the partial saved id of the building table when partial save is completed, it will get the id from the db (ajax) -->
      <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
      <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=3'"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_vehicle_log.php'"/></td>
+	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_vehicle_transaction.php'"/></td>
 	 </td>
      </tr>
   </table>

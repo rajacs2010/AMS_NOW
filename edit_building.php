@@ -2180,13 +2180,12 @@ $(document).ready(function() {
 	<tr height="30">
 		<?php
 			$fgmembersite->DBLogin();
-			$result_state=mysql_query("SELECT * FROM currency");
+			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$row_edit[building_currency]'");
 			$row=mysql_fetch_array($result_state);
 		?>
-		<td width="120" >Currency &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='purcurrency' id='purcurrency' value="<?php echo $fgmembersite->getdbval($row_edit['building_currency'],'name','id','currency'); ?>" readonly class="textbox"/></td>
+		<td width="120" >Currency</td>
+		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
+		<td><input type='text' name='purcurrency' id='purcurrency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 	<tr height="30">
      <td width="120">Sale Deed/Agreement</td>
@@ -2303,12 +2302,12 @@ $(document).ready(function() {
 	<tr height="30">
 		<?php
 			$fgmembersite->DBLogin();
-			$result_state=mysql_query("SELECT * FROM currency");
+			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$row_edit[rentcurrency]'");
 			$row=mysql_fetch_array($result_state);
 		?>
-		<td width="120">Currency&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td></td>
-		<td><input type='text' name='rentcurrency' id='rentcurrency' value="<?php echo $fgmembersite->getdbval($row_edit['rentcurrency'],'name','id','currency'); ?>" readonly class="textbox"/></td>
+		<td width="120">Currency</td>
+		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
+		<td><input type='text' name='rentcurrency' id='rentcurrency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 
 

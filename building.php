@@ -2162,9 +2162,8 @@ $(document).ready(function() {
 			$result_state=mysql_query("SELECT * FROM currency");
 			$row=mysql_fetch_array($result_state);
 		?>
-		<td width="120" >Currency &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
+		<td width="120" >Currency </td>
+		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<td><input type='text' name='purcurrency' id='purcurrency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 	<tr height="30">
@@ -2278,8 +2277,8 @@ $(document).ready(function() {
 			$result_state=mysql_query("SELECT * FROM currency");
 			$row=mysql_fetch_array($result_state);
 		?>
-		<td width="120">Currency&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td></td>
+		<td width="120">Currency</td>
+		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<td><input type='text' name='rentcurrency' id='rentcurrency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 

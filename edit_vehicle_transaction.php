@@ -68,7 +68,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	if(!mysql_query('UPDATE vehicle_transaction SET vehicle_reg_id="'.$vehicle_reg_id.'",transaction_date="'.$transaction_date.'",transaction_type_id="'.$transaction_type_id.'",transaction_number="'.$transaction_number.'",vendor_id="'.$vendor_id.'",uom_id="'.$uom_id.'",units="'.$units.'",currency_id="'.$currency_id.'",rate="'.$rate.'",cost="'.$cost.'",trans_desc="'.$desc.'",bought_by="'.$bought_by.'",emp_code="'.$emp_code.'",driver_code_id="'.$driver_code_id.'",others="'.$others.'",created_by="'.$user_id.'" WHERE id = "'.$edit_id.'"')) {
 	die('Error: ' . mysql_error());
 }
-	echo'<script> window.location="view_vehicle_transaction.php?success=true"; </script> ';
+	echo'<script> window.location="view_vehicle_transaction.php?success=update"; </script> ';
 }
 ?>
 <style type="text/css">

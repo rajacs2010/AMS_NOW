@@ -3,7 +3,7 @@ require_once("./include/membersite_config.php");
 $fgmembersite->DBLogin();
 
 ini_set("display_errors",true);
-error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 
 extract($_REQUEST);
 /*echo "<pre>";
@@ -29,17 +29,17 @@ if(file_exists($header_file)) {
 	exit;
 }
 
-if($_REQUEST['vehicle_company_name']!='') {
-	$var = @$_REQUEST['vehicle_company_name'] ;
-	$trimmed = trim($var);	
-	$qry="SELECT id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,currency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle` WHERE vehicle_company_name LIKE '%".$trimmed."%'";
+if($_REQUEST['trip_desc']!='') {
+	$var = @$_REQUEST['trip_desc'];
+	$trimmed = trim($var);
+	$qry="SELECT vl.id AS VLID,veh.vehicle_regno AS VEH_NUM, dr.emp_name AS DR_NAME,dr.driver_code AS DR_CODE,um.name AS UOM_NAME,va.assignment_no AS ASS_NO,trip_no, trip_desc, starting_date, starting_time,ending_date,ending_time,starting_reading,ending_reading,total_distance,UOM_log,desc_log FROM `vehicle_log` vl LEFT JOIN driver dr ON vl.driver_code = dr.id LEFT JOIN vehicle veh ON veh.id = vl.vehicle_reg_no LEFT JOIN vehicle_assignment va ON vl.assignment_number = va.id LEFT JOIN uom um ON vl.UOM_log = um.id WHERE vl.trip_desc LIKE '%".$trimmed."%'";
 } else { 
-	$qry="SELECT id,vehicle_regno,vehichle_reg_date,vehicle_comp_id,vehicle_company_name,insurance_number,insurance_company,insurance_date,currency,insurance_amount,insurance_duedate,tax_number,tax_authority,tax_date,tax_currency,tax_amount,tax_renewal_date,fitness_certificate_no,fit_date,next_inspection_date,certification_currency,fitness_certification_cost,pollution_certificate_no,pollution_certificate_date,pollution_inspection_date,pollution_currency,pollution_certificate_cost,make,model,year,model_currency,model_cost,maintain_currency,total_maintain_cost,cost_month,total_fuel_cost,cost_month_fuel,car_reg_attach,insurance_attach,tax_attach,pollution_attach,fitness_attach FROM `vehicle`"; 
+	$qry="SELECT vl.id AS VLID,veh.vehicle_regno AS VEH_NUM, dr.emp_name AS DR_NAME,dr.driver_code AS DR_CODE,um.name AS UOM_NAME,va.assignment_no AS ASS_NO,trip_no, trip_desc, starting_date, starting_time,ending_date,ending_time,starting_reading,ending_reading,total_distance,UOM_log,desc_log FROM `vehicle_log` vl LEFT JOIN driver dr ON vl.driver_code = dr.id LEFT JOIN vehicle veh ON veh.id = vl.vehicle_reg_no LEFT JOIN vehicle_assignment va ON vl.assignment_number = va.id LEFT JOIN uom um ON vl.UOM_log = um.id"; 
 }
 $results=mysql_query($qry);
 $num_rows= mysql_num_rows($results);			
 
-$params			=	$vehicle_company_name."&".$sortorder."&".$ordercol;
+$params			=	$trip_desc."&".$sortorder."&".$ordercol;
 
 /********************************pagination start***********************************/
 $strPage = $_REQUEST[page];
@@ -77,11 +77,12 @@ $Num_Pages = (int)$Num_Pages;
 }
 if($sortorder == "")
 {
-	$orderby	=	"ORDER BY id DESC";
+	$orderby	=	"ORDER BY vl.id DESC";
 } else {
 	$orderby	=	"ORDER BY $ordercol $sortorder";
 }
 $qry.=" $orderby LIMIT $Page_Start , $Per_Page";  //need to uncomment
+//echo $qry;
 //exit;
 $results_dsr = mysql_query($qry) or die(mysql_error());
 /********************************pagination***********************************/
@@ -104,20 +105,19 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 function delcall(id,name) {
 	var confirmdata		=	confirm("Are You Sure You Want to Delete : "+name);
 	if(confirmdata) {
-		window.location = "view_vehicle.php?id="+id+"&del=del";
+		window.location = "view_vehicle_log.php?id="+id+"&del=del";
 	}
 }
-function vehviewajax(page,params){   // For pagination and sorting of the Collection Deposited view page
-	var splitparam				=	params.split("&");
-	var vehicle_company_name	=	splitparam[0];
-	var sortorder				=	splitparam[1];
-	var ordercol				=	splitparam[2];
+function vehlogviewajax(page,params){   // For pagination and sorting of the Collection Deposited view page
+	var splitparam		=	params.split("&");
+	var trip_desc		=	splitparam[0];
+	var sortorder		=	splitparam[1];
+	var ordercol		=	splitparam[2];
 	$.ajax({
-		url : "ajax_viewvehicle.php",
-		//url : "ajax_viewveh.php",
+		url : "ajax_viewvehlog.php",
 		type: "get",
 		dataType: "text",
-		data : { "vehicle_company_name" : vehicle_company_name, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
+		data : { "trip_desc" : trip_desc, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
 		success : function(dataval) {
 			var trimval		=	$.trim(dataval);
 			//alert(trimval);
@@ -125,15 +125,14 @@ function vehviewajax(page,params){   // For pagination and sorting of the Collec
 		}
 	});
 }
-function searchvehviewajax(page) {  // For pagination and sorting of the Collection Deposited search in view page
-	var vehicle_company_name	=	$("input[name='vehicle_company_name']").val();
-	//alert(Product_name);
+function searchvehlogviewajax(page) {  // For pagination and sorting of the Collection Deposited search in view page
+	var trip_desc	=	$("input[name='trip_desc']").val();
+	//alert(trans_desc);
 	$.ajax({
-		url : "ajax_viewvehicle.php",
-		//url : "ajax_viewveh.php",
+		url : "ajax_viewvehlog.php",
 		type: "get",
 		dataType: "text",
-		data : { "vehicle_company_name" : vehicle_company_name, "page" : page },
+		data : { "trip_desc" : trip_desc, "page" : page },
 		success : function(dataval) {
 			var trimval		=	$.trim(dataval);
 			//alert(trimval);
@@ -145,24 +144,24 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 
 <div id="mainareadaily">
 <div class="mcf"></div>
-<div><h2 align="center">VEHICLE</h2></div> 
+<div><h2 align="center">VEHICLE LOG</h2></div> 
 
 <div id="containerprforcd">
 
-<span style="float:left;"><input type="button" name="kdproduct" value="Add Vehicle" class="buttonsbig" onclick="window.location='vehicle_sample.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
+<span style="float:left;"><input type="button" name="kdproduct" value="Add Vehicle Log" class="buttonsbig" onclick="window.location='vehicle_log.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
 
 <div class="clearfix"></div>
  <div id="search">
-        <input type="text" name="vehicle_company_name" value="<?php echo $_REQUEST['vehicle_company_name']; ?>" autocomplete='off' style="width:120px;" placeholder='Search By Company Name'/>
-        <input type="button" class="buttonsg" onclick="searchvehviewajax('<?php echo $Page; ?>');" value="GO"/>
+        <input type="text" name="trip_desc" value="<?php echo $_REQUEST['trip_desc']; ?>" autocomplete='off' style="width:120px;" placeholder='Search By Trip Desc'/>
+        <input type="button" class="buttonsg" onclick="searchvehlogviewajax('<?php echo $Page; ?>');" value="GO"/>
  </div>
  <div class="clearfix"></div>
         <?php
 		if($_GET['id']!='' && $_GET['del'] == 'del'){
-			$query = "DELETE FROM `vehicle` WHERE id = $id";
+			$query = "DELETE FROM `vehicle_log` WHERE id = $id";
 			//Run the query
 			$result = mysql_query($query) or die(mysql_error());
-			header("location:view_vehicle.php?success=del");
+			header("location:view_vehicle_log.php?success=del");
 		 }		
 		?>
 		<div id="colviewajaxid">
@@ -171,24 +170,27 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 			<thead>
 			<tr>
 				<?php //echo $sortorderby;
-					if($sortorder == 'ASC') {
-						$sortorderby = 'DESC';
-					} elseif($sortorder == 'DESC') {
-						$sortorderby = 'ASC';
-					} else {
-						$sortorderby = 'ASC';
-					}
-					$paramsval	=	$vehicle_company_name."&".$sortorderby."&vehichle_reg_date";
-				?>				
-				<th nowrap="nowrap" >Vehicle Regn. No.</th>
-				<th nowrap="nowrap" class="rounded" onClick="vehviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Vehicle Regn. Date<img src="images/sort.png" width="13" height="13" /></th>
-				
-				<th nowrap="nowrap">Vehicle Company Name</th>
-				<th nowrap="nowrap">Make</th>
-				<th nowrap="nowrap">Model</th>
-				<th nowrap="nowrap">Year</th>
-				<th nowrap="nowrap">Currency</th>
-				<th nowrap="nowrap">Cost</th>
+				if($sortorder == 'ASC') {
+					$sortorderby = 'DESC';
+				} elseif($sortorder == 'DESC') {
+					$sortorderby = 'ASC';
+				} else {
+					$sortorderby = 'ASC';
+				}
+				$paramsval	=	$trip_desc."&".$sortorderby."&veh.vehicle_regno"; ?>
+				<th class="rounded" onClick="vehlogviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Vehicle Regn. No. <img src="images/sort.png" width="13" height="13" /></th>
+				<th >Assignment No.</th>								
+				<th >Driver Code</th>
+				<th >Driver Name</th>
+				<th >Trip No.</th>
+				<th >Trip Desc.</th>
+				<th >Start Date & Time</th>
+				<th >End Date & Time</th>
+				<th >Start Reading</th>
+				<th >End Reading</th>
+				<th >Total Distance</th>
+				<th >UOM</th>
+				<th >Travel Desc.</th>
 				<th align="right">Edit/Del</th>
 			</tr>
 			</thead>
@@ -199,27 +201,30 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 			$c=0;$cc=1;
 			while($fetch = mysql_fetch_array($results_dsr)) {
 			if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
-			$id			=	$fetch['id'];
+			$id			=	$fetch['VLID'];
 			?>
 			<tr>
-				<td><?php echo $fetch['vehicle_regno']; ?></td>
-				<td><?php echo $fetch['vehichle_reg_date']; ?></td>				
-				<td><?php echo $fgmembersite->upperstate($fetch['vehicle_company_name']); ?></td>
-				<td><?php echo $fetch['make']; ?></td>
-				<td><?php echo $fetch['model']; ?></td>
-				<td><?php echo $fetch['year']; ?></td>
-				<td><?php echo $fgmembersite->getdbval($fetch['model_currency'],'name','id','currency'); ?></td>
-				<td><?php echo $fetch['model_cost']; ?></td>
-								
+				<td><?php echo $fetch['VEH_NUM']; ?></td>
+				<td><?php echo $fetch['ASS_NO']; ?></td>
+				<td><?php echo $fetch['DR_CODE'];?></td>
+				<td><?php echo $fetch['DR_NAME']; ?></td>
+				<td><?php echo $fetch['trip_no']; ?></td>
+				<td><?php echo ucfirst($fetch['trip_desc']); ?></td>
+				<td align="right"><?php echo $fetch['starting_date']." ".$fetch['starting_time']; ?></td>
+				<td align="right"><?php echo $fetch['ending_date']." ".$fetch['ending_time']; ?></td>
+				<td align="right"><?php echo $fetch['starting_reading']; ?></td>
+				<td align="right"><?php echo $fetch['ending_reading']; ?></td>
+				<td align="right"><?php echo $fetch['total_distance']; ?></td>				
+				<td align="right"><?php echo ucfirst($fetch['UOM_NAME']); ?></td>
+				<td align="right"><?php echo ucfirst($fetch['desc_log'])."."; ?></td>		
 				<td align="right" nowrap="nowrap">
 
-				<a href="edit_vehicle.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<!-- <a href="view_building.php?id=<?php echo $fetch['id'];?>&del=del" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a> -->
-				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['id']; ?>','<?php echo $fgmembersite->upperstate($fetch['vehicle_company_name']); ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
+				<a href="edit_vehicle_log.php?id=<?php echo $fetch['VLID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['VLID']; ?>','<?php echo $fetch['VEH_NUM']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 
-			}else{  echo "<tr><td align='center' colspan='13'><b>No records found</b></td></tr>";}  ?>
+			} else { echo "<tr><td align='center' colspan='14'><b>No records found</b></td></tr>";}  ?>
 			</tbody>
 			</table>
 			 </div>   
@@ -229,7 +234,7 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 			 <th class="pagination" scope="col">          
 			<?php 
 			if(!empty($num_rows)){
-				$fgmembersite->rendering_pagination_common($Num_Pages,$Page,$Prev_Page,$Next_Page,$params,'vehviewajax');   //need to uncomment
+				$fgmembersite->rendering_pagination_common($Num_Pages,$Page,$Prev_Page,$Next_Page,$params,'vehlogviewajax');   //need to uncomment
 			} else { 
 				echo "&nbsp;"; 
 			} ?>      
@@ -239,7 +244,7 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 		  </div>
 		  <?php if($_GET['success']=="create") { ?>
 			<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
-			?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
+		  ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
 			<?php } 
 			if($_GET['success']=="update") { ?>
 			<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
@@ -269,7 +274,6 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
      </div> -->  
    </div>
 </div>
-
 <?php
 $footerfile='./layout/footer.php';
 if(file_exists($footerfile))
