@@ -112,7 +112,7 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 			?>
 			<tr>
 				
-				<td><?php echo $fetch['name'];?></td>
+				<td><?php echo $fgmembersite->upperstate($fetch['name']);?></td>
 				
 				<td align="right">
 
