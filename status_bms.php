@@ -13,7 +13,7 @@ if(!$fgmembersite->CheckLogin())
 <?php
 if ($fgmembersite->usertype() == 1)
 {
-$header_file='./layout/admin_header_fms.php';
+$header_file='./layout/admin_header_bms.php';
 }
 if(file_exists($header_file))
 {

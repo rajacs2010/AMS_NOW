@@ -389,7 +389,7 @@ while($row = mysql_fetch_array($result))
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 
-			}else{  echo "<tr><td align='center' colspan='2'><b>No records found</b></td></tr>";}  ?>
+			}else{  echo "<tr><td align='center' colspan='3'><b>No records found</b></td></tr>";}  ?>
 			</tbody>
 			</table>
 			 </div>   

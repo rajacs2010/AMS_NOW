@@ -229,68 +229,10 @@ while($row = mysql_fetch_array($result))
 <!------------------------------- Form -------------------------------------------------->
 <div id="mainarea">
 <div class="mcf"></div>
-<div align="center" class="headings">Currency</div>
-<div id="mytable" align="center">
-<form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" id="validation"  onsubmit="return validateForm();">
-<table>
-  <tr height="60px">
-     <td class="pclr" width="100">Currency*</td>
-     <td>
-	 
-	 <?php if(isset($_GET['id'])){ ?>
-							<input type='text' name='currency' id='currency'  value="<?php echo $name; ?>" maxlength="50" autocomplete='off'/>
-				
-						<?php } else {?>
-							<input type='text' name='currency' id='currency'  maxlength="50" autocomplete='off'/>
-						<?php }?>
-	 </td>
-   </tr>
-   <tr align="center" height="130px;">
-       <td colspan="10">
-	   <?php if(isset($_GET['id'])){ ?>
-			 <input type="submit" name="edit" id="edit" class="buttons" value="Save" />
-			<input type='hidden' name='edit_id' id='edit_id' value='<?php echo $_GET['id'];?>'/>
-			<?php } else {?>
-			 <input type="submit" name="save" id="save" class="buttons" value="Save" />
-			<?php }?>
-	   
-	   &nbsp;&nbsp;&nbsp;&nbsp;
-       <input type="reset" name="reset" class="buttons" value="Clear" id="clear" onclick="return myFunction();"/>&nbsp;&nbsp;&nbsp;&nbsp;
-       <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=2'"/>
-       </td>
-      </tr>
-</table>
-</form>
-</div>
-<?php if($_GET['success']=="create") 
-{
-?>
-<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
-?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-currency-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
-<?php }?>
-<?php if($_GET['success']=="update") 
-{
-?>
-<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
-?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-currency-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
-<?php }?>
-<?php if($_GET['success']=="error") 
-{
-?>
-<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-currency-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
-<?php }?>
-<?php if($_GET['success']=="exists") 
-{
-?>
-<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 :Data Already Exists"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-city-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
-<?php }?>
-<div id="client_error" style="display:none">
-<div id="errormsg" class="mydiv3" ><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-city-default ui-corner-all ui-button-icon-only" role="button" title="Close"><span class="ui-button-text">Close</span></button></div>
-</div>
-<div id="search">
-        <input type="text" name="searchname" id="searchname" value="<?php echo $_REQUEST['searchname']; ?>" autocomplete='off' placeholder='Search By Currency'/>
-        <input type="button" class="buttonsg" onclick="searchcolviewajax('<?php echo $Page; ?>');" value="GO"/>
- </div>
+<div align="center" class="a"><h3>Currency</h3></div>
+
+
+
 <div id="container">
 <div class="mcf"></div>
        <div id="colviewajaxid">
@@ -309,7 +251,7 @@ while($row = mysql_fetch_array($result))
 				}
 				$paramsval	=	$searchname."&".$sortorderby."&name"; ?>
 				<th nowrap="nowrap" class="rounded" onClick="colviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Currency<img src="images/sort.png" width="13" height="13" /></th>
-				<th nowrap="nowrap" align="right">Edit</th>
+				<th nowrap="nowrap" align="right">Symbol</th>
 	
 			</tr>
 			</tr>
@@ -328,7 +270,7 @@ while($row = mysql_fetch_array($result))
 				<td><?php echo $fetch['name'];?></td>
 				
 				<td align="right">
-				<a href="currency.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>
+				<img height="15px" width="15px" style="vertical-align:middle;" src="images/<?php echo $fetch['symbol'];?>">
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 
@@ -349,8 +291,11 @@ while($row = mysql_fetch_array($result))
 			</th>
 			</tr>
 			</table>
+			 <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=2'"/>
 		  </div>
+		  
 </div>
+
 </div>
 </div>
 <?php
