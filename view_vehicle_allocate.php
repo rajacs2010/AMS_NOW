@@ -161,11 +161,11 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 
 <div id="mainareadaily">
 <div class="mcf"></div>
-<div><h2 align="center">VEHICLE ALLOCATION TYPE</h2></div> 
+<div><h2 align="center">VEHICLE ALLOCATION</h2></div> 
 
 <div id="containerprforcd">
 
-<span style="float:left;"><input type="button" name="kdproduct" value="Add Vehicle Allocation Type" class="buttonsbig1" onclick="window.location='vehicle_allocation_type.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
+<span style="float:left;"><input type="button" name="kdproduct" value="Add Vehicle Allocation" class="buttonsbig1" onclick="window.location='vehicle_allocation_type.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
 
 <div class="clearfix"></div>
 

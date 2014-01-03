@@ -166,11 +166,11 @@ $emp_name=$row['emp_name'];
 <!------------------------------- Form -------------------------------------------------->
 <div id="mainarea"><!--- mainarea  div start-->
 <div class="mcf"></div>
-<div align="center" class="headingsgr">VEHICLE ALLOCATION TYPE</div>
+<div align="center" class="headingsgr">VEHICLE ALLOCATION</div>
 <div id="mytableformreceipt1" align="center"><!--- mytableformreceipt1 div start-->
 <form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 <fieldset class="alignment" align="left">
-  <legend><strong>Vehicle Allocation Type</strong></legend>
+  <legend><strong>Vehicle Allocation</strong></legend>
   <br/>
   <table width="100%">
   <tr>

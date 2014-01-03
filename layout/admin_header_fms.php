@@ -68,7 +68,7 @@ error_reporting(E_ALL & ~E_NOTICE);
  <li><a href="#"><span style="padding-left:10px;">MASTER DATA</span></a>
     <ul>
            <li><a href="vehicle.php">Vehicle</a></li>
-            <li><a href="vehicle_allocation_type.php">Vehicle Allocation Type</a></li>
+            <li><a href="vehicle_allocation_type.php">Vehicle Allocation</a></li>
             <li><a href="driver.php">Driver</a></li>
 			<li><a href="vehicle_status.php">Vehicle Status</a></li>
 			<li><a href="vendor.php">Vendor</a></li>
