@@ -146,7 +146,9 @@ if(isset($_POST['submitted']))
 		<tr  height="50px;" align="center">
 		<td class="align" ><input type="submit" name="login" id="submit" class="buttons" value="Login" /></td>
 		<td><input type="button" name="clear"  class="buttons" value="Clear" id="clear" onclick="return loginClear();"/></td>
-		<td><input type="button" name="signup" value="Signup" class="buttonsfp" onclick="window.location='#'"/></td>
+		<td>
+		<input type="button" onclick="window.location='#'" class="buttonsfp" value="Forgot Password" name="cancel">
+		</td>
 		<td>&nbsp;</td>
 		</tr>
 		<tr  height="50px;" align="center">

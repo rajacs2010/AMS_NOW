@@ -17,241 +17,285 @@ if(file_exists($header_file)) {
 	exit;
 }
 ?>
-<style type="text/css">
-#containerprforcd {
-	padding:0px;
-	width:100%;
-	margin-left:auto;
-	margin-right:auto;
-}
-#mainareadaily {
-    background: none repeat scroll 0 0 #EBEBEB;
-    height: 500px;
-    width: 100%;
-}
+<script>
 
-.buttonsbig1 {
-    background-color: #C1C1C1;
-    border: 1px solid #686868;
-    border-radius: 5px;
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2);
-    color: #000000;
-    cursor: pointer;
-    font-family: Calibri;
-    font-size: 12px;
-    height: 25px;
-    padding: 3px;
-    width: 160px;
+$(function () {
+	$('#closebutton').button({
+		icons: {
+			primary : "../images/close_pop.png",
+		},
+		text:false
+	});	
+	$('#closebutton').click(function(event) {
+		//alert('232');
+		$('#errormsgbuild').hide();
+		return false;
+	});		
+});
+
+</script>
+<style>
+#closebutton {
+    background: url("images/close_pop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    color: rgba(0, 0, 0, 0);
+    position: relative;
+    right: -220px;
+    top: -35px;
 }
 </style>
-<script>
-function colviewajax(page,params){   // For pagination and sorting of the Collection Deposited view page
-	var splitparam		=	params.split("&");
-	var searchname	=	splitparam[0];
-	var sortorder		=	splitparam[1];
-	var ordercol		=	splitparam[2];
-	$.ajax({
-		url : "ajax_viewdriver.php",
-		type: "get",
-		dataType: "text",
-		data : { "searchname" : searchname, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
-		success : function(dataval) {
-			var trimval		=	$.trim(dataval);
-			//alert(trimval);
-			$("#colviewajaxid").html(trimval);
-		}
-	});
-}
-function searchcolviewajax(page){  // For pagination and sorting of the Collection Deposited search in view page
-	var searchname	=	$("input[name='searchname']").val();
-	//alert(Product_name);
-	$.ajax({
-		url : "ajax_viewdriver.php",
-		type: "get",
-		dataType: "text",
-		data : { "searchname" : searchname, "page" : page },
-		success : function(dataval) {
-			var trimval		=	$.trim(dataval);
-			//alert(trimval);
-			$("#colviewajaxid").html(trimval);
-		}
-	});
-}
-function show_confirm(name) {
-	var r=confirm("Are You Sure You Want to Delete : "+name);
-	if(r==true) {
-		return true;
-	} else {
+<script>  
+	  $(document).ready(function() {
+	$("#city").change(function(event) {
+			var selvalue=document.getElementById("city").value;
+			if (selvalue != 0) {
+				$('#display_state').load('ajax_building.php?selvalue='+selvalue);
+			}
+			else {
+				document.getElementById("state").value = "";			
+			}
+		});	
+		});	
+	  </script>
+	  <script>
+function validateForm() 
+	{
+	var vendor_name=document.getElementById("name").value;
+	if(vendor_name=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Enter The Vendor Name');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("name").focus();
 		return false;
 	}
-}
+	var city=document.getElementById("city").value;
+	if(city==0)
+	{
+		$('.myalignbuild').html('ERR 0009 : Select City');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("city").focus();
+		return false;
+	}
+	var contact_number=document.getElementById("contact_number").value;
+	if(contact_number=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Enter The Contact Number');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("contact_number").focus();
+		return false;
+	}	
+	}
+$(function () {		
+	$('#clear').click(function(event) {
+		$('#name').val()="";
+		$('#city').val()=0;
+		$('#contact_number').val()="";
+		$('#alt_contact_number').val()="";
+		$('#licence_number').val()="";	
+		$('#address1').val()="";	
+		$('#address2').val()="";
+		$('#address3').val()="";		
+	});		
+});
 </script>
 <?php
-if(isset($_GET['delete_id']) && intval($_GET['delete_id'])) {
-	if ($_GET['delete'] ==1) {
-		$id=$_GET['delete_id'];
-		$query = "SELECT * FROM driver where id=$id"; 
-		$result = mysql_query($query);
-		if($result === FALSE) {
-			die(mysql_error()); // TODO: better error handling
-		}
-	if(!mysql_query("delete FROM driver where id=$id")) {
-		die('Error: ' . mysql_error());
-	}
-	$fgmembersite->RedirectToURL("view_driver.php?success=delete");
-	// 
-	//echo "hi";
-	}
-}
-if($_REQUEST['searchname']!='') {
-	$var = @$_REQUEST['searchname'] ;
-	$trimmed = trim($var);	
-	$qry="SELECT * FROM driver where emp_name like '%".$trimmed."%'";
-} else { 
-	$qry="SELECT * FROM driver"; 
-}
-$results=mysql_query($qry);
-$num_rows= mysql_num_rows($results);			
-$params			=	$searchname."&".$sortorder."&".$ordercol;
-
-/********************************pagination start***********************************/
-$strPage = $_REQUEST[page];
-//$params = $_REQUEST[params];
-
-//if($_REQUEST[mode]=="Listing"){
-//$Num_Rows = mysql_num_rows ($res_search);
-
-########### pagins
-
-$Per_Page = 5;   // Records Per Page
-
-$Page = $strPage;
-if(!$strPage)
+if(isset($_POST['save'])) {
+$vendor_code=$_POST['code'];
+$vendor_name=$_POST['name'];
+$address1=$_POST['address1'];
+$address2=$_POST['address2'];
+$address3=$_POST['address3'];
+$city_vendor=$_POST['city'];
+$contact_number=$_POST['contact_number'];
+$alt_contact_number=$_POST['alt_contact_number'];
+$user_id=$_SESSION['user_id'];
+$fgmembersite->DBLogin();
+if(!mysql_query('insert into vendor SET vendor_code="'.$vendor_code.'",name="'.$vendor_name.'",address1="'.$address1.'",address2="'.$address2.'",address3="'.$address3.'",city_id="'.$city_vendor.'",contact_number="'.$contact_number.'",alt_contact_number="'.$alt_contact_number.'",created_by="'.$user_id.'" '))
 {
-	$Page=1;
+die('Error: ' . mysql_error());
+}
+	$fgmembersite->RedirectToURL("view_vendor.php?success=create");
 }
 
-$Prev_Page = $Page-1;
-$Next_Page = $Page+1;
-
-$Page_Start = (($Per_Page*$Page)-$Per_Page);
-if($num_rows<=$Per_Page) {
-	$Num_Pages =1;
-}
-else if(($num_rows % $Per_Page)==0)
-{
-	$Num_Pages =($num_rows/$Per_Page) ;
-}
-else {
-	$Num_Pages =($num_rows/$Per_Page)+1;
-	$Num_Pages = (int)$Num_Pages;
-}
-if($sortorder == "") {
-	$orderby	=	"ORDER BY id DESC";
-} else {
-	$orderby	=	"ORDER BY $ordercol $sortorder";
-}
-$qry.=" $orderby LIMIT $Page_Start , $Per_Page";  //need to uncomment
-//exit;
-$results_dsr = mysql_query($qry) or die(mysql_error());
-/********************************pagination***********************************/
 ?>
 
 <!------------------------------- Form -------------------------------------------------->
-
-<div id="mainareadaily">
+<div id="mainarea"><!--- mainarea  div start-->
 <div class="mcf"></div>
-<div><h2 align="center">DRIVER</h2></div> 
-
-<div id="containerprforcd">
-
-<span style="float:left;"><input type="button" name="kdproduct" value="Add Driver" class="buttonsbig1" onclick="window.location='driver.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
-
-<div class="clearfix"></div>
-
-<div id="search">
-        <input type="text" name="searchname" id="searchname" value="<?php echo $_REQUEST['searchname']; ?>" autocomplete='off' placeholder='Search By Employee Name'/>
-        <input type="button" class="buttonsg" onclick="searchcolviewajax('<?php echo $Page; ?>');" value="GO"/>
- </div>
-  <div class="clearfix"></div>
-<div class="mcf"></div>
-       <div id="colviewajaxid">
-			<div class="con2">
-			<table width="100%">
-			<thead>
-			<tr>				
-				<?php //echo $sortorderby;
-				if($sortorder == 'ASC') {
-					$sortorderby = 'DESC';
-				} elseif($sortorder == 'DESC') {
-					$sortorderby = 'ASC';
-				} else {
-					$sortorderby = 'ASC';
-				}
-				$paramsval	=	$searchname."&".$sortorderby."&driver_code"; ?>
-				<th nowrap="nowrap" class="rounded" onClick="colviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Driver Code<img src="images/sort.png" width="13" height="13" /></th>
-				<th nowrap="nowrap" >Name</th>
-				<th nowrap="nowrap" >Employee Code</th>
-				<th nowrap="nowrap" >Driving License Number</th>
-				<th nowrap="nowrap" >Edit</th>
-				<th nowrap="nowrap" >Delete</th>
-			</tr>
-			</thead>
-			<tbody>
+<div align="center" class="headingsgr">Vendor</div>
+<div id="mytableformreceipt1" align="center"><!--- mytableformreceipt1 div start-->
+<form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
+<fieldset class="alignment" align="left">
+  <legend><strong>Vendor</strong></legend>
+<table width="50%" align="left"><!-- start--->
+			<tr height="30">
+			<td width="148">vendor Code</td>
+			<td>
 			<?php
-			if(!empty($num_rows)){
-				$slno	=	($Page-1)*$Per_Page + 1;
-			$c=0;$cc=1;
-			while($fetch = mysql_fetch_array($results_dsr)) {
-			if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
-			$id= $fetch['id'];
+		 if(!isset($_GET[id]) && $_GET[id] == '') {
+			$cusid					=	"SELECT vendor_code FROM  vendor ORDER BY id DESC";			
+			$cusold					=	mysql_query($cusid) or die(mysql_error());
+			$cuscnt					=	mysql_num_rows($cusold);
+			//$cuscnt					=	0; // comment if live
+			if($cuscnt > 0) {
+				$row_cus					  =	 mysql_fetch_array($cusold);
+				$cusnumber	  =	$row_cus['vendor_code'];
+
+				$getcusno						=	abs(str_replace("VE",'',strstr($cusnumber,"VE")));
+				$getcusno++;
+				if($getcusno < 10) {
+					$createdcode	=	"00".$getcusno;
+				} else if($getcusno < 100) {
+					$createdcode	=	"0".$getcusno;
+				} else {
+					$createdcode	=	$getcusno;
+				}
+
+				$customer_code				=	"VE".$createdcode;
+			} else {
+				$customer_code				=	"VE001";
+			}
+		}
+	?>
+	<input type='text' name='code' id='code'  value="<?php echo $customer_code;?>" readonly="true" size="7"/>
+			</td>
+			</tr>
+</table><!-- end--->
+
+	 <table width="50%" align="left"><!-- start--->
+			<tr height="30">
+		<td width="128">Vendor Name*</td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td><input type='text' name='name' id='name' tabindex="1"/>
+		</td>
+    </tr>
+		</table><!-- end--->		
+</fieldset>
+
+
+<fieldset align="left" class="alignment">
+  <legend><strong>Address</strong></legend>
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table>
+    <tr height="30">
+    <td width="120">Address Line 1</td>
+	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" class="areatext" /></td>
+    </tr>
+    
+	<tr height="30">
+     <td width="120" >Line 2</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" class="areatext" /></td>
+	</tr>
+
+	<tr height="30">
+     <td width="120">Line 3</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" class="areatext" /></td>
+	</tr>
+</table>
+   </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Left Table End -------------------------------------->
+
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table> 
+  <tr height="30">
+		<td width="146">City*</td>
+		<td><?php
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT a.id  as id ,a.name,b.name as state_name FROM city a, state b where a.state_id=b.id");
+			echo '<select name="city" id="city" tabindex="5" >';
+			echo '<option value="0">--Select--</option>';
+			while($row=mysql_fetch_array($result_state)) {
+				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+			}
+			echo '</select>';
 			?>
-			<tr>				
-				<td><?php echo $fetch['driver_code'];?></td>
-				<td><?php echo $fgmembersite->upperstate($fetch['emp_name']); ?></td>
-				<td><?php echo $fetch['emp_code'];?></td>
-				<td><?php echo $fetch['license_number'];?></td>
-				<td >
-				<a href="edit_driver.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>
-				</td>
-				<td>
-				<a href="view_driver.php?delete_id=<?php echo $fetch['id'];?>&delete=1"><img src="images/trash.png" alt="" title="" width="11" height="11" onclick="return show_confirm('<?php echo $fgmembersite->upperstate($fetch['driver_code']); ?>');"/></a>
-				</td>
-			</tr>
-			<?php $c++; $cc++; $slno++; }		 
-			}else{  echo "<tr><td align='center' colspan='6'><b>No records found</b></td></tr>";}  ?>
-			</tbody>
-			</table>
-			 </div>   
-			 <div class="paginationfile" align="center">
-			 <table>
-			 <tr>
-			 <th class="pagination" scope="col">          
-			<?php 
-			if(!empty($num_rows)){
-				rendering_pagination_common($Num_Pages,$Page,$Prev_Page,$Next_Page,$params,'colviewajax');   //need to uncomment
-			} else { 
-				echo "&nbsp;"; 
-			} ?>      
-			</th>
-			</tr>
-			</table>
-		  </div>
-<?php if($_GET['success']=="delete") { ?>
-	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "Data Deleted Successfully"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
-<?php } ?>
-<?php if($_GET['success']=="create") { ?>
-	<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
+		</td>
+    </tr>
+  <tr height="30">
+     <td width="120" nowrap="nowrap">State</td>
+     <td>
+	<div id="display_state"><input type='text' type="text" name='state' id='state' readonly class="textbox" /></div>
+	 </td>
+	</tr>
+      </table>
+       </td>
+     </tr>
+</table>
+</fieldset>
+
+<fieldset class="alignment" align="left">
+  <legend><strong>Contact Details</strong></legend>
+<table width="50%" align="left"><!-- start--->
+		
+  <tr height="30">
+    <td width="148">Contact Number*</td>
+    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" /></td>
+    </tr>
+	
+</table><!-- end--->
+
+<table width="50%" align="left"><!-- start--->
+		
+<tr height="30">
+     <td width="148" nowrap="nowrap">Alternate Contact No.</td>
+     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="7"/></td>
+	</tr>
+	
+	
+	
+</table><!-- end--->			
+</fieldset>
+
+<?php if($_GET['success']=="update") { ?>
+	<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
+	?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
+<?php } 
+if($_GET['success']=="error") { ?>
+	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
 <?php }?>
-<?php if($_GET['success']=="update") 
+<br/>
+</div><!--- mytableformreceipt1 div end-->
+<table width="100%" style="clear:both">
+  <tbody><tr height="50px;" align="center">
+	<td><input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='ams_temp.php?id=3'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='view_vendor.php'" class="buttons" value="View" name="View">
+	</td>
+  </tr>
+  <tr>
+  <td>
+  <div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
+  <?php if($_GET['success']=="create") 
 {
 ?>
-<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
 ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
 <?php }?>
-</div>
-</div>
-</div>
+  </td>
+  </tr>
+</tbody></table>
+</form>
+</div><!--- mainarea  div end-->
 <?php
 $footerfile='./layout/footer.php';
 if(file_exists($footerfile)) {
