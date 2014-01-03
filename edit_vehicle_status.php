@@ -81,17 +81,16 @@ if(isset($_POST['save']))
 {
 $edit_id=$_POST['edit_id'];
 $user_id=$_SESSION['user_id'];
-$vehicle_reg_id=$_POST['vehicle_reg_id'];
 $status_id=$_POST['status_id'];
 $current_date=date("Y-m-d H:i:s");
-if ($vehicle_reg_id != "")
-{
-if(!mysql_query('UPDATE vehicle_status SET vehicle_reg_id="'.$vehicle_reg_id.'",status_id="'.$status_id.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
-{
-die('Error: ' . mysql_error());
-}
-	$fgmembersite->RedirectToURL("view_vehicle_status.php?success=update");
-}
+			if ($status_id != "")
+			{
+			if(!mysql_query('UPDATE vehicle_status SET status_id="'.$status_id.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
+			{
+			die('Error: ' . mysql_error());
+			}
+				$fgmembersite->RedirectToURL("view_vehicle_status.php?success=update");
+			}
 }
 
 ?>
@@ -127,21 +126,14 @@ while($row = mysql_fetch_array($result))
 			<td width="148">Vehicle Regn. No*</td>
 			<td>
 	<?php
-					$result_state=mysql_query("select * from vehicle");
-					echo '<select name="vehicle_reg_id" id="vehicle_reg_id" tabindex="1">';
-					echo '<option value="0">--Select--</option>';
+					$result_state=mysql_query("select * from vehicle where id=$vehicle_reg_id");
 					while($row=mysql_fetch_array($result_state))
 					{
-					if($row['id'] == $vehicle_reg_id){
-						  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
-					 } else {
-						  $isSelected = ''; // else we remove any tag
-					 }
-					 echo "<option value='".$row['id']."'".$isSelected.">".$row['vehicle_regno']."</option>";
-
+					$reg_no=$row['vehicle_regno']; 
 					}
-					echo '</select>';
+					
 					?>
+					<input type='text' name='vehicle_reg_id' id='vehicle_reg_id'  maxlength="50" autocomplete='off' value="<?php echo $reg_no; ?>" readonly="true"/>
 			</td>
 			</tr>
 					
@@ -180,7 +172,9 @@ while($row = mysql_fetch_array($result))
 <?php } 
 if($_GET['success']=="error") { ?>
 	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
-<?php }?>
+<?php }
+
+?>
 <br/>
 </div><!--- mytableformreceipt1 div end-->
 <table width="100%" style="clear:both">
@@ -200,7 +194,9 @@ if($_GET['success']=="error") { ?>
 ?>
 <div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
 ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
-<?php }?>
+<?php 
+}
+?>
   </td>
   </tr>
 </tbody></table>

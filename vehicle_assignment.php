@@ -234,7 +234,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 		</td>
     </tr>
 	<tr height="30">
-			<td width="148">Driver Code</td>
+			<td width="148">Driver Code*</td>
 			<td>
 	<?php
 	$result_state=mysql_query("select * from driver");
