@@ -152,18 +152,28 @@ if(isset($_POST['save']))
 
 $user_id=$_SESSION['user_id'];
 $currency=$_POST['currency'];
-if ($currency != "")
-{
-if(!mysql_query('INSERT INTO currency (name,created_by)VALUES ("'.$currency.'","'.$user_id.'")'))
-{
-die('Error: ' . mysql_error());
-}
-$fgmembersite->RedirectToURL("currency.php?success=create");
-}
-else
-{
-$fgmembersite->RedirectToURL("currency.php?success=error");
-}
+$query = "SELECT * FROM currency where name = '$currency'"; 
+$result = mysql_query($query);
+		if (mysql_num_rows($result) > 0)
+		{
+			$fgmembersite->RedirectToURL("currency.php?success=exists");
+		}
+		else
+		{
+
+			if ($currency != "")
+			{
+			if(!mysql_query('INSERT INTO currency (name,created_by)VALUES ("'.$currency.'","'.$user_id.'")'))
+			{
+			die('Error: ' . mysql_error());
+			}
+			$fgmembersite->RedirectToURL("currency.php?success=create");
+			}
+			else
+			{
+			$fgmembersite->RedirectToURL("currency.php?success=error");
+			}
+	  }
 }
 ?>
 <?php
@@ -173,18 +183,27 @@ $edit_id=$_POST['edit_id'];
 $user_id=$_SESSION['user_id'];
 $currency=$_POST['currency'];
 $current_date=date("Y-m-d H:i:s");
-if ($currency != "")
-{
-if(!mysql_query('UPDATE currency SET name="'.$currency.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
-{
-die('Error: ' . mysql_error());
-}
-$fgmembersite->RedirectToURL("currency.php?success=update");
-}
-else
-{
-$fgmembersite->RedirectToURL("currency.php?success=error");
-}
+$query = "SELECT * FROM currency where name = '$currency'"; 
+$result = mysql_query($query);
+		if (mysql_num_rows($result) > 0)
+		{
+			$fgmembersite->RedirectToURL("currency.php?success=exists");
+		}
+		else
+		{
+			if ($currency != "")
+			{
+			if(!mysql_query('UPDATE currency SET name="'.$currency.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
+			{
+			die('Error: ' . mysql_error());
+			}
+			$fgmembersite->RedirectToURL("currency.php?success=update");
+			}
+			else
+			{
+			$fgmembersite->RedirectToURL("currency.php?success=error");
+			}
+		}
 }
 
 ?>
@@ -259,6 +278,11 @@ while($row = mysql_fetch_array($result))
 {
 ?>
 <div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-currency-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+<?php }?>
+<?php if($_GET['success']=="exists") 
+{
+?>
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 :Data Already Exists"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-city-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
 <?php }?>
 <div id="client_error" style="display:none">
 <div id="errormsg" class="mydiv3" ><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-city-default ui-corner-all ui-button-icon-only" role="button" title="Close"><span class="ui-button-text">Close</span></button></div>

@@ -152,18 +152,27 @@ if(isset($_POST['save']))
 
 $user_id=$_SESSION['user_id'];
 $transaction_type=$_POST['transaction_type'];
-if ($transaction_type != "")
-{
-if(!mysql_query('INSERT INTO transaction_type (name,created_by)VALUES ("'.$transaction_type.'","'.$user_id.'")'))
-{
-die('Error: ' . mysql_error());
-}
-$fgmembersite->RedirectToURL("transaction_type.php?success=create");
-}
-else
-{
-$fgmembersite->RedirectToURL("transaction_type.php?success=error");
-}
+$query = "SELECT * FROM transaction_type where name = '$transaction_type'"; 
+$result = mysql_query($query);
+		if (mysql_num_rows($result) > 0)
+		{
+			$fgmembersite->RedirectToURL("transaction_type.php?success=exists");
+		}
+		else
+		{
+			if ($transaction_type != "")
+			{
+			if(!mysql_query('INSERT INTO transaction_type (name,created_by)VALUES ("'.$transaction_type.'","'.$user_id.'")'))
+			{
+			die('Error: ' . mysql_error());
+			}
+			$fgmembersite->RedirectToURL("transaction_type.php?success=create");
+			}
+			else
+			{
+			$fgmembersite->RedirectToURL("transaction_type.php?success=error");
+			}
+		}
 }
 ?>
 <?php
@@ -173,18 +182,27 @@ $edit_id=$_POST['edit_id'];
 $user_id=$_SESSION['user_id'];
 $transaction_type=$_POST['transaction_type'];
 $current_date=date("Y-m-d H:i:s");
-if ($transaction_type != "")
-{
-if(!mysql_query('UPDATE transaction_type SET name="'.$transaction_type.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
-{
-die('Error: ' . mysql_error());
-}
-$fgmembersite->RedirectToURL("transaction_type.php?success=update");
-}
-else
-{
-$fgmembersite->RedirectToURL("transaction_type.php?success=error");
-}
+$query = "SELECT * FROM transaction_type where name = '$transaction_type'"; 
+$result = mysql_query($query);
+		if (mysql_num_rows($result) > 0)
+		{
+			$fgmembersite->RedirectToURL("transaction_type.php?success=exists");
+		}
+		else
+		{
+			if ($transaction_type != "")
+			{
+			if(!mysql_query('UPDATE transaction_type SET name="'.$transaction_type.'",updated_at="'.$current_date.'",updated_by="'.$user_id.'" WHERE id="'.$edit_id.'" '))
+			{
+			die('Error: ' . mysql_error());
+			}
+			$fgmembersite->RedirectToURL("transaction_type.php?success=update");
+			}
+			else
+			{
+			$fgmembersite->RedirectToURL("transaction_type.php?success=error");
+			}
+		}
 }
 
 ?>
@@ -259,6 +277,11 @@ while($row = mysql_fetch_array($result))
 {
 ?>
 <div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-transaction_type-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+<?php }?>
+<?php if($_GET['success']=="exists") 
+{
+?>
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 :Data Already Exists"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-city-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
 <?php }?>
 <div id="client_error" style="display:none">
 <div id="errormsg" class="mydiv3" ><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-city-default ui-corner-all ui-button-icon-only" role="button" title="Close"><span class="ui-button-text">Close</span></button></div>
