@@ -127,7 +127,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
   color:transparent;
 }
 .scroll_box {
-	height:270px;
+	height:280px;
 	overflow:auto;
 }
 .alignment2 {
