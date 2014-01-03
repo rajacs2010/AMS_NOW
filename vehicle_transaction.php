@@ -498,14 +498,14 @@ $(document).live('ready',function() {
 		?>
 	 <img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
      <td>
-		<input type='text' name='total_currency' id='total_currency' tabindex="9" value="<?php echo $row['name']; ?>" readonly class="textbox"/>
+		<input type='text' name='total_currency' id='total_currency' size="4" tabindex="9" value="<?php echo $row['name']; ?>" readonly class="textbox"/>
 	 </td>
 	</tr>
 	
 	<tr height="30">
      <td width="120">Cost*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='cost' id='cost' class="textbox" tabindex="11" autocomplete="off" style="text-align:right;" /></td>
+     <td><input type='text' name='cost' id='cost' size="10" class="textbox" tabindex="11" autocomplete="off" style="text-align:right;" /></td>
 	</tr>
 	
 	<tr height="30">
@@ -536,7 +536,7 @@ $(document).live('ready',function() {
    <tr height="30">
      <td width="120">Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='transaction_date' id='transaction_date' tabindex="2" value="<?php echo date('d-m-Y')?>" class="datepicker"/></td>
+     <td><input type='text' name='transaction_date' id='transaction_date' size="10" tabindex="2" value="<?php echo date('d-m-Y')?>" class="datepicker"/></td>
 	</tr>
    
    
@@ -569,7 +569,7 @@ $(document).live('ready',function() {
 			}
 		}
 	?>
-		<input type='text' name='code' id='code' tabindex="4" class="textbox" value="<?php echo $customer_code;?>" readonly="true" /></td>
+		<input type='text' name='code' id='code' size="7" tabindex="4" class="textbox" value="<?php echo $customer_code;?>" readonly="true" /></td>
 	</tr>
      
 	<tr height="30">
@@ -584,13 +584,13 @@ $(document).live('ready',function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Units*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='units' id='units' class="textbox" tabindex="8" autocomplete="off" style="text-align:right;" /></td>
+		 <td><input type='text' name='units' id='units' size="10" class="textbox" tabindex="8" autocomplete="off" style="text-align:right;" /></td>
 	</tr>
 	
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Rate*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='rate' id='rate' class="textbox" tabindex="10" autocomplete="off"  style="text-align:right;"/></td>
+		 <td><input type='text' name='rate' id='rate' size="10" class="textbox" tabindex="10" autocomplete="off"  style="text-align:right;"/></td>
 	</tr>
 	
 	<tr height="30">

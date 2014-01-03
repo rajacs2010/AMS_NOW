@@ -218,9 +218,8 @@ function searchvehlogviewajax(page) {  // For pagination and sorting of the Coll
 				<td align="right"><?php echo ucfirst($fetch['UOM_NAME']); ?></td>
 				<td align="right"><?php echo ucfirst($fetch['desc_log'])."."; ?></td>		
 				<td align="right" nowrap="nowrap">
-
-				<a href="edit_vehicle_log.php?id=<?php echo $fetch['VLID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['VLID']; ?>','<?php echo $fetch['VEH_NUM']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
+					<a href="edit_vehicle_log.php?id=<?php echo $fetch['VLID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['VLID']; ?>','<?php echo $fetch['VEH_NUM']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 

@@ -48,16 +48,6 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 		echo "&nbsp;";
 }
 ?>
-<!-- <div id="inside_content"> -->
-<?php
-if(isset($_GET['success']))
-{
-	if ($_GET['success']=="true") { ?>
-		<span class="success_message">Building created successfully</span>
-		<?php
-	}
-}
-?>
 <link href="css/popup.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 .confirmMAp {
@@ -213,13 +203,15 @@ $(document).ready(function() {
 		var add_currency		=	$("#add_currency").val();
 		var dcost				=	$("#dcost").val();
 		
-		var	currentdate		=	new Date();
-		var dte2			=	parseInt(ddate.substring(0,2),10);
-		var mont2			=	(parseInt(ddate.substring(3,5), 10)) -1;
-		var year2			=	parseInt(ddate.substring(6,10),10);
+		var	currentdate			=	new Date();
 
-		var date2			=	new Date(year2,mont2,dte2);
+		//alert(currentdate);
+		//return false;
 
+		var ddateval 		=	new Date(ddate.substring(6,10)+"/"+ddate.substring(3,5)+"/"+ddate.substring(0,2)).getTime();
+
+		var currentdatevalue	=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+		
 		if(generator_code == '0') {
 			$('.myalignbuild').html('ERR : Select Generator Code');
 			$('#errormsgbuild').css('display','block');
@@ -244,7 +236,7 @@ $(document).ready(function() {
 			},5000);
 			$("#ddate").focus();
 			return false;
-		} else if(date2 > currentdate) {
+		} else if(ddateval > currentdatevalue) {
 			$('.myalignbuild').html('ERR : Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -385,7 +377,7 @@ $(document).ready(function() {
 					$row_cus					  =	 mysql_fetch_array($cusold);
 					$cusnumber	  =	$row_cus['transaction_number'];
 
-					$getcusno						=	abs(str_replace("DIETRA",'',strstr($cusnumber,"DIETRA")));
+					$getcusno						=	abs(str_replace("DE",'',strstr($cusnumber,"DE")));
 					$getcusno++;
 					if($getcusno < 10) {
 						$createdcode	=	"00".$getcusno;
@@ -395,9 +387,9 @@ $(document).ready(function() {
 						$createdcode	=	$getcusno;
 					}
 
-					$customer_code				=	"DIETRA".$createdcode;
+					$customer_code				=	"DE".$createdcode;
 				} else {
-					$customer_code				=	"DIETRA001";
+					$customer_code				=	"DE001";
 				}
 			}
 		?>

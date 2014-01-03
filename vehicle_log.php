@@ -49,7 +49,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	$UOM_log				=	$_POST['uom_log'];
 	$desc_log				=	$_POST['desc_log'];
 
-	$user_id					=	$_SESSION['user_id'];
+	$user_id				=	$_SESSION['user_id'];
 	//echo 'INSERT INTO vehicle_log SET vehicle_reg_no="'.$vehicle_reg_no.'",assignment_number="'.$assignment_number.'",driver_code="'.$driver_code.'",trip_no="'.$trip_no.'",trip_desc="'.$trip_desc.'",starting_date="'.$starting_date.'",starting_time="'.$starting_time.'",ending_date="'.$ending_date.'",ending_time="'.$ending_time.'",starting_reading="'.$starting_reading.'",ending_reading="'.$ending_reading.'",total_distance="'.$total_distance.'",UOM_log="'.$UOM_log.'",desc_log="'.$desc_log.'",created_by="'.$user_id.'" '; 
 	//exit;
 	if(!mysql_query('INSERT INTO vehicle_log SET vehicle_reg_no="'.$vehicle_reg_no.'",assignment_number="'.$assignment_number.'",driver_code="'.$driver_code.'",trip_no="'.$trip_no.'",trip_desc="'.$trip_desc.'",starting_date="'.$starting_date.'",starting_time="'.$starting_time.'",ending_date="'.$ending_date.'",ending_time="'.$ending_time.'",starting_reading="'.$starting_reading.'",ending_reading="'.$ending_reading.'",total_distance="'.$total_distance.'",UOM_log="'.$UOM_log.'",desc_log="'.$desc_log.'",created_by="'.$user_id.'" ')) {
@@ -188,7 +188,8 @@ $(document).live('ready',function() {
 	$("#starting_reading").on('blur',function() {
 
 		var mcost=$(this).val();
-		var numericExpression = /^[+]?[0-9,]+$/;
+		//var numericExpression = /^[+]?[0-9,]+(\.[0-9,]+)?$/;
+		var numericExpression = /^[0-9,]+$/;
 		if(!mcost.match(numericExpression))
 		{
 		$('.myalignbuild').html('ERR : Only Numbers! ');
@@ -249,7 +250,7 @@ $(document).live('ready',function() {
 			return false;
 		}
 		var mcost=$(this).val();
-		var numericExpression = /^[+]?[0-9,]+(\.[0-9,]+)?$/;
+		var numericExpression = /^[0-9,]+$/;
 		if(!mcost.match(numericExpression)) {
 		$('.myalignbuild').html('ERR : Only Numbers! ');
 		$('#errormsgbuild').css('display','block');

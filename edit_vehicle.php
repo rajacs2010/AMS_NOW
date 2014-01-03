@@ -1095,13 +1095,19 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"-"+insurance_duedate.substring(3,5)+"-"+insurance_duedate.substring(0,2)).getTime();
+		var vdateval 					=	new Date(vdate.substring(6,10)+"/"+vdate.substring(3,5)+"/"+vdate.substring(0,2)).getTime();
+		
+		var insurance_dateval 			=	new Date(insurance_date.substring(6,10)+"/"+insurance_date.substring(3,5)+"/"+insurance_date.substring(0,2)).getTime();
+		
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"/"+insurance_duedate.substring(3,5)+"/"+insurance_duedate.substring(0,2)).getTime();
 
-		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"-"+tax_renewal_date.substring(3,5)+"-"+tax_renewal_date.substring(0,2)).getTime();
+		var tax_dateval 				=	new Date(tax_date.substring(6,10)+"/"+tax_date.substring(3,5)+"/"+tax_date.substring(0,2)).getTime();
+		
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"/"+tax_renewal_date.substring(3,5)+"/"+tax_renewal_date.substring(0,2)).getTime();
 
-		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
 
-		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var currentdateval				=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
 		
 		//alert(currentdateval);		
 		
@@ -1121,7 +1127,7 @@ $(document).ready(function() {
 			},5000);
 			$("#vdate").focus();
 			return false;
-		} else if (vdate > currentdateval){
+		} else if (vdateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Date Greater Than Today!');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1210,7 +1216,7 @@ $(document).ready(function() {
 			$("#insurance_date").focus();
 			return false;
 		} 
-		if (insurance_date > currentdateval){
+		if (insurance_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Insurance Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1229,7 +1235,7 @@ $(document).ready(function() {
 			return false;
 		}
 
-		if (tax_date > currentdateval){
+		if (tax_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Tax Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1292,13 +1298,19 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"-"+insurance_duedate.substring(3,5)+"-"+insurance_duedate.substring(0,2)).getTime();
+		var vdateval 					=	new Date(vdate.substring(6,10)+"/"+vdate.substring(3,5)+"/"+vdate.substring(0,2)).getTime();
+		
+		var insurance_dateval 			=	new Date(insurance_date.substring(6,10)+"/"+insurance_date.substring(3,5)+"/"+insurance_date.substring(0,2)).getTime();
+		
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"/"+insurance_duedate.substring(3,5)+"/"+insurance_duedate.substring(0,2)).getTime();
 
-		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"-"+tax_renewal_date.substring(3,5)+"-"+tax_renewal_date.substring(0,2)).getTime();
+		var tax_dateval 				=	new Date(tax_date.substring(6,10)+"/"+tax_date.substring(3,5)+"/"+tax_date.substring(0,2)).getTime();
+		
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"/"+tax_renewal_date.substring(3,5)+"/"+tax_renewal_date.substring(0,2)).getTime();
 
-		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
 
-		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var currentdateval				=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
 
 		//alert(currentdateval);		
 		
@@ -1318,7 +1330,7 @@ $(document).ready(function() {
 			},5000);
 			$("#vdate").focus();
 			return false;
-		} else if (vdate > currentdateval){
+		} else if (vdateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Date Greater Than Today!');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1407,7 +1419,7 @@ $(document).ready(function() {
 			$("#insurance_date").focus();
 			return false;
 		} 
-		if (insurance_date > currentdateval){
+		if (insurance_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Insurance Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1427,7 +1439,7 @@ $(document).ready(function() {
 			return false;
 		}
 
-		if (tax_date > currentdateval){
+		if (tax_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Tax Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1468,16 +1480,20 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		var next_inspection_dateval 	=	new Date(next_inspection_date.substring(6,10)+"-"+next_inspection_date.substring(3,5)+"-"+next_inspection_date.substring(0,2)).getTime();
+		var fit_dateval 				=	new Date(fit_date.substring(6,10)+"/"+fit_date.substring(3,5)+"/"+fit_date.substring(0,2)).getTime();
+		
+		var next_inspection_dateval 	=	new Date(next_inspection_date.substring(6,10)+"/"+next_inspection_date.substring(3,5)+"/"+next_inspection_date.substring(0,2)).getTime();
 
-		var pollution_inspection_dateval=	new Date(pollution_inspection_date.substring(6,10)+"-"+pollution_inspection_date.substring(3,5)+"-"+pollution_inspection_date.substring(0,2)).getTime();
+		var pollution_certificate_dateval	=	new Date(pollution_certificate_date.substring(6,10)+"/"+pollution_certificate_date.substring(3,5)+"/"+pollution_certificate_date.substring(0,2)).getTime();
 
-		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+		var pollution_inspection_dateval	=	new Date(pollution_inspection_date.substring(6,10)+"/"+pollution_inspection_date.substring(3,5)+"/"+pollution_inspection_date.substring(0,2)).getTime();
 
-		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var currentdatevalue				=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+
+		var currentdateval					=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
 		
 		
-		if (fit_date > currentdateval){
+		if (fit_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Fitness Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1487,7 +1503,7 @@ $(document).ready(function() {
 			return false;
 		}
 		if (next_inspection_dateval < currentdatevalue){
-			$('.myalignbuild').html('ERR : Fitness Date Less Than Today');
+			$('.myalignbuild').html('ERR : Fitness Inspection Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
@@ -1496,7 +1512,7 @@ $(document).ready(function() {
 			return false;
 		}
 
-		if (pollution_certificate_date > currentdateval){
+		if (pollution_certificate_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Pollution Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1506,7 +1522,7 @@ $(document).ready(function() {
 			return false;
 		}
 		if (pollution_inspection_dateval < currentdatevalue){
-			$('.myalignbuild').html('ERR : Pollution Date Less Than Today');
+			$('.myalignbuild').html('ERR : Pollution Inspection Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
@@ -1591,7 +1607,7 @@ $(document).ready(function() {
 		?>
 		<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='model_currency' id='model_currency' value="<?php $fgmembersite->DBLogin(); echo $fgmembersite->getdbval($model_currency,'name','id','currency'); ?>"  readonly class="textbox"/></td>
+		<td><input type='text' name='model_currency' id='model_currency' size="4" value="<?php echo $row[name]; ?>"  readonly class="textbox"/></td>
 	</tr>
     
 
@@ -1607,7 +1623,7 @@ $(document).ready(function() {
   <td>
    <table>
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Date*</td>
+		 <td width="120" nowrap="nowrap">Date</td>
 		 <td><input type='text' name='vdate' id='vdate' tabindex="2" value="<?php echo $vehichle_reg_date;?>" class="datepicker textbox"/></td>
 	</tr>
      
@@ -1677,7 +1693,7 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='currency' id='currency' value="<?php echo $fgmembersite->getdbval($currency,'name','id','currency'); ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='currency' id='currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -1740,13 +1756,13 @@ $(document).ready(function() {
 	<tr height="30">
      <?php
 			$fgmembersite->DBLogin();
-			$result_state=mysql_query("SELECT * FROM currency");
+			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$tax_currency'");
 			$row=mysql_fetch_array($result_state);
 		?>
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='tax_currency' id='tax_currency' value="<?php echo $fgmembersite->getdbval($tax_currency,'name','id','currency'); ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='tax_currency' id='tax_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -1810,9 +1826,14 @@ $(document).ready(function() {
     
 	<tr height="30">     
 		<td width="120" >Currency </td>
-		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
+		<td><?php
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$certification_currency'");
+			$row=mysql_fetch_array($result_state);
+		?>
+		<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='certification_currency' id='certification_currency' value="<?php echo $fgmembersite->getdbval($certification_currency,'name','id','currency'); ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='certification_currency' id='certification_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -1869,9 +1890,14 @@ $(document).ready(function() {
     
 	<tr height="30">
      	<td width="120" >Currency </td>
-		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
+		<td><?php
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$pollution_currency'");
+			$row=mysql_fetch_array($result_state);
+		?>
+		<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='pollution_currency' id='pollution_currency' value="<?php echo $fgmembersite->getdbval($pollution_currency,'name','id','currency'); ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='pollution_currency' id='pollution_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">

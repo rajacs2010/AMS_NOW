@@ -520,8 +520,8 @@ $(document).live('ready',function() {
 			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$row_edit[currency_id]'");
 			$row=mysql_fetch_array($result_state);
 		?>
-		<td width="120" >Currency &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><img width="15px" height="15px" src="images/currency.gif"></td>
+		<td width="120" >Currency </td>
+		<td><img width="15px" height="15px" src="images/<?php echo $row['symbol']; ?>"></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
 		<td><input type='text' name='total_currency' id='total_currency' value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
 	</tr>
@@ -529,7 +529,7 @@ $(document).live('ready',function() {
 	<tr height="30">
      <td width="120">Cost*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='cost' id='cost' value="<?php echo $row_edit['cost']; ?>" class="textbox" tabindex="11" autocomplete="off" style="text-align:right;" /></td>
+     <td><input type='text' name='cost' id='cost' size="10" value="<?php echo $row_edit['cost']; ?>" class="textbox" tabindex="11" autocomplete="off" style="text-align:right;" /></td>
 	</tr>
 	
 	<tr height="30">
@@ -559,14 +559,14 @@ $(document).live('ready',function() {
    <tr height="30">
      <td width="120">Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='transaction_date' id='transaction_date' tabindex="2" value="<?php echo $row_edit[transaction_date]; ?>" class="datepicker"/></td>
+     <td><input type='text' name='transaction_date' id='transaction_date' size="10" tabindex="2" value="<?php echo $row_edit[transaction_date]; ?>" class="datepicker"/></td>
 	</tr>
    
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Transaction Number</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td>
-		<input type='text' name='code' id='code' tabindex="4" class="textbox" value="<?php echo $row_edit[transaction_number]; ?>" readonly="true" /></td>
+		<input type='text' name='code' id='code' size="6" tabindex="4" class="textbox" value="<?php echo $row_edit[transaction_number]; ?>" readonly="true" /></td>
 	</tr>
      
     <tr height="30">
@@ -581,13 +581,13 @@ $(document).live('ready',function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Units*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='units' id='units' value="<?php echo $row_edit[units]; ?>" class="textbox" tabindex="8" autocomplete="off" style="text-align:right;" /></td>
+		 <td><input type='text' name='units' id='units' size="10" value="<?php echo $row_edit[units]; ?>" class="textbox" tabindex="8" autocomplete="off" style="text-align:right;" /></td>
 	</tr>
 
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Rate*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='rate' id='rate' value="<?php echo $row_edit[rate]; ?>" class="textbox" tabindex="10" autocomplete="off"  style="text-align:right;"/></td>
+		 <td><input type='text' name='rate' id='rate' size="10" value="<?php echo $row_edit[rate]; ?>" class="textbox" tabindex="10" autocomplete="off"  style="text-align:right;"/></td>
 	</tr>
 	
 	<tr height="30">

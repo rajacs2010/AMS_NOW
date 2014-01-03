@@ -462,6 +462,15 @@ $(document).ready(function() {
 </script>
 <?php
 if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
+	
+	$vregno								=	$_POST['vregno'];
+	
+	$result_reg_no=mysql_query("select id from vehicle WHERE vehicle_regno='$vregno'");
+	$rowcnt_reg_no=mysql_num_rows($result_reg_no);
+	if($rowcnt_reg_no > 0) {		
+		$fgmembersite->RedirectToURL("vehicle.php?success=exists");
+	}
+	
 	if(isset($_FILES["car_reg_attach"]["name"])) {
 	$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
 	$temp = explode(".", $_FILES["car_reg_attach"]["name"]);
@@ -590,8 +599,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	}
 	//
 	//
-	$user_id							=	$_SESSION['user_id'];
-	$vregno								=	$_POST['vregno'];
+	$user_id							=	$_SESSION['user_id'];	
 	$vdate								=	$_POST['vdate'];
 	$comp_id							=	$_POST['comp_id'];
 	
@@ -735,6 +743,14 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
   background:url(images/close_pop.png) no-repeat;
   color:transparent;
 }
+#closebutton1 {
+  position:relative;
+  top:-35px;
+  right:-200px;
+  border:none;
+  background:url(images/close_pop.png) no-repeat;
+  color:transparent;
+}
 .scroll_box {
 	height:419px;
 	overflow:auto;
@@ -780,6 +796,11 @@ $(document).ready(function() {
 		$('#closebutton').click(function(event) {
 			//alert('232');
 			$('#errormsgbuild').hide();
+			return false;
+		});
+		$('#closebutton1').click(function(event) {
+			//alert('232');
+			$('#errormsg').hide();
 			return false;
 		});		
 	});
@@ -1025,13 +1046,19 @@ $(document).ready(function() {
 		
 		var	currentdate					=	new Date();
 
-		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"-"+insurance_duedate.substring(3,5)+"-"+insurance_duedate.substring(0,2)).getTime();
+		var vdateval 					=	new Date(vdate.substring(6,10)+"/"+vdate.substring(3,5)+"/"+vdate.substring(0,2)).getTime();
+		
+		var insurance_dateval 		=	new Date(insurance_date.substring(6,10)+"/"+insurance_date.substring(3,5)+"/"+insurance_date.substring(0,2)).getTime();
+		
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"/"+insurance_duedate.substring(3,5)+"/"+insurance_duedate.substring(0,2)).getTime();
 
-		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"-"+tax_renewal_date.substring(3,5)+"-"+tax_renewal_date.substring(0,2)).getTime();
+		var tax_dateval 		=	new Date(tax_date.substring(6,10)+"/"+tax_date.substring(3,5)+"/"+tax_date.substring(0,2)).getTime();
+		
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"/"+tax_renewal_date.substring(3,5)+"/"+tax_renewal_date.substring(0,2)).getTime();
 
-		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
 
-		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var currentdateval				=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
 
 		if(vregno == '') {
 			$('.myalignbuild').html('ERR : Enter Registration No.');
@@ -1049,7 +1076,7 @@ $(document).ready(function() {
 			},5000);
 			$("#vdate").focus();
 			return false;
-		} else if (vdate > currentdateval){
+		} else if (vdateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Date Greater Than Today!');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1138,7 +1165,7 @@ $(document).ready(function() {
 			$("#insurance_date").focus();
 			return false;
 		} 
-		if (insurance_date > currentdateval){
+		if (insurance_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Insurance Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1157,7 +1184,7 @@ $(document).ready(function() {
 			return false;
 		}
 
-		if (tax_date > currentdateval){
+		if (tax_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Tax Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1220,13 +1247,19 @@ $(document).ready(function() {
 
 		var	currentdate					=	new Date();
 
-		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"-"+insurance_duedate.substring(3,5)+"-"+insurance_duedate.substring(0,2)).getTime();
+		var vdateval 					=	new Date(vdate.substring(6,10)+"/"+vdate.substring(3,5)+"/"+vdate.substring(0,2)).getTime();
+		
+		var insurance_dateval 			=	new Date(insurance_date.substring(6,10)+"/"+insurance_date.substring(3,5)+"/"+insurance_date.substring(0,2)).getTime();
+		
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"/"+insurance_duedate.substring(3,5)+"/"+insurance_duedate.substring(0,2)).getTime();
 
-		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"-"+tax_renewal_date.substring(3,5)+"-"+tax_renewal_date.substring(0,2)).getTime();
+		var tax_dateval 				=	new Date(tax_date.substring(6,10)+"/"+tax_date.substring(3,5)+"/"+tax_date.substring(0,2)).getTime();
+		
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"/"+tax_renewal_date.substring(3,5)+"/"+tax_renewal_date.substring(0,2)).getTime();
 
-		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
 
-		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var currentdateval				=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
 
 		//alert(currentdateval);		
 		
@@ -1246,7 +1279,7 @@ $(document).ready(function() {
 			},5000);
 			$("#vdate").focus();
 			return false;
-		} else if (vdate > currentdateval){
+		} else if (vdateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Date Greater Than Today!');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1335,7 +1368,7 @@ $(document).ready(function() {
 			$("#insurance_date").focus();
 			return false;
 		} 
-		if (insurance_date > currentdateval){
+		if (insurance_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Insurance Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1355,7 +1388,7 @@ $(document).ready(function() {
 			return false;
 		}
 
-		if (tax_date > currentdateval){
+		if (tax_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Tax Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1382,29 +1415,33 @@ $(document).ready(function() {
 
 	$("#seca").on("click", function() {
 		//alert("232");
-		var fit_date					=	$("#fit_date").val();
-		var next_inspection_date		=	$("#next_inspection_date").val();	
-		var pollution_certificate_date	=	$("#pollution_certificate_date").val();
-		var pollution_inspection_date	=	$("#pollution_inspection_date").val();
-		var fit_certificate_no			=	$("#fit_certificate_no").val();				
-		var certification_currency		=	$("#certification_currency").val();
-		var certification_cost			=	$("#certification_cost").val();							
-		var pollution_certificate_no	=	$("#pollution_certificate_no").val();		
-		var pollution_currency			=	$("#pollution_currency").val();
-		var pollution_certificate_cost	=	$("#pollution_certificate_cost").val();
+		var fit_date						=	$("#fit_date").val();
+		var next_inspection_date			=	$("#next_inspection_date").val();	
+		var pollution_certificate_date		=	$("#pollution_certificate_date").val();
+		var pollution_inspection_date		=	$("#pollution_inspection_date").val();
+		var fit_certificate_no				=	$("#fit_certificate_no").val();				
+		var certification_currency			=	$("#certification_currency").val();
+		var certification_cost				=	$("#certification_cost").val();							
+		var pollution_certificate_no		=	$("#pollution_certificate_no").val();		
+		var pollution_currency				=	$("#pollution_currency").val();
+		var pollution_certificate_cost		=	$("#pollution_certificate_cost").val();
 
-		var	currentdate					=	new Date();
+		var	currentdate						=	new Date();
 
-		var next_inspection_dateval 	=	new Date(next_inspection_date.substring(6,10)+"-"+next_inspection_date.substring(3,5)+"-"+next_inspection_date.substring(0,2)).getTime();
+		var fit_dateval 					=	new Date(fit_date.substring(6,10)+"/"+fit_date.substring(3,5)+"/"+fit_date.substring(0,2)).getTime();
+		
+		var next_inspection_dateval 		=	new Date(next_inspection_date.substring(6,10)+"/"+next_inspection_date.substring(3,5)+"/"+next_inspection_date.substring(0,2)).getTime();
 
-		var pollution_inspection_dateval=	new Date(pollution_inspection_date.substring(6,10)+"-"+pollution_inspection_date.substring(3,5)+"-"+pollution_inspection_date.substring(0,2)).getTime();
+		var pollution_certificate_dateval	=	new Date(pollution_certificate_date.substring(6,10)+"/"+pollution_certificate_date.substring(3,5)+"/"+pollution_certificate_date.substring(0,2)).getTime();
 
-		var currentdatevalue			=	new Date(currentdate.getFullYear()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getDate()).getTime();
+		var pollution_inspection_dateval	=	new Date(pollution_inspection_date.substring(6,10)+"/"+pollution_inspection_date.substring(3,5)+"/"+pollution_inspection_date.substring(0,2)).getTime();
 
-		var currentdateval				=	 currentdate.getDate()+"-"+(parseInt(currentdate.getMonth())+1)+"-"+currentdate.getFullYear();
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+
+		var currentdateval				=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
 		
 		
-		if (fit_date > currentdateval){
+		if (fit_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Fitness Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1414,7 +1451,7 @@ $(document).ready(function() {
 			return false;
 		}
 		if (next_inspection_dateval < currentdatevalue){
-			$('.myalignbuild').html('ERR : Fitness Date Less Than Today');
+			$('.myalignbuild').html('ERR : Fitness Inspection Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
@@ -1423,7 +1460,7 @@ $(document).ready(function() {
 			return false;
 		}
 
-		if (pollution_certificate_date > currentdateval){
+		if (pollution_certificate_dateval > currentdatevalue){
 			$('.myalignbuild').html('ERR : Pollution Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1433,7 +1470,7 @@ $(document).ready(function() {
 			return false;
 		}
 		if (pollution_inspection_dateval < currentdatevalue){
-			$('.myalignbuild').html('ERR : Pollution Date Less Than Today');
+			$('.myalignbuild').html('ERR : Pollution Inspection Date Less Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
@@ -1509,7 +1546,7 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='model_currency' id='model_currency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='model_currency' id='model_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
     
 
@@ -1525,7 +1562,7 @@ $(document).ready(function() {
   <td>
    <table>
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Date*</td>
+		 <td width="120" nowrap="nowrap">Date</td>
 		 <td><input type='text' name='vdate' id='vdate' tabindex="2" value="<?php echo date('d-m-Y'); ?>" class="datepicker textbox"/></td>
 	</tr>
      
@@ -1589,7 +1626,7 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='currency' id='currency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='currency' id='currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -1658,7 +1695,7 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='tax_currency' id='tax_currency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='tax_currency' id='tax_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -1734,7 +1771,7 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='certification_currency' id='certification_currency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='certification_currency' id='certification_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -1798,7 +1835,7 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='pollution_currency' id='pollution_currency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='pollution_currency' id='pollution_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -1939,6 +1976,11 @@ $(document).ready(function() {
   </table>
 	<div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
 </form>
+<?php 
+if($_GET['success']=="exists") {
+			?>
+			<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR : Regn. Number Already Exists"; ?> </h3><button id="closebutton1" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+			<?php } ?>
 <!-- </div> -->
 </div>
 <?php

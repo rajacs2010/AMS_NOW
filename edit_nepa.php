@@ -207,12 +207,13 @@ $(document).ready(function() {
 		var amount				=	$("#amount").val();
 		var add_currency		=	$("#add_currency").val();
 		
-		var	currentdate		=	new Date();
-		var dte2			=	parseInt(mdate.substring(0,2),10);
-		var mont2			=	(parseInt(mdate.substring(3,5), 10)) -1;
-		var year2			=	parseInt(mdate.substring(6,10),10);
+		var	currentdate			=	new Date();
+		//alert(currentdate);
+		//return false;
 
-		var date2			=	new Date(year2,mont2,dte2);
+		var mdateval 			=	new Date(mdate.substring(6,10)+"/"+mdate.substring(3,5)+"/"+mdate.substring(0,2)).getTime();
+
+		var currentdatevalue	=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
 
 		if(building_code == '0') {
 			$('.myalignbuild').html('ERR : Select Building Code');
@@ -254,7 +255,7 @@ $(document).ready(function() {
 			},5000);
 			$("#mdate").focus();
 			return false;
-		} else if(date2 > currentdate) {
+		} else if(mdateval > currentdatevalue) {
 			$('.myalignbuild').html('ERR : Date Greater Than Today');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {

@@ -86,8 +86,7 @@ if(isset($_POST['submitted']))
       
 <div class="content">
  
-<table align="center" width="30%"CELLPADDING="3" CELLSPACING="0"  style=" border: 1px solid #00BFFF; border-top:0px;font-family: Arial;
-    font-size: 12px;"      >
+<table align="center" width="30%" cellpadding="3" cellspacing="0"  style="border: 1px solid #00BFFF;border-top:0px;font-family: Arial;font-size: 12px;" >
   <tr>
     <th style="background: url('images/th.png'); height: 29px;color:#ffffff;text-align: left;font-size: 14px;text-align:center">
 Login

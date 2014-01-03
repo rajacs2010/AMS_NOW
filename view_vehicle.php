@@ -149,7 +149,7 @@ function searchvehviewajax(page) {  // For pagination and sorting of the Collect
 
 <div id="containerprforcd">
 
-<span style="float:left;"><input type="button" name="kdproduct" value="Add Vehicle" class="buttonsbig" onclick="window.location='vehicle_sample.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
+<span style="float:left;"><input type="button" name="kdproduct" value="Add Vehicle" class="buttonsbig" onclick="window.location='vehicle.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=3'"></span>
 
 <div class="clearfix"></div>
  <div id="search">

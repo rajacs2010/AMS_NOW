@@ -6,6 +6,7 @@ ini_set("display_errors",false);
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_WARNING);
 
 extract($_REQUEST);
+
 /*echo "<pre>";
 print_r($_REQUEST);
 echo "</pre>";
@@ -15,8 +16,7 @@ print_r($_FILES);
 echo "</pre>";*/
 //exit;
 
-if(!$fgmembersite->CheckLogin())
-{
+if(!$fgmembersite->CheckLogin()) {
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
@@ -987,12 +987,14 @@ if(isset($_POST['formsaveval']) && $_POST['formsaveval'] == 'Edit') {
 	} elseif($edit_id_val != '') {
 		if(!mysql_query('UPDATE building SET building_name="'.$buildingname.'",building_code="'.$building_code.'",building_type="'.$building_type.'",building_city="'.$city.'",building_state="'.$state.'",address1="'.$address1.'",address2="'.$address2.'",address3="'.$address3.'",building_status="'.$building_status.'",building_purchase="'.$datepurchase.'",datelease="'.$datelease.'",building_currency="'.$purcurrency.'",rentcurrency="'.$rentcurrency.'",building_cost="'.$cost.'",building_rent="'.$rent.'",building_period="'.$periodfrom.'",building_purchasefrom="'.$purchasefrom.'",building_saleagreement="'.$saleagreement.'",building_landlord="'.$landlord.'",landlord_contactperson="'.$contactperson.'",landlod_address1="'.$landlod_address1.'",landlod_address2="'.$landlod_address2.'",landlod_address3="'.$landlod_address3.'",landlord_city="'.$city_landlord.'",landlord_state="'.$state_landlord.'",landlord_contactno="'.$contactnumber.'",landlord_email="'.$emailid.'",landlord_alternateno="'.$alternatenumber.'",landlord_altperson="'.$altperson.'",landlord_altpersonno="'.$altpersonnumber.'",leasedead="'.$leasedeed.'",effectivedate="'.$effectivedate.'",marker_id="'.$marker_id.'",leaserenewaldate="'.$renewaldate.'",companyliason_empcode="'.$emp_code.'",companyliason_empname="'.$empname.'",build_desc="'.$buildingdesc.'",attach4="'.$attach4.'",attach5="'.$attach5.'",attach6="'.$attach6.'",attach7="'.$attach7.'",attach8="'.$attach8.'",incharge_empcode="'.$incharge_empcode.'",incharge_empname="'.$leadername.'",total_employess="'.$totalemployee.'",insurance_number="'.$insurancenumber.'",insurance_date="'.$insurancedate.'",attach9="'.$attach9.'",renewal_due="'.$insurancerenewaldue.'",total_maintain_cost="'.$maintenancecost.'",total_currency="'.$total_currency.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id ="'.$edit_id.'"')) {
 			die('Error: ' . mysql_error());
-		}
+		}		
 		?>
 		<script type="text/javascript">
 			alert("Data Saved Successfully");
+			//window.location = "edit_building.php?id="+edit_id+"&secpage=1";
 		</script>
 		<?php
+		//exit();
 		$fgmembersite->RedirectToURL("edit_building.php?id=$edit_id&secpage=1");
 		echo "&nbsp;";
 	}
@@ -1493,19 +1495,23 @@ $(document).ready(function() {
 			var eff_date		=	$("#effectivedate").val();
 			var ren_date		=	$("#renewaldate").val();
 
-			var	currentdate		=	new Date();
-			var dte2			=	parseInt(eff_date.substring(0,2),10);
-			var mont2			=	(parseInt(eff_date.substring(3,5), 10)) -1;
-			var year2			=	parseInt(eff_date.substring(6,10),10);
+			var	currentdate			=	new Date();
 
-			var ren_dte2		=	parseInt(ren_date.substring(0,2),10);
-			var ren_mont2		=	(parseInt(ren_date.substring(3,5), 10)) -1;
-			var ren_year2		=	parseInt(ren_date.substring(6,10),10);
+			//alert(currentdate);
+			//return false;
 
-			var date2			=	new Date(year2,mont2,dte2);
-			var ren_date2		=	new Date(ren_year2,ren_mont2,ren_dte2);
-		
-		
+			var eff_dateval 		=	new Date(eff_date.substring(6,10)+"/"+eff_date.substring(3,5)+"/"+eff_date.substring(0,2)).getTime();
+				
+			var ren_dateval 		=	new Date(ren_date.substring(6,10)+"/"+ren_date.substring(3,5)+"/"+ren_date.substring(0,2)).getTime();
+
+			var currentdatevalue	=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+
+			//alert(currentdate.getFullYear());
+			//alert(currentdate.getMonth());
+			//alert(currentdate.getDate());
+			//alert(eff_dateval);
+			//alert(currentdatevalue);
+			
 			if(eff_date == '') {
 				$('.myalignbuild').html('ERR : Select Effective Date');
 				$('#errormsgbuild').css('display','block');
@@ -1514,7 +1520,7 @@ $(document).ready(function() {
 				},5000);
 				$("#effectivedate").focus();
 				return false;
-			} else if (date2 > currentdate){
+			} else if (eff_dateval > currentdatevalue){
 				$('.myalignbuild').html('ERR : Date greater than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1530,7 +1536,7 @@ $(document).ready(function() {
 				},5000);
 				$("#renewaldate").focus();
 				return false;
-			} else if (ren_date2 < currentdate){
+			} else if (ren_dateval < currentdatevalue){
 				$('.myalignbuild').html('ERR : Date Less than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1641,19 +1647,17 @@ $(document).ready(function() {
 			var eff_date		=	$("#effectivedate").val();
 			var ren_date		=	$("#renewaldate").val();
 
-			var	currentdate		=	new Date();
-			var dte2			=	parseInt(eff_date.substring(0,2),10);
-			var mont2			=	(parseInt(eff_date.substring(3,5), 10)) -1;
-			var year2			=	parseInt(eff_date.substring(6,10),10);
+			var	currentdate			=	new Date();
 
-			var ren_dte2		=	parseInt(ren_date.substring(0,2),10);
-			var ren_mont2		=	(parseInt(ren_date.substring(3,5), 10)) -1;
-			var ren_year2		=	parseInt(ren_date.substring(6,10),10);
+			//alert(currentdate);
+			//return false;
 
-			var date2			=	new Date(year2,mont2,dte2);
-			var ren_date2		=	new Date(ren_year2,ren_mont2,ren_dte2);
-		
-		
+			var eff_dateval 		=	new Date(eff_date.substring(6,10)+"/"+eff_date.substring(3,5)+"/"+eff_date.substring(0,2)).getTime();
+				
+			var ren_dateval 		=	new Date(ren_date.substring(6,10)+"/"+ren_date.substring(3,5)+"/"+ren_date.substring(0,2)).getTime();
+
+			var currentdatevalue	=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+				
 			if(eff_date == '') {
 				$('.myalignbuild').html('ERR : Select Effective Date');
 				$('#errormsgbuild').css('display','block');
@@ -1662,7 +1666,7 @@ $(document).ready(function() {
 				},5000);
 				$("#effectivedate").focus();
 				return false;
-			} else if (date2 > currentdate){
+			} else if (eff_dateval > currentdatevalue){
 				$('.myalignbuild').html('ERR : Date greater than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1678,7 +1682,7 @@ $(document).ready(function() {
 				},5000);
 				$("#renewaldate").focus();
 				return false;
-			} else if (ren_date2 < currentdate){
+			} else if (ren_dateval < currentdatevalue){
 				$('.myalignbuild').html('ERR : Date Less than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1743,18 +1747,12 @@ $(document).ready(function() {
 			var liaison_emp		=	$("#emp_code").val();
 			
 			var	currentdate		=	new Date();
-			var dte2			=	parseInt(Dateval.substring(0,2),10);
-			var mont2			=	(parseInt(Dateval.substring(3,5), 10)) -1;
-			var year2			=	parseInt(Dateval.substring(6,10),10);
 
-			var ren_dte2		=	parseInt(ren_date.substring(0,2),10);
-			var ren_mont2		=	(parseInt(ren_date.substring(3,5), 10)) -1;
-			var ren_year2		=	parseInt(ren_date.substring(6,10),10);
+			var Datevalval 		=	new Date(Dateval.substring(6,10)+"/"+Dateval.substring(3,5)+"/"+Dateval.substring(0,2)).getTime();
 
-			var date2			=	new Date(year2,mont2,dte2);
-			var ren_date2		=	new Date(ren_year2,ren_mont2,ren_dte2);
-
-			if (date2 > currentdate){
+			var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+			
+			if (Datevalval > currentdatevalue) {
 				$('.myalignbuild').html('ERR : Date greater than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -2144,9 +2142,9 @@ $(document).ready(function() {
   <table>
   <tr height="25">
      <td width="65">Effective*</td>
-     <td><input type="text" name="effectivedate" id="effectivedate" size="10" value="<?php echo $row_edit['effectivedate']; ?>" tabindex="16" autocomplete='off' maxlength="10" class="datepicker"/></td>
+     <td><input type="text" name="effectivedate" id="effectivedate" size="10" value="<?php if($row_edit['effectivedate'] == '') { echo date('d-m-Y'); } else { echo $row_edit['effectivedate'];  } ?>" tabindex="16" autocomplete='off' maxlength="10" class="datepicker"/></td>
 	<td width="130" nowrap="nowrap" >&nbsp;&nbsp;&nbsp;&nbsp;Renewal Date*</td>
-	<td><input type='text' name='renewaldate' id='renewaldate' size="10" value="<?php echo $row_edit['leaserenewaldate']; ?>" tabindex="17" autocomplete='off' maxlength="10" class="datepicker textbox"/></td>
+	<td><input type='text' name='renewaldate' id='renewaldate' size="10" value="<?php if($row_edit['leaserenewaldate'] == '') { echo date('d-m-Y'); } else { echo $row_edit['leaserenewaldate'];  } ?>" tabindex="17" autocomplete='off' maxlength="10" class="datepicker textbox"/></td>
      </tr>
    </table>
  </fieldset>
@@ -2181,11 +2179,17 @@ $(document).ready(function() {
 		<?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$row_edit[building_currency]'");
-			$row=mysql_fetch_array($result_state);
+			$rowcnt_cur=mysql_num_rows($result_state);
+			if($rowcnt_cur == 0) {
+				$result_state=mysql_query("SELECT * FROM currency");
+				$row=mysql_fetch_array($result_state);
+			} else if($rowcnt_cur > 0) {
+				$row=mysql_fetch_array($result_state);
+			}
 		?>
 		<td width="120" >Currency</td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td><input type='text' name='purcurrency' id='purcurrency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='purcurrency' id='purcurrency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 	<tr height="30">
      <td width="120">Sale Deed/Agreement</td>
@@ -2261,12 +2265,12 @@ $(document).ready(function() {
   <table>
 	<tr height="32">
      <td width="120" nowrap="nowrap">Date</td>
-     <td><input type='text' name='insurancedate' id='insurancedate'	value="<?php echo $row_edit['insurance_date']; ?>" tabindex="5" class="datepicker textbox"/></td>
+     <td><input type='text' name='insurancedate' id='insurancedate'	size="10" value="<?php if($row_edit['insurance_date'] == '') { echo date('d-m-Y'); } else { echo $row_edit['insurance_date'];  }?>" tabindex="5" class="datepicker textbox"/></td>
 	</tr>
 	
 	<tr height="32">
      <td width="120" nowrap="nowrap">Renewal Date</td>
-     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' value="<?php echo $row_edit['renewal_due']; ?>" tabindex="7" class="datepicker textbox"/></td>
+     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' size="10" value="<?php if($row_edit['renewal_due'] == '') { echo date('d-m-Y'); } else { echo $row_edit['renewal_due'];  } ?>" tabindex="7" class="datepicker textbox"/></td>
 	</tr>
     </table>
    </td>
@@ -2296,18 +2300,24 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Agreement Date*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='datelease' id='datelease' value="<?php echo $row_edit['datelease']; ?>" tabindex="1" class="datepicker textbox"/></td>
+    <td><input type='text' name='datelease' id='datelease' size="10" value="<?php if($row_edit['datelease'] == '') { echo date('d-m-Y'); } else { echo $row_edit['datelease'];  } ?>" tabindex="1" class="datepicker textbox"/></td>
     </tr>
     
 	<tr height="30">
 		<?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$row_edit[rentcurrency]'");
-			$row=mysql_fetch_array($result_state);
+			$rowcnt_cur=mysql_num_rows($result_state);
+			if($rowcnt_cur == 0) {
+				$result_state=mysql_query("SELECT * FROM currency");
+				$row=mysql_fetch_array($result_state);
+			} else if($rowcnt_cur > 0) {
+				$row=mysql_fetch_array($result_state);
+			}
 		?>
 		<td width="120">Currency</td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td><input type='text' name='rentcurrency' id='rentcurrency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='rentcurrency' id='rentcurrency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 
 

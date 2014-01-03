@@ -1039,16 +1039,6 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	}
 }
 ?>
-<!-- <div id="inside_content"> -->
-<?php
-if(isset($_GET['success']))
-{
-	if ($_GET['success']=="true") { ?>
-		<span class="success_message">Building created successfully</span>
-		<?php
-	}
-}
-?>
 <link href="css/popup.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 .confirmMAp {
@@ -1498,22 +1488,26 @@ $(document).ready(function() {
 		
 		if($("#building_status:checked").val() == 2) {
 			
-			var eff_date		=	$("#effectivedate").val();
-			var ren_date		=	$("#renewaldate").val();
+			var eff_date			=	$("#effectivedate").val();
+			var ren_date			=	$("#renewaldate").val();
 
-			var	currentdate		=	new Date();
-			var dte2			=	parseInt(eff_date.substring(0,2),10);
-			var mont2			=	(parseInt(eff_date.substring(3,5), 10)) -1;
-			var year2			=	parseInt(eff_date.substring(6,10),10);
+			var	currentdate			=	new Date();
 
-			var ren_dte2		=	parseInt(ren_date.substring(0,2),10);
-			var ren_mont2		=	(parseInt(ren_date.substring(3,5), 10)) -1;
-			var ren_year2		=	parseInt(ren_date.substring(6,10),10);
+			//alert(currentdate);
+			//return false;
 
-			var date2			=	new Date(year2,mont2,dte2);
-			var ren_date2		=	new Date(ren_year2,ren_mont2,ren_dte2);
-		
-		
+			var eff_dateval 		=	new Date(eff_date.substring(6,10)+"/"+eff_date.substring(3,5)+"/"+eff_date.substring(0,2)).getTime();
+				
+			var ren_dateval 		=	new Date(ren_date.substring(6,10)+"/"+ren_date.substring(3,5)+"/"+ren_date.substring(0,2)).getTime();
+
+			var currentdatevalue	=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+
+			//alert(currentdate.getFullYear());
+			//alert(currentdate.getMonth());
+			//alert(currentdate.getDate());
+			//alert(eff_dateval);
+			//alert(currentdatevalue);
+			
 			if(eff_date == '') {
 				$('.myalignbuild').html('ERR : Select Effective Date');
 				$('#errormsgbuild').css('display','block');
@@ -1522,7 +1516,7 @@ $(document).ready(function() {
 				},5000);
 				$("#effectivedate").focus();
 				return false;
-			} else if (date2 > currentdate){
+			} else if (eff_dateval > currentdatevalue){
 				$('.myalignbuild').html('ERR : Date greater than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1538,7 +1532,7 @@ $(document).ready(function() {
 				},5000);
 				$("#renewaldate").focus();
 				return false;
-			} else if (ren_date2 < currentdate){
+			} else if (ren_dateval < currentdatevalue){
 				$('.myalignbuild').html('ERR : Date Less than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1649,19 +1643,17 @@ $(document).ready(function() {
 			var eff_date		=	$("#effectivedate").val();
 			var ren_date		=	$("#renewaldate").val();
 
-			var	currentdate		=	new Date();
-			var dte2			=	parseInt(eff_date.substring(0,2),10);
-			var mont2			=	(parseInt(eff_date.substring(3,5), 10)) -1;
-			var year2			=	parseInt(eff_date.substring(6,10),10);
+			var	currentdate			=	new Date();
 
-			var ren_dte2		=	parseInt(ren_date.substring(0,2),10);
-			var ren_mont2		=	(parseInt(ren_date.substring(3,5), 10)) -1;
-			var ren_year2		=	parseInt(ren_date.substring(6,10),10);
+			//alert(currentdate);
+			//return false;
 
-			var date2			=	new Date(year2,mont2,dte2);
-			var ren_date2		=	new Date(ren_year2,ren_mont2,ren_dte2);
-		
-		
+			var eff_dateval 		=	new Date(eff_date.substring(6,10)+"/"+eff_date.substring(3,5)+"/"+eff_date.substring(0,2)).getTime();
+				
+			var ren_dateval 		=	new Date(ren_date.substring(6,10)+"/"+ren_date.substring(3,5)+"/"+ren_date.substring(0,2)).getTime();
+
+			var currentdatevalue	=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+				
 			if(eff_date == '') {
 				$('.myalignbuild').html('ERR : Select Effective Date');
 				$('#errormsgbuild').css('display','block');
@@ -1670,7 +1662,7 @@ $(document).ready(function() {
 				},5000);
 				$("#effectivedate").focus();
 				return false;
-			} else if (date2 > currentdate){
+			} else if (eff_dateval > currentdatevalue){
 				$('.myalignbuild').html('ERR : Date greater than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1686,7 +1678,7 @@ $(document).ready(function() {
 				},5000);
 				$("#renewaldate").focus();
 				return false;
-			} else if (ren_date2 < currentdate){
+			} else if (ren_dateval < currentdatevalue){
 				$('.myalignbuild').html('ERR : Date Less than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1752,18 +1744,12 @@ $(document).ready(function() {
 			var liaison_emp		=	$("#emp_code").val();
 			
 			var	currentdate		=	new Date();
-			var dte2			=	parseInt(Dateval.substring(0,2),10);
-			var mont2			=	(parseInt(Dateval.substring(3,5), 10)) -1;
-			var year2			=	parseInt(Dateval.substring(6,10),10);
 
-			var ren_dte2		=	parseInt(ren_date.substring(0,2),10);
-			var ren_mont2		=	(parseInt(ren_date.substring(3,5), 10)) -1;
-			var ren_year2		=	parseInt(ren_date.substring(6,10),10);
+			var Datevalval 		=	new Date(Dateval.substring(6,10)+"/"+Dateval.substring(3,5)+"/"+Dateval.substring(0,2)).getTime();
 
-			var date2			=	new Date(year2,mont2,dte2);
-			var ren_date2		=	new Date(ren_year2,ren_mont2,ren_dte2);
-
-			if (date2 > currentdate){
+			var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+			
+			if (Datevalval > currentdatevalue){
 				$('.myalignbuild').html('ERR : Date greater than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -2164,7 +2150,7 @@ $(document).ready(function() {
 		?>
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td><input type='text' name='purcurrency' id='purcurrency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='purcurrency' id='purcurrency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 	<tr height="30">
      <td width="120">Sale Deed/Agreement</td>
@@ -2233,12 +2219,12 @@ $(document).ready(function() {
   <table>
 	<tr height="32">
      <td width="120" nowrap="nowrap">Date</td>
-     <td><input type='text' name='insurancedate' id='insurancedate'	readonly value="<?php echo date('d-m-Y'); ?>" tabindex="5" class="datepicker textbox"/></td>
+     <td><input type='text' name='insurancedate' id='insurancedate'	size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="5" class="datepicker textbox"/></td>
 	</tr>
 	
 	<tr height="32">
      <td width="120" nowrap="nowrap">Renewal Date</td>
-     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' readonly value="<?php echo date('d-m-Y'); ?>" tabindex="7" class="datepicker textbox"/></td>
+     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="7" class="datepicker textbox"/></td>
 	</tr>
     </table>
    </td>
@@ -2268,7 +2254,7 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Agreement Date*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='datelease' id='datelease' value="<?php echo date('d-m-Y'); ?>" tabindex="1" class="datepicker textbox"/></td>
+    <td><input type='text' name='datelease' id='datelease' size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="1" class="datepicker textbox"/></td>
     </tr>
     
 	<tr height="30">
@@ -2279,7 +2265,7 @@ $(document).ready(function() {
 		?>
 		<td width="120">Currency</td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td><input type='text' name='rentcurrency' id='rentcurrency' value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='rentcurrency' id='rentcurrency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 
 
