@@ -133,7 +133,7 @@ if(isset($_POST['submitted']))
 	<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" style="clear:both;">
       <tr height="50px">
         <td width="29%" class="align" >User Name*</td>
-        <td width="32%"><input type="text" name="username" id="username"  class="required" size="20" autocomplete="off"  maxlength="20" onkeypress="return specialChar(event)"/>
+        <td width="32%"><input type="text" name="username" id="username"  class="required" size="20" autocomplete="off"  maxlength="20" onkeypress="return specialChar(event)" autocomplete="off"/>
 		<td width="29%">&nbsp;</td>
 		<td width="14%">&nbsp;</td>
       </tr>
@@ -147,7 +147,7 @@ if(isset($_POST['submitted']))
 		<td class="align" ><input type="submit" name="login" id="submit" class="buttons" value="Login" /></td>
 		<td><input type="button" name="clear"  class="buttons" value="Clear" id="clear" onclick="return loginClear();"/></td>
 		<td>
-		<input type="button" onclick="window.location='#'" class="buttonsfp" value="Forgot Password" name="cancel">
+		<input type="button" onclick="window.location='forgot_password.php'" class="buttonsfp" value="Forgot Password" name="cancel">
 		</td>
 		<td>&nbsp;</td>
 		</tr>

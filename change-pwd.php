@@ -11,7 +11,7 @@ if(!$fgmembersite->CheckLogin())
 <?php
 if ($fgmembersite->usertype() == 1)
 {
-$header_file='./layout/admin_header.php';
+$header_file='./layout/admin_header_bms.php';
 }
 else
 {
@@ -27,20 +27,94 @@ $fgmembersite->RedirectToURL("index.php");
 exit;
 }
 ?>
+<script>
+function clearvalue()
+{
+document.getElementById("currentpassword").value="";
+document.getElementById("password").value="";
+document.getElementById("currentpassword").focus();
+}
+</script>
+<style>
+#closebutton {
+    background: url("images/close_pop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    color: rgba(0, 0, 0, 0);
+    position: relative;
+    right: -220px;
+    top: -35px;
+}
+#closebutton1 {
+    background: url("images/close_pop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    color: rgba(0, 0, 0, 0);
+    position: relative;
+    right: -200px;
+    top: -35px;
+}
+</style>
+<script>
 
-<div id="inside_content">
-&nbsp;
-<head>
-      <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
-      <title>Change password</title>
-      <link rel="STYLESHEET" type="text/css" href="style/fg_membersite.css" />
-      <script type='text/javascript' src='scripts/gen_validatorv31.js'></script>
-      <link rel="STYLESHEET" type="text/css" href="style/pwdwidget.css" />
-      <script src="scripts/pwdwidget.js" type="text/javascript"></script>       
-</head>
+$(function () {
+	$('#closebutton').button({
+		icons: {
+			primary : "images/close_pop.png",
+		},
+		text:false
+	});	
+	$('#closebutton').click(function(event) {
+		//alert('232');
+		$('#errormsgbuild').hide();
+		return false;
+	});		
+});
+</script>
+<script>
 
+$(function () {
+	$('#closebutton1').button({
+		icons: {
+			primary : "images/close_pop.png",
+		},
+		text:false
+	});	
+	$('#closebutton1').click(function(event) {
+		//alert('232');
+		$('#errormsg').hide();
+		return false;
+	});		
+});
+</script>
+<script>
+function validateForm() 
+	{
+		var currentpassword=document.getElementById("currentpassword").value;
+		if(currentpassword=="")
+		{
+			$('.myalignbuild').html('ERR 0009 : Enter Current Password');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			document.getElementById("currentpassword").focus();
+			return false;
+		}
+		var password=document.getElementById("password").value;
+		if(password=="")
+		{
+			$('.myalignbuild').html('ERR 0009 : Enter New Password');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			document.getElementById("password").focus();
+			return false;
+		}
+		
+	}
+</script>
 <?php
-if(isset($_POST['Submit']))
+if(isset($_POST['save']))
 {
 $fgmembersite->DBLogin();
 $user_id=$_SESSION['user_id'];
@@ -60,52 +134,61 @@ if(!mysql_query("UPDATE users SET password=md5('$changepassword'),plainpassword=
 {
 die('Error: ' . mysql_error());
 }
-echo '<div class="success_message">Your password changed successfully</div>';
+//echo '<div class="success_message">Your password changed successfully</div>';
 
-
+$fgmembersite->RedirectToURL("change-pwd.php?success=update");
 //echo"Your Password Updated successfully";
 }
 else
 {
-echo '<div class="error_message">Your password does not match</div>';
+$fgmembersite->RedirectToURL("change-pwd.php?success=notmatch");
+//echo '<div class="error_message">Your password does not match</div>';
 
 }
 }
 ?>
-<div id ='change_pass'>
-<form id='confirm' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8'>
+<div id="mainarea">
+<div class="mcf"></div>
+<div align="center" class="headings">Change Password</div>
+<div id="mytable" align="center">
+<form id='confirm' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8' onsubmit="return validateForm();">
 
-<table align="center" width="36%"CELLPADDING="3" CELLSPACING="0"  style=" border: 1px solid #00BFFF; border-top:0px;font-family: Arial;
-    font-size: 12px;"      >
+<table >
   <tr>
-    <th style="background: url('images/th.png'); height: 29px;color:#ffffff;text-align: left;font-size: 14px;text-align:center">
-Change password
-    </th>
-  </tr>
-  <tr>
-    <td align="center" style=" padding:30px 50px 30px 0px;">
+    <td >
 <input type='hidden' name='submitted' id='submitted' value='1'/>
              <!-- The inner table below is a container for form -->
-                <table style="font-family:Arial;" width="100%"  cellpadding="10px" class="htmlForm" cellspacing="0" border="0">
-
+                <table>
+<tr>
+<td colspan="2">
+&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
                     <tr>
-                       <td  width="150px"><label style="margin-left:0px;">Current password<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td><input type='password' name='currentpassword' id='currentpassword' class="textbox" value="" maxlength="50" /></td>
+                       <td  width="150px" >Current password*</td>
+                        <td><input type='password' name='currentpassword' id='currentpassword'   maxlength="50" autocomplete="off"/></td>
                     </tr>
 					<tr>
-                       <td  width="150px"><label style="margin-left:0px;">New password<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td><input type='password' name='password' id='password' class="textbox" value="" maxlength="50" /></td>
+                       <td  width="150px"  >New password*</td>
+                        <td><input type='password' name='password' id='password' class="textbox" maxlength="50" autocomplete="off" /></td>
                     </tr>
 					
 
+<tr>
+<td colspan="2">
+&nbsp;&nbsp;&nbsp;
+</td>
+</tr>
 
-              <br/>
                
 
 <tr >
             <td  width="150px" >&nbsp;</td>
-            <td align="right">
-             <input type='submit'  class="flatbutton" name='Submit' value='Submit' class="button"/>
+            <td align="center">
+             <input type='submit'   name='save' value='save' class="buttons"/>
+			   &nbsp;&nbsp;&nbsp;&nbsp;
+       <input type="reset" name="reset" class="buttons" value="Clear" id="clear" onclick="return clearvalue();"/>&nbsp;&nbsp;&nbsp;&nbsp;
+       <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=2'"/>
         
 
             </td>
@@ -116,16 +199,22 @@ Change password
                 </form>            </td>
 
         </tr>
-
-
-
-
     </table>
 
 </form>
 </div>
- </div>
 
+<div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
+  <?php 
+if($_GET['success']=="notmatch") { ?>
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 :Passsword Do Not Match"; ?> </h3><button id="closebutton1" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+<?php }
+if($_GET['success']=="update") { ?>
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Password Updated Successfully"; ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
+<?php }
+?>
+
+</div>
 <?php
 $footerfile='./layout/footer.php';
 if(file_exists($footerfile))
