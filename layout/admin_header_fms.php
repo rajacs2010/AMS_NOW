@@ -29,7 +29,8 @@ error_reporting(E_ALL & ~E_NOTICE);
     <div id="logo">
       <div class="left"><img src="images/logo_fmcl.png" width=60 height="70"/></div>
       <div class="left">
-      <h1 align="center">ADMINISTRATIVE SYSTEM</h1>
+      <h1 align="center">ADMINISTRATION SYSTEM</h1>
+	  <span style="padding-left:60px;font-family:Calibri;font-size:19px;"><strong>Fleet Management</strong></span>
       </div>
       <div class="left"><img src="images/logo_tts.png" width="60" height="72" style="padding-left:300px;"/></div> 
       </div>

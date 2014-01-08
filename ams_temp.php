@@ -39,11 +39,39 @@ $fgmembersite->RedirectToURL("index.php");
 exit;
 }
 ?>
-
+<style>
+.sucmsg1 {
+    background: none repeat scroll 0 0 #C1C1C1;
+    border-radius: 10px;
+    color: #003366;
+    height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    padding: 7px 0 0;
+    text-align: center;
+    width: 22%;
+}
+</style>
 <div id="mainarea">
 <div  style="padding-top:20%;" class="mydiv">
-<h3 align="center" class="sucmsg">
-Welcome <?php echo $_SESSION['username'];?>
+<h3 align="center" class="sucmsg1">
+<?php 
+$id=$_GET['id'];
+if ($id ==1)
+	{
+	$value='Admin Support';
+	}
+	if($id ==2)
+	{
+	$value='Building Management';
+	}
+	if($id ==3)
+	{
+	$value='Fleet Management';
+	}
+?>
+Welcome <?php echo $value;?>
 </h3>
 </div>
 </div>

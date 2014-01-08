@@ -77,37 +77,14 @@ function validateForm() {
 	
 	var building_code=document.getElementById("building_code");
 	if(building_code.value==0) {
-		$('.myalignbuild').html('ERR 0009 : Select Building Code');
+		$('.myalignbuild').html('ERR 0009 : Select Building Name');
 		$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
 		document.getElementById("building_code").focus();
 		return false;
-	}
-	
-	var make=document.getElementById("make");
-	if(make.value=="") {
-		$('.myalignbuild').html('ERR 0009 : Enter Make');
-		$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-		document.getElementById("make").focus();
-		return false;
-	}
-	
-	var model=document.getElementById("model");
-	if(model.value=="") {
-		$('.myalignbuild').html('ERR 0009 : Enter Model');
-		$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-		document.getElementById("model").focus();
-		return false;
-	}
-	
+	}	
 	var genrator_status=document.getElementById("genrator_status");
 	if(genrator_status.value==0) {
 		$('.myalignbuild').html('ERR 0009 : Select Ownership');
@@ -151,7 +128,7 @@ function validateForm() {
 		}		
 		var vendor_code=document.getElementById("vendor_code");
 		if(vendor_code.value==0) {
-			$('.myalignbuild').html('ERR 0009 : Select Vendor Code');
+			$('.myalignbuild').html('ERR 0009 : Select Vendor Name');
 			$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
 					$('#errormsgbuild').hide();
@@ -223,7 +200,7 @@ function validateForm() {
 		}
 		var vendor_code_landlord=document.getElementById("vendor_code_landlord");
 		if(vendor_code_landlord.value==0) {
-				$('.myalignbuild').html('ERR 0009 : Select Vendor Code');
+				$('.myalignbuild').html('ERR 0009 : Select Vendor Name');
 			$('#errormsgbuild').css('display','block');
 					setTimeout(function() {
 						$('#errormsgbuild').hide();
@@ -515,13 +492,13 @@ $renewaldate=$row['contract_renewaldate'];
 			</tr>
 			
 			<tr height="30">
-			 <td width="120">Building Code*</td>
+			 <td width="120">Building Name*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				
 				<?php
 							
-									$result_state=mysql_query("SELECT id,building_code from building");
+									$result_state=mysql_query("SELECT id,building_name from building");
 							echo '<select name="building_code" id="building_code" tabindex="3" >';
 						echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
@@ -532,7 +509,7 @@ $renewaldate=$row['contract_renewaldate'];
 								  $isSelected = ''; // else we remove any tag
 							 }
 							
-							echo "<option value='".$row['id']."'".$isSelected.">".$row['building_code']."</option>";
+							echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
 
 							}
 							echo '</select>';
@@ -543,10 +520,9 @@ $renewaldate=$row['contract_renewaldate'];
 			  </td>
 			</tr>
 			<tr height="30">
-			 <td width="120">Model*</td>
+			 <td width="120">Model</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
-				
 				<input type="text" name="model" id="model" size="10" autocomplete='off' tabindex="5"  value="<?php echo $model;?>"/>
 				
 			  </td>
@@ -571,10 +547,10 @@ $renewaldate=$row['contract_renewaldate'];
 				</tr>
 				
 				<tr height="30">
-				 <td width="120">Make*</td>
+				 <td width="120">Make</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
-					<input type='text' name='make' id='make' size="10" tabindex="4" value="<?php echo $make;?>" autocomplete="off" />
+					<input type='text' name='make' id='make' size="30" tabindex="4" value="<?php echo $make;?>" autocomplete="off" />
 				  </td>
 				</tr>
 				<tr height="30">
@@ -599,7 +575,7 @@ $renewaldate=$row['contract_renewaldate'];
   <legend><strong>Ownership</strong></legend>
   <table width="100%">
   <tr height="30">
-  <td width="142">Owned/Landlord/Rented*</td>
+  <td width="142">Owned/Landlord's/Rented*</td>
   <td>
 		<?php 
 			if ($genrator_status=='1') 
@@ -656,12 +632,12 @@ $renewaldate=$row['contract_renewaldate'];
 			
 			
 			<tr height="30">
-			 <td width="120">Vendor Code*</td>
+			 <td width="120">Vendor Name*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				
 				<?php
-									$result_state=mysql_query("SELECT id,vendor_code from vendor_bms");
+									$result_state=mysql_query("SELECT id,name from vendor_bms");
 									echo '<select name="vendor_code" id="vendor_code" tabindex="12" >';
 									echo '<option value="0">--Select--</option>';
 									while($row=mysql_fetch_array($result_state))
@@ -673,7 +649,7 @@ $renewaldate=$row['contract_renewaldate'];
 								  $isSelected = ''; // else we remove any tag
 							 }
 							
-							echo "<option value='".$row['id']."'".$isSelected.">".$row['vendor_code']."</option>";
+							echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 
 									}
 									echo '</select>';
@@ -985,12 +961,12 @@ $renewaldate=$row['contract_renewaldate'];
 				  </td>
 				</tr>
 				<tr height="30">
-			 <td width="120">Vendor Code*</td>
+			 <td width="120">Vendor Name*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				
 				<?php
-									$result_state=mysql_query("SELECT id,vendor_code from vendor_bms");
+									$result_state=mysql_query("SELECT id,name from vendor_bms");
 									echo '<select name="vendor_code_landlord" id="vendor_code_landlord" tabindex="11" >';
 									echo '<option value="0">--Select--</option>';
 									while($row=mysql_fetch_array($result_state))
@@ -1001,7 +977,7 @@ $renewaldate=$row['contract_renewaldate'];
 								  $isSelected = ''; // else we remove any tag
 							 }
 							
-							echo "<option value='".$row['id']."'".$isSelected.">".$row['vendor_code']."</option>";
+							echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 
 									}
 									echo '</select>';

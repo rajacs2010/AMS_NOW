@@ -71,6 +71,17 @@ function validateForm()
 		document.getElementById("name").focus();
 		return false;
 	}
+	var address1=document.getElementById("address1").value;
+	if(address1=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Enter The Address Line 1');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("address1").focus();
+		return false;
+	}
 	var city=document.getElementById("city").value;
 	if(city==0)
 	{
@@ -189,19 +200,19 @@ die('Error: ' . mysql_error());
   <td>
   <table>
     <tr height="30">
-    <td width="120">Address Line 1</td>
+    <td width="111" >Address Line 1*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" class="areatext" /></td>
     </tr>
     
 	<tr height="30">
-     <td width="120" >Line 2</td>
+     <td width="111" ><span style="padding-left:55px;">Line 2</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" class="areatext" /></td>
 	</tr>
 
 	<tr height="30">
-     <td width="120">Line 3</td>
+     <td width="111"><span style="padding-left:55px;">Line 3</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" class="areatext" /></td>
 	</tr>

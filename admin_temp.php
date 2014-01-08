@@ -23,13 +23,31 @@ $fgmembersite->RedirectToURL("index.php");
 exit;
 }
 ?>
-
+<script>
+$(function () {
+	setTimeout(function() {
+			$('#mydiv1').hide();		
+		},1000);
+		
+	setTimeout( function(){ 
+    // Do something after 1 second 
+	$('#display_div').show();
+  }
+ , 1000 );
+});
+</script>
 <div id="mainarea">
-<div  style="padding-top:20%; padding-left:150px;" class="mydivf">
+<div  style="padding-top:20%;" id="mydiv1">
+<h3 align="center" class="sucmsg" >
+Welcome <?php echo $_SESSION['username'];?>
+</div>
+<div  style="padding-top:20%; padding-left:150px; display:none" class="mydivf" id="display_div" >
+<br/>
 <a href="#"><img border="0" src="images/fms.png" alt="Admin Support"></img></a>&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="ams_temp.php?id=2"><img border="0" src="images/bms.png" alt="Building Management"></img></a>&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="ams_temp.php?id=3"><img border="0" src="images/ams.png" alt="Fleet Management"></img></a>
 </div>
+
 </div>
 
 <?php

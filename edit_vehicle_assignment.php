@@ -36,11 +36,6 @@ $(function () {
 		return false;
 	});		
 });
-$(function () {		
-	$('#clear').click(function(event) {
-		$('#desc').val()="";
-	});		
-});
 </script>
 <style>
 #closebutton {
@@ -101,7 +96,7 @@ function validateForm()
 	var driver_id=document.getElementById("driver_id").value;
 	if(driver_id==0)
 	{
-		$('.myalignbuild').html('ERR 0009 : Select Driver Code');
+		$('.myalignbuild').html('ERR 0009 : Select Driver Name');
 		$('#errormsgbuild').css('display','block');
 		setTimeout(function() {
 			$('#errormsgbuild').hide();
@@ -158,7 +153,22 @@ function validateForm()
 		document.getElementById("to_date").focus();
 		return false;
 	}
-	
+	var enddate=document.getElementById("to_date").value;
+	var enddateval = enddate.substring(6,10)+"/"+enddate.substring(3,5)+"/"+enddate.substring(0,2);
+	var current_date=document.getElementById("from_date").value;
+	 var current_dateval = current_date.substring(6,10)+"/"+current_date.substring(3,5)+"/"+current_date.substring(0,2);
+
+	var date_check=new Date(enddateval).getTime() >= new Date(current_dateval).getTime();
+	if (date_check==false)
+	{
+	$('.myalignbuild').html('ERR 0009 :To Date should be greater than or equal to From Date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("to_date").focus();
+		return false;
+	}
 	
 	}
 $(function () {		
@@ -234,11 +244,11 @@ $assignment_desc=$row['assignment_desc'];
 		</td>
     </tr>
 	<tr height="30">
-			<td width="148">Driver Code*</td>
+			<td width="148">Driver Name*</td>
 			<td>
 	<?php
 	$result_state=mysql_query("select * from driver");
-				echo '<select name="driver_id" id="driver_id" tabindex="2">';
+				echo '<select name="driver_id" id="driver_id" tabindex="2" style="width:100px;">';
 				echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{
@@ -248,7 +258,7 @@ $assignment_desc=$row['assignment_desc'];
 								  $isSelected = ''; // else we remove any tag
 							 }
 							
-							echo "<option value='".$row['id']."'".$isSelected.">".$row['driver_code']."</option>";
+							echo "<option value='".$row['id']."'".$isSelected.">".$row['emp_name']."</option>";
 
 					}
 					echo '</select>';
@@ -287,7 +297,7 @@ $assignment_desc=$row['assignment_desc'];
 		<td>
 		<?php 
 		$result_state=mysql_query("SELECT id,vehicle_regno from vehicle");
-							echo '<select name="vehicle_regno" id="vehicle_regno" style="width:80px;" tabindex="1" >';
+							echo '<select name="vehicle_regno" id="vehicle_regno" style="width:100px;" tabindex="1" >';
 							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{
@@ -304,10 +314,10 @@ $assignment_desc=$row['assignment_desc'];
 		</td>
     </tr>
 	<tr height="30">
-		<td width="128">Driver Name</td>
+		<td width="128">Driver Code</td>
 	
 		<td>
-	<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly ="true"/></span>
+	<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly ="true" size="10"/></span>
 		</td>
     </tr>
 			<tr height="30">
@@ -316,7 +326,7 @@ $assignment_desc=$row['assignment_desc'];
 		<td>
 		<?php 
 		$result_state=mysql_query("select * from assignment_type");
-							echo '<select name="assignment_type" id="assignment_type" style="width:80px;" tabindex="4">';
+							echo '<select name="assignment_type" id="assignment_type" style="width:100px;" tabindex="4">';
 							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{

@@ -81,13 +81,26 @@ while($row = mysql_fetch_array($result_emp_id))
 if($_GET["selvalue_incharge_empcode_driver"])
 {
 $selvalue=$_GET["selvalue_incharge_empcode_driver"];
-$result=mysql_query("SELECT emp_name from driver where id=$selvalue");
+$result=mysql_query("SELECT driver_code from driver where id=$selvalue");
 						   while($row=mysql_fetch_array($result))
 							{
-							$emp_name=$row['emp_name'];
+							$emp_name=$row['driver_code'];
 							}
 ?>
-<input type='text' name='leadername' id='leadername' value="<?php echo $emp_name; ?>" readonly="true"/>
-<?php
+<input type='text' name='leadername' id='leadername' value="<?php echo $emp_name; ?>" readonly="true" size="10"/>
+<?php 
 }
+if($_GET["building_code"])
+{
+$selvalue=$_GET["building_code"];
+$result=mysql_query("SELECT generator_code from generator where building_code=$selvalue");
+						   while($row=mysql_fetch_array($result))
+							{
+							$emp_name=$row['generator_code'];
+							}
+?>
+<input type='text' name='generator_code' id='generator_code' value="<?php echo $emp_name; ?>" readonly="true" size="10"/>
+<?php 
+}
+
 ?>

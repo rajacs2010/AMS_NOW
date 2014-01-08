@@ -86,7 +86,7 @@ function validateForm()
 	var driver_id=document.getElementById("driver_id").value;
 	if(driver_id==0)
 	{
-		$('.myalignbuild').html('ERR 0009 : Select Driver Code');
+		$('.myalignbuild').html('ERR 0009 : Select Driver Name');
 		$('#errormsgbuild').css('display','block');
 		setTimeout(function() {
 			$('#errormsgbuild').hide();
@@ -234,15 +234,15 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 		</td>
     </tr>
 	<tr height="30">
-			<td width="148">Driver Code*</td>
+			<td width="148">Driver Name*</td>
 			<td>
 	<?php
 	$result_state=mysql_query("select * from driver");
-				echo '<select name="driver_id" id="driver_id" tabindex="2">';
+				echo '<select name="driver_id" id="driver_id" tabindex="2" style="width:100px;">';
 				echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{
-					echo '<option value="'.$row['id'].'">'.$row['driver_code'].'</option>';
+					echo '<option value="'.$row['id'].'">'.$row['emp_name'].'</option>';
 
 					}
 					echo '</select>';
@@ -282,7 +282,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 		<?php 
 		$fgmembersite->DBLogin();
 		$result_state=mysql_query("SELECT id,vehicle_regno from vehicle");
-							echo '<select name="vehicle_regno" id="vehicle_regno" style="width:80px;" tabindex="1" >';
+							echo '<select name="vehicle_regno" id="vehicle_regno" style="width:100px;" tabindex="1" >';
 							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{
@@ -294,10 +294,10 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 		</td>
     </tr>
 	<tr height="30">
-		<td width="128">Driver Name</td>
+		<td width="128">Driver Code</td>
 	
 		<td>
-	<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly ="true"/></span>
+	<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly ="true" size="10"/></span>
 		</td>
     </tr>
 			<tr height="30">
@@ -307,7 +307,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 		<?php 
 		$fgmembersite->DBLogin();
 		$result_state=mysql_query("select * from assignment_type");
-							echo '<select name="assignment_type" id="assignment_type" style="width:80px;" tabindex="4">';
+							echo '<select name="assignment_type" id="assignment_type" style="width:100px;" tabindex="4">';
 							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{

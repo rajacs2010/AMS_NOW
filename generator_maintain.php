@@ -36,11 +36,20 @@ $(function () {
 		return false;
 	});		
 });
-$(function () {		
-	$('#clear').click(function(event) {
-		$('#desc').val()="";
-	});		
-});
+$(document).ready(function() { 
+$("#building_code").change(function(event) {
+		var building_code=document.getElementById("building_code").value;
+		if (building_code != 0)
+		{
+			
+			$('#code_display').load('ajax_building.php?building_code='+building_code);
+		}
+		else
+		{
+			document.getElementById("generator_code").value = "";
+		}
+    });		
+	  });
 </script>
 <style>
 #closebutton {
@@ -163,31 +172,29 @@ if(isset($_POST['save'])) {
 <div align="center" class="headingsgr">GENERATOR MAINTENANCE</div>
 <div id="mytableformreceipt1" align="center"><!--- mytableformreceipt1 div start-->
 <form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
+
 <fieldset class="alignment" align="left">
-  <legend><strong>Generator Maintenance</strong></legend>
-  <table width="100%">
-  <tr>
-  <td width="50%">
-		<table align="left">
-		 <tr>
-		  <td>
-		  <table>
+  <legend><strong>Generator Details</strong></legend>
+<table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="120">Generator Code*</td>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			<td>
-			<?php
-				$result_state=mysql_query("SELECT id,generator_code from generator");
-				echo '<select name="generator_code" id="generator_code" tabindex="1" >';
-				echo '<option value="0">--Select--</option>';
-				while($row=mysql_fetch_array($result_state)) {
-					echo '<option value="'.$row['id'].'">'.$row['generator_code'].'</option>';
-				}
-				echo '</select>';
-			?>
-			</td>
+			 <td width="120">Building Name*</td>
+			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			 <td>
+				
+				<?php
+									$result_state=mysql_query("SELECT id,building_name from building");
+									echo '<select name="building_code" id="building_code" tabindex="1"  >';
+									echo '<option value="0">--Select--</option>';
+									while($row=mysql_fetch_array($result_state))
+									{
+									echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['building_name']).'</option>';
+
+									}
+									echo '</select>';
+									?>&nbsp;
+				
+			  </td>
 			</tr>
-			
 			<tr height="30">
 			 <td width="120">Status*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -197,20 +204,77 @@ if(isset($_POST['save'])) {
 				echo '<select name="status" id="status" tabindex="3">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state)) {
-					echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+					echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
 				}
 				echo '</select>';
 ?>			
 			  </td>
+			</tr>		
+</table><!-- end--->
+
+	 <table width="50%" align="left"><!-- start--->
+			<tr height="30">
+			<td width="120">Generator Code</td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td>
+				<div id="code_display">
+				<input type='text' name='generator_code' id='generator_code' size="10" tabindex="4" autocomplete="off"/>
+				</div>
+			</td>
 			</tr>
 			<tr height="30">
-			<td width="120">Done Date*</td>
+				<td width="120">Maintenance Due Date*</td>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
+				<td>
+				<input type="text" name="mduedate" id="mduedate" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete='off' tabindex="2" class="datepicker"/>	
+				</td>
+				</tr>	
+		</table><!-- end--->		
+</fieldset>
+
+<fieldset class="alignment" align="left">
+  <legend><strong>Maintenance Details</strong></legend>
+<table width="50%" align="left"><!-- start--->
+			<tr height="30">
+			<td width="120">Maintenance Done Date*</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
 					<input type='text' name='donedate' id='donedate' value="<?php echo date('d-m-Y'); ?>" size="10" tabindex="5" autocomplete="off" class="datepicker"/>
 				  </td>
 			</tr>
+					
+</table><!-- end--->
+
+	 <table width="50%" align="left"><!-- start--->
+		<tr height="30">
+			 <td width="120">Vendor Name*</td>
+			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			 <td>				
+				<?php
+					$result_state=mysql_query("SELECT id,name from vendor_bms");
+					echo '<select name="vendor_code_landlord" id="vendor_code_landlord" tabindex="11" >';
+					echo '<option value="0">--Select--</option>';
+					while($row=mysql_fetch_array($result_state)) {
+						echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+					}
+					echo '</select>';
+				?>&nbsp;				
+			  </td>
+			</tr>
+		</table><!-- end--->	
+
+<table width="100%" align="left"><!-- start--->
 			<tr height="30">
+				 <td width="142">Description</td>
+				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				 <td>					
+					<input type='text' name='desc' id='desc' size="70" tabindex="4" autocomplete="off"/>					
+				  </td>
+				</tr>
+		</table>
+
+<table width="50%" align="left"><!-- start--->
+				<tr height="30">
 			 <td width="120">Currency</td>
 			 	<?php
 					$result_state=mysql_query("select * from currency where id=1");
@@ -220,57 +284,32 @@ if(isset($_POST['save'])) {
 						$symbol=$row['symbol'];
 					}							
 				?>
-			 <td><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
+			 <td width="50" align="right"><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
 			 <td><input type='text' name='add_currency' id='add_currency' value="<?php echo $currency_name;?>" size="4"  readonly="true" tabindex="7" autocomplete="off"/>
 			 </td>
 			</tr>
-		   </table>
-		   </td>
-		 </tr>
-		</table>
-</td>
-<td width="40%" >
-	 <table >
-			 <tr>
-			  <td>
-			  <table>
-				<tr height="30">
-				<td width="120">Maintenance Due Date*</td>
-				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
-				<td>
-				<input type="text" name="mduedate" id="mduedate" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete='off' tabindex="2" class="datepicker"/>	
-				</td>
-				</tr>				
-				<tr height="30">
-				 <td width="120">Description</td>
-				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-				 <td>					
-					<input type='text' name='desc' id='desc' size="30" tabindex="4" autocomplete="off"/>					
-				  </td>
-				</tr>
-				<tr height="30">
-				 <td width="120">Next Due Date*</td>
+					<tr height="30">
+				 <td width="120">Next Maintenance Due Date*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
 				<input type="text" name="nextduedate" id="nextduedate" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete='off' tabindex="6" class="datepicker" />
 			</td>
 				 
 				</tr>
-				<tr height="30">
-			 <td width="120">Additional Cost</td>
+</table><!-- end--->
+
+	 <table width="50%" align="left"><!-- start--->
+		<tr height="30">
+			 <td width="120"> Cost</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
 				<input type="text" name="addcost" id="addcost" style="text-align:right;" size="10" autocomplete='off' tabindex="8" />				
 			  </td>
 			</tr>
-		   </table>
-		   </td>
-		 </tr>
-		</table>		
- </td>	
-</tr>
-</table> 
+		</table><!-- end--->			
 </fieldset>
+
+
 <?php if($_GET['success']=="update") { ?>
 	<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
 	?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>

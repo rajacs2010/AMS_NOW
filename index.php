@@ -118,7 +118,7 @@ if(isset($_POST['submitted']))
     <div id="logo">
  <div class="left"><img src="images/logo_fmcl.png" width=60 height="70"/></div>
       <div class="left">
-      <h1 align="center">ADMINISTRATIVE SYSTEM</h1>
+      <h1 align="center">ADMINISTRATION SYSTEM</h1>
      </div> <div class="left"><img src="images/logo_tts.png" width="60" height="70" style="padding-left:300px;"/></div> 
       </div>
  </div>

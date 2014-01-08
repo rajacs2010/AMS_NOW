@@ -58,7 +58,8 @@ $("#incharge_empcode").change(function(event) {
 		var selvalue_incharge_empcode=document.getElementById("incharge_empcode").value;
 		if (selvalue_incharge_empcode != 0)
 		{
-			$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
+		document.getElementById("leadername").value=selvalue_incharge_empcode;
+			//$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
 		}
 		else
 		{
@@ -95,7 +96,7 @@ function validateForm() {
 	var incharge_empcode=document.getElementById("incharge_empcode").value;
 	if(incharge_empcode==0)
 	{
-		$('.myalignbuild').html('ERR 0009 : Select The Employee Code');
+		$('.myalignbuild').html('ERR 0009 : Select The Employee Name');
 		$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
@@ -176,7 +177,7 @@ die('Error: ' . mysql_error());
 			
 		
 			<tr height="30">
-			 <td width="120">Employee Code*</td>
+			 <td width="120">Employee Name*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				<?php			 
@@ -185,11 +186,11 @@ die('Error: ' . mysql_error());
 				or die("Opps some thing went wrong");
 				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-				echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="3">';
-				echo '<option value="0">--Select--</option>';
+				echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="3" style="width:100px;">';
+				echo '<option value="0">--Employee--</option>';
 				while($row=mysql_fetch_array($result_emp_id))
 				{
-				echo '<option value="'.$row['emp_code'].'">'.$row['emp_code'].'</option>';
+				echo '<option value="'.$row['emp_code'].'">'.$row['first_name'].'</option>';
 				}
 				echo '</select>';
 				?>
@@ -225,10 +226,10 @@ die('Error: ' . mysql_error());
 			  </td>
 			</tr>
 				<tr height="30">
-				<td width="120">Employee Name</td>
+				<td width="120">Employee Code</td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
 				<td>
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" tabindex="4"/></span>
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" size="10" tabindex="4"/></span>
 				</td>
 				</tr>				
 		   </table>

@@ -58,7 +58,8 @@ $("#incharge_empcode").change(function(event) {
 		var selvalue_incharge_empcode=document.getElementById("incharge_empcode").value;
 		if (selvalue_incharge_empcode != 0)
 		{
-			$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
+			
+		document.getElementById("leadername").value = selvalue_incharge_empcode;	//$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
 		}
 		else
 		{
@@ -91,6 +92,17 @@ function validateForm()
 			$('#errormsgbuild').hide();
 		},5000);
 		document.getElementById("incharge_empcode").focus();
+		return false;
+	}
+	var address1=document.getElementById("address1").value;
+	if(address1=="")
+	{
+		$('.myalignbuild').html('ERR 0009 : Enter The Address Line 1');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("address1").focus();
 		return false;
 	}
 	var city=document.getElementById("city").value;
@@ -153,7 +165,7 @@ function validateForm()
 	var current_date=document.getElementById("hide_date").value;
 	 var current_dateval = current_date.substring(6,10)+"/"+current_date.substring(3,5)+"/"+current_date.substring(0,2);
 
-	var date_check=new Date(enddateval).getTime() >= new Date(current_dateval).getTime();
+	var date_check=new Date(enddateval).getTime() > new Date(current_dateval).getTime();
 	if (date_check==false)
 	{
 	$('.myalignbuild').html('ERR 0009 :Date should be greater than or equal to current date');
@@ -265,7 +277,7 @@ $state_name=$row['state_name'];
 
 	 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-		<td width="128">Employee Code*</td>
+		<td width="128">Employee Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;</td>
 		<td><?php
 			$fgmembersite->DBLogin();
@@ -273,8 +285,8 @@ $state_name=$row['state_name'];
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="1" class="selectbox">';
-			echo '<option value="0">--Select--</option>';
+			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="1" class="selectbox" style="width:100px;">';
+			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
 			if($row['emp_code'] == $emp_code){
@@ -282,12 +294,12 @@ $state_name=$row['state_name'];
 						 } else {
 							  $isSelected = ''; // else we remove any tag
 						 }
-						 echo "<option value='".$row['emp_code']."'".$isSelected.">".$row['emp_code']."</option>";
+						 echo "<option value='".$row['emp_code']."'".$isSelected.">".$row['first_name']."</option>";
 			}
 			echo '</select>';
 			?>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" value="<?php echo $emp_name;?>"/></span>
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" size="10" value="<?php echo $emp_code;?>"/></span>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -301,19 +313,19 @@ $state_name=$row['state_name'];
   <td>
   <table>
     <tr height="30">
-    <td width="120">Address Line 1</td>
+    <td width="111" >Address Line 1*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" value="<?php echo $address1;?>" /></td>
     </tr>
     
 	<tr height="30">
-     <td width="120" >Line 2</td>
+     <td width="111" ><span style="padding-left:55px;">Line 2</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" value="<?php echo $address2;?>" /></td>
 	</tr>
 
 	<tr height="30">
-     <td width="120">Line 3</td>
+     <td width="111" ><span style="padding-left:55px;">Line 3</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" value="<?php echo $address3;?>" /></td>
 	</tr>
