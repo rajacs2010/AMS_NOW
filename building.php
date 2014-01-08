@@ -14,8 +14,7 @@ echo "<pre>";
 print_r($_FILES);
 echo "</pre>";*/
 //exit;
-if(!$fgmembersite->CheckLogin())
-{
+if(!$fgmembersite->CheckLogin()) {
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
@@ -671,7 +670,8 @@ $(document).ready(function() {
 	$("#emp_code").change(function(event){
 		var selvalue_empcode=document.getElementById("emp_code").value;
 		if (selvalue_empcode != 0) {
-			  $('#display_empname').load('ajax_building.php?selvalue_empcode='+selvalue_empcode);
+			//$('#display_empname').load('ajax_building.php?selvalue_empcode='+selvalue_empcode);
+			$("#empname").val(selvalue_empcode);
 		}
 		else {
 			document.getElementById("empname").value = "";	
@@ -679,13 +679,38 @@ $(document).ready(function() {
     });		
 	$("#incharge_empcode").change(function(event) {
 		var selvalue_incharge_empcode=document.getElementById("incharge_empcode").value;
-		if (selvalue_incharge_empcode != 0)
-		{
-			$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
+		if (selvalue_incharge_empcode != 0) {
+			$('#leadername').val(selvalue_incharge_empcode);
+			//$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
 		}
 		else
 		{
 			document.getElementById("leadername").value = "";
+		}
+    });
+	$("#landlord").change(function(event) {
+		var landlord_val	=	$(this).val();
+		if (landlord_val != 0) {
+			$.ajax({
+				url				:	"ajax_building.php",
+				type				:	"post",
+				dataType			:	"text",
+				cache				:	false,
+				data				:	{ "landlordval" : landlord_val },
+				success				:	function(ajaxval) {
+					//alert(ajaxval);
+					var splitval	=	ajaxval.split("~");
+					$("#land_add1").val(splitval[0]);
+					$("#land_add2").val(splitval[1]);
+					$("#land_add3").val(splitval[2]);
+					$("#contactnumber").val(splitval[3]);
+					$("#alternatenumber").val(splitval[4]);
+					$("#city_landlord").val(splitval[5]);
+					$("#state_landlord").val(splitval[6]);
+				}
+			});
+		} else {
+			document.getElementById("landlord").value = "";
 		}
     });		
 });
@@ -982,7 +1007,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 		$landlod_address1		=	$_POST['land_add1'];
 		$landlod_address2		=	$_POST['land_add2'];
 		$landlod_address3		=	$_POST['land_add3'];
-		$city_landlord			=	$_POST['city_landlord'];
+		$city_landlord			=	$fgmembersite->getdbval($_POST['city_landlord'],'id','name','city');
 		$state_landlord			=	$_POST['state_landlord'];
 		$contactnumber			=	$_POST['contactnumber'];
 		$emailid				=	$_POST['emailid'];
@@ -1141,6 +1166,15 @@ var infowindow;
 function initialize(latval,longval) {
 	//alert(latval);
 	//alert(longval);
+ var latvalue =  $("#latbox").val();
+ var longvalue =  $("#lngbox").val();
+ var latlngval	= ''; 
+ if(latvalue != '' && longvalue != '') {
+	latval	=	latvalue;
+	longval	=	longvalue;
+	latlngval	=	$("#latlongbox").val();
+ }
+ //alert(latlngval);
   var latlng = new google.maps.LatLng(latval, longval);
   var options = {
     zoom: 13,
@@ -1148,22 +1182,45 @@ function initialize(latval,longval) {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   }
   var map = new google.maps.Map(document.getElementById("map_canvas"), options);
+
+  if(latlngval != '') {
+	  var myLatlng = new google.maps.LatLng(latval, longval);
+	  var marker1 = new google.maps.Marker({
+	      position: myLatlng,
+	      map: map
+	    });
+	    google.maps.event.addListener(marker1, "click", function() {
+	        //alert(event.latLng);
+	    	//document.getElementById("latbox").value = event.latLng.lat();
+	    	//document.getElementById("lngbox").value = event.latLng.lng();
+	        infowindow.open(map, marker1);
+	    });
+  }
+  
   var html = "<table style='background-color:#A09E9E' >" +
              "<tr><td>Name:</td> <td><input type='text' id='name'/> </td> </tr>" +
              "<tr><td>Address:</td> <td><input type='text' id='address'/></td> </tr>" +             
              "<tr><td></td><td><input type='button' class='buttons' style='width:75px;' value='Save & Close' onclick='saveData()'/></td></tr>";
+
+google.maps.event.addListenerOnce(map, 'idle', function(){
+    google.maps.event.trigger(map, 'resize');
+    map.setCenter(latlng);
+});
 infowindow = new google.maps.InfoWindow({
  content: html
 });
 
 google.maps.event.addListener(map, "click", function(event) {
+	//alert(event.latLng);
     marker = new google.maps.Marker({
       position: event.latLng,
       map: map
     });
     google.maps.event.addListener(marker, "click", function() {
-      infowindow.open(map, marker);
-    });
+    	//document.getElementById("latbox").value = event.latLng.lat();
+    	//document.getElementById("lngbox").value = event.latLng.lng();
+        infowindow.open(map, marker);
+    });    
 });
 }
 
@@ -1173,7 +1230,30 @@ function saveData() {
   var type			=	'';
   var building_code =	$("#code").val();
   var latlng		=	marker.getPosition();
+  //alert(latlng);
 
+  if(name == '') {
+	$('.myalignbuild').html('ERR : Enter Name');
+	$('#errormsgbuild').css('display','block');
+	setTimeout(function() {
+			$('#errormsgbuild').hide();
+	},5000);
+	return false;
+  }
+  if(address == '') {
+	$('.myalignbuild').html('ERR : Enter Address');
+	$('#errormsgbuild').css('display','block');
+	setTimeout(function() {
+			$('#errormsgbuild').hide();
+	},5000);
+	return false;
+  }
+  //alert(latlng);
+  document.getElementById("latbox").value = latlng.lat();
+  document.getElementById("lngbox").value = latlng.lng();
+  document.getElementById("latlongbox").value = latlng;
+  
+	
   var url = "savemap.php?name=" + name + "&address=" + address +
             "&type=" + type + "&lat=" + latlng.lat() + "&lng=" + latlng.lng()+"&building_code="+building_code;
   downloadUrl(url, function(data, responseCode) {
@@ -1207,6 +1287,7 @@ function downloadUrl(url, callback) {
 		//alert('dyrt');
 		$("#marker_id").val(request.responseText);
 		alert("Location Saved");
+		$("#mapval").html("Location Map");
 		infowindow.close();
 		
 		$('#showingmap').remove();
@@ -1253,6 +1334,12 @@ $(document).ready(function() {
 		});		
 	});
 
+	$("#city").on('change',function() {
+		$("#latbox").val('');
+		$("#longbox").val('');
+		$("#latlongbox").val('');
+		$("#mapval").html('Select Map');
+	});
 	$("#mapval").on('click',function() {
 		var cityval		=	$("#city option:selected").text();
 		var buildcode	=	$("#code").val();
@@ -1444,7 +1531,7 @@ $(document).ready(function() {
 		//var add1		=	$("#address1").val();
 		var cityval		=	$("#city").val();
 
-		if(bu_name == '') {
+		/*if(bu_name == '') {
 			$('.myalignbuild').html('ERR : Enter Building Name');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1476,7 +1563,9 @@ $(document).ready(function() {
 			},5000);
 			$("#city").focus();
 			return false;
-		} else if($("#building_status:checked").length <= 0) {
+		} */
+
+		if($("#building_status:checked").length <= 0) {
 			$('.myalignbuild').html('ERR : Select Ownership');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1486,7 +1575,7 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		if($("#building_status:checked").val() == 2) {
+		/*if($("#building_status:checked").val() == 2) {
 			
 			var eff_date			=	$("#effectivedate").val();
 			var ren_date			=	$("#renewaldate").val();
@@ -1542,7 +1631,8 @@ $(document).ready(function() {
 				return false;
 			}
 		}
-
+		*/
+		
 		$("#firstdiv").css('display','none');
 		$("#secdiv").css('display','block');
 		$("#thirddiv").css('display','none');
@@ -1593,10 +1683,10 @@ $(document).ready(function() {
 		var bu_type		=	$("#building_type").val();
 		var bu_name		=	$("#buildingname").val();
 		var inc_emp		=	$("#incharge_empcode").val();
-		//var add1		=	$("#address1").val();
+		var add1		=	$("#address1").val();
 		var cityval		=	$("#city").val();
 
-		if(bu_name == '') {
+		if(bu_name == '') {						
 			$('.myalignbuild').html('ERR : Enter Building Name');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1619,6 +1709,14 @@ $(document).ready(function() {
 				$('#errormsgbuild').hide();
 			},5000);
 			$("#incharge_empcode").focus();
+			return false;
+		}  else if(add1 == '') {
+			$('.myalignbuild').html('ERR : Enter Address');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#address1").focus();
 			return false;
 		}  else if(cityval == '0') {
 			$('.myalignbuild').html('ERR : Select City');
@@ -1686,6 +1784,17 @@ $(document).ready(function() {
 				},5000);
 				$("#renewaldate").focus();
 				return false;
+			}  
+			//alert(eff_dateval);
+			//alert(ren_dateval);
+			if (eff_dateval > ren_dateval || eff_dateval == ren_dateval){
+				$('.myalignbuild').html('ERR : Eff. Date Should be Less Than Renewal Date!');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#effectivedate").focus();
+				return false;
 			}
 		}
 		
@@ -1698,18 +1807,183 @@ $(document).ready(function() {
 	$("#seca").on("click", function() {
 		//alert("232");
 		
-		if($("#building_status:checked").val() == 1) {
-			var pur_from	=	$("#purchasefrom").val();
-			var costval		=	$("#cost").val();
-			var curval		=	$("#purcurrency").val();
+		var bu_type		=	$("#building_type").val();
+		var bu_name		=	$("#buildingname").val();
+		var inc_emp		=	$("#incharge_empcode").val();
+		var add1		=	$("#address1").val();
+		var cityval		=	$("#city").val();
+
+		if(bu_name == '') {
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
 			
-			if(pur_from == '') {
-				$('.myalignbuild').html('ERR : Enter Purchased From');
+			$('.myalignbuild').html('ERR : Enter Building Name');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#buildingname").focus();
+			return false;
+		} else if(bu_type == '0') {
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Select Building Type');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#building_type").focus();
+			return false;
+		} else if(inc_emp == '0') {
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Select In-Charge');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#incharge_empcode").focus();
+			return false;
+		}  else if(add1 == '') {
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Enter Address');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#address1").focus();
+			return false;
+		}  else if(cityval == '0') {
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Select City');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#city").focus();
+			return false;
+		} else if($("#building_status:checked").length <= 0) {
+			$('.myalignbuild').html('ERR : Select Ownership');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#building_status").focus();
+			return false;
+		}
+		
+		if($("#building_status:checked").val() == 1) {
+			var pur_from				=	$("#purchasefrom").val();
+			var datepurchase			=	$("#datepurchase").val();			
+			var costval					=	$("#cost").val();
+			var curval					=	$("#purcurrency").val();
+			var insurancenumber			=	$("#insurancenumber").val();
+			var insurancedate			=	$("#insurancedate").val();
+			var insurancerenewaldue		=	$("#insurancerenewaldue").val();			
+
+			var currentdate				=	new Date();
+
+			var datepurchaseval			=	new Date(datepurchase.substring(6,10)+"/"+datepurchase.substring(3,5)+"/"+datepurchase.substring(0,2)).getTime();
+
+			var insurancedateval		=	new Date(insurancedate.substring(6,10)+"/"+insurancedate.substring(3,5)+"/"+insurancedate.substring(0,2)).getTime();
+
+			var insurancerenewaldueval	=	new Date(insurancerenewaldue.substring(6,10)+"/"+insurancerenewaldue.substring(3,5)+"/"+insurancerenewaldue.substring(0,2)).getTime();
+			var currentdateval			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+
+			//alert(currentdateval);
+			//alert(datepurchaseval);
+			if(pur_from == '0') {
+				$('.myalignbuild').html('ERR : Select Purchased From');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
 					$('#errormsgbuild').hide();
 				},5000);
 				$("#purchasefrom").focus();
+				return false;
+			} else if(datepurchase == '') {
+				$('.myalignbuild').html('ERR : Enter Purchased Date');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#datepurchase").focus();
+				return false;
+			} else if(datepurchaseval > currentdateval) {
+				$('.myalignbuild').html('ERR : Date Greater Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#datepurchase").focus();
 				return false;
 			} else if(curval == '') {
 				$('.myalignbuild').html('ERR : Add Currency');
@@ -1728,6 +2002,37 @@ $(document).ready(function() {
 				$("#cost").focus();
 				return false;
 			}
+			if(insurancenumber != '') {
+				if (insurancedateval > currentdateval){
+					$('.myalignbuild').html('ERR : Date Greater Than Today!');
+					$('#errormsgbuild').css('display','block');
+					setTimeout(function() {
+						$('#errormsgbuild').hide();
+					},5000);
+					$("#insurancedate").focus();
+					return false;
+				} else if (insurancerenewaldueval < currentdateval){
+					$('.myalignbuild').html('ERR : Date Less than Today!');
+					$('#errormsgbuild').css('display','block');
+					setTimeout(function() {
+						$('#errormsgbuild').hide();
+					},5000);
+					$("#insurancerenewaldue").focus();
+					return false;
+				}  
+				//alert(eff_dateval);
+				//alert(ren_dateval);
+				if (insurancedateval > insurancerenewaldueval || insurancedateval == insurancerenewaldueval){
+					$('.myalignbuild').html('ERR : Ins. Eff. Date Should be Less Than Renewal Date!');
+					$('#errormsgbuild').css('display','block');
+					setTimeout(function() {
+						$('#errormsgbuild').hide();
+					},5000);
+					$("#insurancedate").focus();
+					return false;
+				}
+			}
+			
 		} else if($("#building_status:checked").val() == 2) {
 			var Dateval			=	$("#datelease").val();
 			var per_from		=	$("#periodfrom").val();
@@ -1748,6 +2053,142 @@ $(document).ready(function() {
 			var Datevalval 		=	new Date(Dateval.substring(6,10)+"/"+Dateval.substring(3,5)+"/"+Dateval.substring(0,2)).getTime();
 
 			var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+
+
+			var eff_date		=	$("#effectivedate").val();
+			var ren_date		=	$("#renewaldate").val();
+
+			//alert(currentdate);
+			//return false;
+
+			var eff_dateval 		=	new Date(eff_date.substring(6,10)+"/"+eff_date.substring(3,5)+"/"+eff_date.substring(0,2)).getTime();
+				
+			var ren_dateval 		=	new Date(ren_date.substring(6,10)+"/"+ren_date.substring(3,5)+"/"+ren_date.substring(0,2)).getTime();
+
+			if(eff_date == '') {
+				
+				$("#firstdiv").css('display','block');
+				$("#secdiv").css('display','none');
+				$("#thirddiv").css('display','none');
+				$("#fourdiv").css('display','none');
+
+				$("#first_span").css('display','inline');
+				$("#part_span").css('display','inline');
+
+				$("#prev_span").css('display','none');
+				$("#sec_span").css('display','none');
+				$("#third_span").css('display','none');
+				$("#four_span").css('display','none');
+				$("#five_span").css('display','none');
+				$("#six_span").css('display','none');
+				
+				$('.myalignbuild').html('ERR : Select Effective Date');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#effectivedate").focus();
+				return false;
+			} else if (eff_dateval > currentdatevalue){
+				
+				$("#firstdiv").css('display','block');
+				$("#secdiv").css('display','none');
+				$("#thirddiv").css('display','none');
+				$("#fourdiv").css('display','none');
+
+				$("#first_span").css('display','inline');
+				$("#part_span").css('display','inline');
+
+				$("#prev_span").css('display','none');
+				$("#sec_span").css('display','none');
+				$("#third_span").css('display','none');
+				$("#four_span").css('display','none');
+				$("#five_span").css('display','none');
+				$("#six_span").css('display','none');
+								
+				$('.myalignbuild').html('ERR : Date greater than today!');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#effectivedate").focus();
+				return false;
+			} else if(ren_date == '') {
+
+				$("#firstdiv").css('display','block');
+				$("#secdiv").css('display','none');
+				$("#thirddiv").css('display','none');
+				$("#fourdiv").css('display','none');
+
+				$("#first_span").css('display','inline');
+				$("#part_span").css('display','inline');
+
+				$("#prev_span").css('display','none');
+				$("#sec_span").css('display','none');
+				$("#third_span").css('display','none');
+				$("#four_span").css('display','none');
+				$("#five_span").css('display','none');
+				$("#six_span").css('display','none');
+				
+				$('.myalignbuild').html('ERR : Select Renewal Date');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#renewaldate").focus();
+				return false;
+			} else if (ren_dateval < currentdatevalue){
+
+				$("#firstdiv").css('display','block');
+				$("#secdiv").css('display','none');
+				$("#thirddiv").css('display','none');
+				$("#fourdiv").css('display','none');
+
+				$("#first_span").css('display','inline');
+				$("#part_span").css('display','inline');
+
+				$("#prev_span").css('display','none');
+				$("#sec_span").css('display','none');
+				$("#third_span").css('display','none');
+				$("#four_span").css('display','none');
+				$("#five_span").css('display','none');
+				$("#six_span").css('display','none');
+
+				$('.myalignbuild').html('ERR : Date Less than today!');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#renewaldate").focus();
+				return false;
+			}  
+			//alert(eff_dateval);
+			//alert(ren_dateval);
+			if (eff_dateval > ren_dateval || eff_dateval == ren_dateval){
+
+				$("#firstdiv").css('display','block');
+				$("#secdiv").css('display','none');
+				$("#thirddiv").css('display','none');
+				$("#fourdiv").css('display','none');
+
+				$("#first_span").css('display','inline');
+				$("#part_span").css('display','inline');
+
+				$("#prev_span").css('display','none');
+				$("#sec_span").css('display','none');
+				$("#third_span").css('display','none');
+				$("#four_span").css('display','none');
+				$("#five_span").css('display','none');
+				$("#six_span").css('display','none');
+
+				$('.myalignbuild').html('ERR : Eff. Date Should be Less Than Renewal Date!');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#effectivedate").focus();
+				return false;
+			}
 			
 			if (Datevalval > currentdatevalue){
 				$('.myalignbuild').html('ERR : Date greater than today!');
@@ -1783,8 +2224,8 @@ $(document).ready(function() {
 				},5000);
 				$("#rent").focus();
 				return false;
-			} else if(landlord == '') {
-				$('.myalignbuild').html('ERR : Enter Landlord');
+			} else if(landlord == '0') {
+				$('.myalignbuild').html('ERR : Select Landlord');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
 					$('#errormsgbuild').hide();
@@ -1799,7 +2240,7 @@ $(document).ready(function() {
 				},5000);
 				$("#contactperson").focus();
 				return false;
-			} else if(con_num == '') {
+			} /*else if(con_num == '') {
 				$('.myalignbuild').html('ERR : Enter Contact Number');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1820,9 +2261,6 @@ $(document).ready(function() {
 				var email_to_lower	=	$("#emailid").val();
 				var address			=	email_to_lower.toLowerCase();
 				if(reg.test(address) == false) {
-					/*alert('Invalid Email Address');
-					document.getElementById("email").focus();
-					return false;*/
 					$('.myalignbuild').html('ERR : Invalid Email Address');
 					$('#errormsgbuild').css('display','block');
 					setTimeout(function() {
@@ -1840,7 +2278,8 @@ $(document).ready(function() {
 				},5000);
 				$("#city_landlord").focus();
 				return false;
-			} else if(liaison_emp == '0') {
+			}*/
+			if(liaison_emp == '0') {
 				$('.myalignbuild').html('ERR : Select Company Liaison');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -1947,22 +2386,23 @@ $(document).ready(function() {
      
 	<tr height="30">
 		<td width="120">In-Charge*</td>
-		<td><?php
+		<td>
+		<?php
 			$fgmembersite->DBLogin();
 			$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="3" class="selectbox">';
-			echo '<option value="0">--Select--</option>';
+			echo '<select name="incharge_empcode" id="incharge_empcode" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:100px;" tabindex="3" class="selectbox">';
+			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
-				echo '<option value="'.$row['emp_code'].'">'.$row['emp_code'].'</option>';
+				echo '<option value="'.$row['emp_code'].'">'.$row['first_name'].'</option>';
 			}
 			echo '</select>';
 			?>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox"/></span>
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' size="5" readonly class="textbox"/></span>
 		</td>
     </tr>
    </table>
@@ -1988,19 +2428,19 @@ $(document).ready(function() {
   <td>
   <table>
     <tr height="30">
-    <td width="120">Address Line 1</td>
+    <td width="50" align="left">Address Line 1*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="4" class="areatext" /></td>
     </tr>
     
 	<tr height="30">
-     <td width="120" >Line 2</td>
+     <td width="50" align="left"><span style="padding-left:55px;">Line 2</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="5" class="areatext" /></td>
 	</tr>
 
 	<tr height="30">
-     <td width="120">Line 3</td>
+     <td width="50" ><span style="padding-left:55px;">Line 3</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="6" class="areatext" /></td>
 	</tr>
@@ -2040,8 +2480,11 @@ $(document).ready(function() {
   <table>
 	<tr height="30">
      <td width="120" nowrap="nowrap">Map</td>
-     <td><button type="button" name="mapval" id="mapval" tabindex="8" style="width:80px;" class="areatext" >Save Map</button>
+     <td><button type="button" name="mapval" id="mapval" tabindex="8" style="width:93px;" class="areatext" >Select Map</button>
 	 <input type='hidden' name='marker_id' id='marker_id' />
+	 <input type='hidden' name='lngbox' id='lngbox' value="" />
+	 <input type='hidden' name='latbox' id='latbox' value=""/>
+	 <input type='hidden' name='latlongbox' id='latlongbox' value=""/>
 	 </td>
 	</tr>
      
@@ -2051,22 +2494,22 @@ $(document).ready(function() {
     </tr>
     
 	<tr height="30">
-     <td width="120" nowrap="nowrap">Drawing 2</td>
+     <td width="100" nowrap="nowrap" ><span style="padding-left:36px;">Drawing 2</span></td>
      <td><input type='file' name='attach5' id='attach5' tabindex="10" class="textbox"/></td>
 	</tr>
 
 	<tr height="40">
-     <td width="120">Drawing 3</td>
+     <td width="100" ><span style="padding-left:36px;">Drawing 3</span></td>
      <td><input type='file' name='attach6' id='attach6' tabindex="11" class="textbox"/></td>
 	</tr>
 	
 	<tr height="30">
-		<td width="120">Drawing 4</td>
+		<td width="100" ><span style="padding-left:36px;">Drawing 4</span></td>
 		<td><input type='file' name='attach7' id='attach7' tabindex="12" class="textbox"/></td>
     </tr>
 	
 	<tr height="30">
-     <td width="120">Drawing 5</td>
+     <td width="100" ><span style="padding-left:36px;">Drawing 5</span></td>
      <td><input type='file' name='attach8' id='attach8' tabindex="13" class="textbox"/></td>
 	</tr>	
       </table>
@@ -2139,7 +2582,19 @@ $(document).ready(function() {
     <tr height="30">
      <td width="120" nowrap="nowrap">Purchased From*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='purchasefrom' id='purchasefrom' size="45" maxlength="45" autocomplete="off" tabindex="1" class="textbox"/></td>
+     <td><?php
+				$result_state=mysql_query("select id,name,vendor_code from vendor");
+				echo '<select name="purchasefrom" id="purchasefrom" tabindex="1" style="width:100px;">';
+				echo '<option value="0">--Select--</option>';
+				while($row=mysql_fetch_array($result_state))
+				{
+					echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+				}
+				echo '</select>';
+	      ?>         
+     <!-- <input type='text' name='purchasefrom' id='purchasefrom' size="45" maxlength="45" autocomplete="off" tabindex="1" class="textbox"/>-->
+     
+     </td>
 	</tr>
 	
 	<tr height="30">
@@ -2150,12 +2605,12 @@ $(document).ready(function() {
 		?>
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td><input type='text' name='purcurrency' id='purcurrency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='purcurrency' id='purcurrency' tabindex="3" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 	<tr height="30">
      <td width="120">Sale Deed/Agreement</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='file' name='saleagreement' id='saleagreement' style="width:250px;" tabindex="3" class="textbox"/></td>
+     <td><input type='file' name='saleagreement' id='saleagreement' style="width:250px;" tabindex="5" class="textbox"/></td>
 	</tr>
 
    </table>
@@ -2168,13 +2623,13 @@ $(document).ready(function() {
   <td>
   <table>
 	<tr height="30">
-     <td width="120" nowrap="nowrap"></td>
-     <td></td>
+     <td width="120" nowrap="nowrap">Purchased Date*</td>
+     <td><input type='text' name='datepurchase' id='datepurchase' size="10" value="<?php echo date('d-m-Y'); ?> " tabindex="2" class="datepicker textbox"/></td>
 	</tr>
      
 	<tr height="30">
      <td width="120">Cost*</td>	 
-     <td><input type='text' name='cost' id='cost' autocomplete="off" style="text-align:right;" tabindex="2" class="textbox"/></td>
+     <td><input type='text' name='cost' id='cost' autocomplete="off" style="text-align:right;" tabindex="4" class="textbox"/></td>
 	</tr>
 
        </table>
@@ -2198,13 +2653,13 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Number</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='insurancenumber' id='insurancenumber' autocomplete="off" tabindex="4" class="textbox"/></td>
+    <td><input type='text' name='insurancenumber' id='insurancenumber' autocomplete="off" tabindex="6" class="textbox"/></td>
     </tr>
     
 	<tr height="40">
      <td width="120">Agreement</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='file' name='insuranceagreement' id='insuranceagreement' tabindex="6" class="textbox"/></td>
+     <td><input type='file' name='insuranceagreement' id='insuranceagreement' tabindex="8" class="textbox"/></td>
 	</tr>
    </table>
    </td>
@@ -2219,12 +2674,12 @@ $(document).ready(function() {
   <table>
 	<tr height="32">
      <td width="120" nowrap="nowrap">Date</td>
-     <td><input type='text' name='insurancedate' id='insurancedate'	size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="5" class="datepicker textbox"/></td>
+     <td><input type='text' name='insurancedate' id='insurancedate'	size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="7" class="datepicker textbox"/></td>
 	</tr>
 	
 	<tr height="32">
      <td width="120" nowrap="nowrap">Renewal Date</td>
-     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="7" class="datepicker textbox"/></td>
+     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="9" class="datepicker textbox"/></td>
 	</tr>
     </table>
    </td>
@@ -2324,39 +2779,51 @@ $(document).ready(function() {
     <tr height="30">
      <td width="120">Name*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='landlord' id='landlord' size="35" autocomplete="off" tabindex="5" class="textbox"/></td>
+     <td><?php
+			$result_state=mysql_query("select id,name,vendor_code from vendor");
+			echo '<select name="landlord" id="landlord" tabindex="5" style="width:100px;">';
+			echo '<option value="0">--Select--</option>';
+			while($row=mysql_fetch_array($result_state)) {
+				echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+			}
+			echo '</select>';
+	    ?>
+     <!-- <input type='text' name='landlord' id='landlord' size="35" autocomplete="off" tabindex="5" class="textbox"/>-->
+     </td>
 	</tr>
     
 	<tr height="30">
 		<td width="120">Address Line 1</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type="text" id="land_add1" name="land_add1" size="35" autocomplete="off" tabindex="6" class="areatext" /></td>
+		<td><input type="text" id="land_add1" name="land_add1" size="35" readonly autocomplete="off" tabindex="6" class="areatext" /></td>
     </tr>
 
 	<tr height="30">
-		 <td width="120">Line 2</td>
+		 <td width="100"><span style="padding-left:55px;">Line 2</span></td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" id="land_add2" name="land_add2" size="35" autocomplete="off" tabindex="7" class="areatext" /></td>
+		 <td><input type="text" id="land_add2" name="land_add2" size="35" readonly autocomplete="off" tabindex="7" class="areatext" /></td>
 	</tr>
 
 	<tr height="30">
-		<td width="120">Line 3</td>
+		<td width="100"><span style="padding-left:55px;">Line 3</span></td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type="text" id="land_add3" name="land_add3" size="35" autocomplete="off" tabindex="8" class="areatext" /></td>
+		<td><input type="text" id="land_add3" name="land_add3" size="35" readonly autocomplete="off" tabindex="8" class="areatext" /></td>
     </tr>
 	
 	<tr height="30">
-     <td width="120">City*</td>
+     <td width="120">City</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><?php
-		$result_state=mysql_query("SELECT a.id  as id ,a.name,b.name as state_name FROM city a, state b where a.state_id=b.id");
+     <td>
+     	<input type='text' name='city_landlord' id='city_landlord' tabindex="9" readonly class="textbox" />
+		<?php
+		/*$result_state=mysql_query("SELECT a.id  as id ,a.name,b.name as state_name FROM city a, state b where a.state_id=b.id");
 		echo '<select name="city_landlord" id="city_landlord" tabindex="9" >';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{
 			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
 		}
-		echo '</select>';
+		echo '</select>';*/
 	?></td>
 	</tr>
 
@@ -2384,19 +2851,19 @@ $(document).ready(function() {
     </tr>
 
 	<tr height="30">
-     <td width="120">Contact Number*</td>
+     <td width="120">Contact Number</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='contactnumber' id='contactnumber' tabindex="11" class="textbox"/></td>
+     <td><input type='text' name='contactnumber' id='contactnumber' readonly tabindex="11" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
 		<td width="120">Alternate Number</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='alternatenumber' id='alternatenumber' tabindex="12" class="textbox"/></td>
+		<td><input type='text' name='alternatenumber' id='alternatenumber' readonly tabindex="12" class="textbox"/></td>
     </tr>
 
 	<tr height="30">
-     <td width="120">Email ID*</td>
+     <td width="120">Email ID</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type='text' name='emailid' id='emailid' tabindex="13" class="textbox"/></td>
 	</tr>
@@ -2440,7 +2907,7 @@ $(document).ready(function() {
   <td>
   <table>
     <tr height="30">
-    <td width="120">Employee Code*</td>
+    <td width="120">Employee Name*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><?php
 		$fgmembersite->DBLogin();
@@ -2452,7 +2919,7 @@ $(document).ready(function() {
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id))
 		{
-		echo '<option value="'.$row['emp_code'].'">'.$row['emp_code'].'</option>';
+		echo '<option value="'.$row['emp_code'].'">'.$row['first_name'].'</option>';
 
 		}
 		echo '</select>';
@@ -2471,7 +2938,7 @@ $(document).ready(function() {
   <td>
    <table>
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Employee Name</td>
+		 <td width="120" nowrap="nowrap">Employee Code</td>
 		 <td><div id="display_empname"><input type='text' name='empname' id='empname' readonly class="textbox"/></div></td>
 	</tr>     
    </table>

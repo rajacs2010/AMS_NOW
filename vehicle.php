@@ -1692,7 +1692,7 @@ $(document).ready(function() {
 			$result_state=mysql_query("SELECT * FROM currency");
 			$row=mysql_fetch_array($result_state);
 		?>
-		<td width="120" >Currency </td>
+		<td width="120" >Currency</td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
 		<td><input type='text' name='tax_currency' id='tax_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
@@ -1828,10 +1828,10 @@ $(document).ready(function() {
     
 	<tr height="30">
      <?php
-			$fgmembersite->DBLogin();
-			$result_state=mysql_query("SELECT * FROM currency");
-			$row=mysql_fetch_array($result_state);
-		?>
+		$fgmembersite->DBLogin();
+		$result_state=mysql_query("SELECT * FROM currency");
+		$row=mysql_fetch_array($result_state);
+	 ?>
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
