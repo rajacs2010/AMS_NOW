@@ -26,7 +26,7 @@ if ($fgmembersite->usertype() == 1)	{
 	$header_file='./layout/admin_header_bms.php';
 }
 
-$query_edit				=	"SELECT id,generator_code,building_code,date,transaction_number,diesel_volume,currency,Diesel_cost FROM diesel WHERE id = '$id'";			
+$query_edit				=	"SELECT id,generator_code,building_code,date,transaction_number,diesel_volume,dieprice,currency,Diesel_cost FROM diesel WHERE id = '$id'";			
 $res_edit				=	mysql_query($query_edit) or die(mysql_error());
 $row_edit				=	mysql_fetch_array($res_edit);
 
@@ -43,11 +43,11 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	//echo $sql;
 	//exit;
 		
-		//echo 'UPDATE diesel SET generator_code="'.$generator_code.'",building_code="'.$building_code.'",date="'.$ddate.'",transaction_number="'.$tnumber.'",diesel_volume="'.$volume.'",currency="'.$add_currency.'",diesel_cost="'.$dcost.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"';
+		//echo 'UPDATE diesel SET generator_code="'.$generator_code.'",building_code="'.$building_code.'",date="'.$ddate.'",transaction_number="'.$tnumber.'",diesel_volume="'.$volume.'",dieprice="'.$dieprice.'",currency="'.$add_currency.'",diesel_cost="'.$dcost.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"';
 
 		$user_id		=	$_SESSION['user_id'];
 		$add_currency	=	$fgmembersite->getdbval($_POST['add_currency'],'id','name','currency');
-		if(!mysql_query('UPDATE diesel SET generator_code="'.$generator_code.'",building_code="'.$building_code.'",date="'.$ddate.'",transaction_number="'.$tnumber.'",diesel_volume="'.$volume.'",currency="'.$add_currency.'",diesel_cost="'.$dcost.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
+		if(!mysql_query('UPDATE diesel SET generator_code="'.$generator_code.'",building_code="'.$building_code.'",date="'.$ddate.'",transaction_number="'.$tnumber.'",diesel_volume="'.$volume.'",dieprice="'.$dieprice.'",currency="'.$add_currency.'",diesel_cost="'.$dcost.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
 			die('Error: ' . mysql_error());
 		}
 		$fgmembersite->RedirectToURL("view_diesel.php?success=update");
@@ -193,6 +193,62 @@ $(document).ready(function() {
 			$(this).focus();
 			return false;
 		}
+		var x = $(this).val();
+		var x=(x.toString().replace(/,/g,""));
+		var x=(Math.round(x * 100) / 100);
+		$(this).val(x.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+		//alert(2323);
+		var price_val				=	($('#dieprice').val().replace(/,/g,''));		
+		//var price_value			=	parseInt(price_val.replace(/,/g,''));
+
+		//alert(starting_reading);
+		
+		if(price_val == '') {
+			return false;
+		}
+		var vol_readingval		=	parseInt(mcost.replace(/,/g,''));
+		
+		var total_cost			=	price_val * vol_readingval;
+
+		var x=(total_cost.toString().replace(/,/g,""));
+		var x=(Math.round(x * 100) / 100);
+		$('#dcost').val(x.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","));			
+	});
+
+	$("#dieprice").on('blur',function() {
+
+		var mcost=$(this).val();
+		var numericExpression = /^[+]?[0-9,]+(\.[0-9,]+)?$/;
+		if(!mcost.match(numericExpression)) {
+		$('.myalignbuild').html('ERR : Only Numbers! ');
+		$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$(this).val("");
+			$(this).focus();
+			return false;
+		}
+		var x = $(this).val();
+		var x=(x.toString().replace(/,/g,""));
+		var x=(Math.round(x * 100) / 100);
+		$(this).val(x.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+		var volume_val				=	($('#volume').val().replace(/,/g,''));		
+		//var price_value			=	parseInt(price_val.replace(/,/g,''));
+
+		//alert(starting_reading);
+		
+		if(volume_val == '') {
+			return false;
+		}
+		var price_readingval		=	mcost.replace(/,/g,'');
+		
+		var total_cost				=	volume_val * price_readingval;
+
+		var x=(total_cost.toString().replace(/,/g,""));
+		var x=(Math.round(x * 100) / 100);
+		$('#dcost').val(x.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 	});
 	
 	$("#part_save").on("click", function() {
@@ -202,6 +258,7 @@ $(document).ready(function() {
 		var ddate				=	$("#ddate").val();
 		var tnumber				=	$("#tnumber").val();
 		var volumeval			=	$("#volume").val();
+		var dieprice			=	$("#dieprice").val();
 		var add_currency		=	$("#add_currency").val();
 		var dcost				=	$("#dcost").val();
 		
@@ -212,8 +269,16 @@ $(document).ready(function() {
 		var ddateval 		=	new Date(ddate.substring(6,10)+"/"+ddate.substring(3,5)+"/"+ddate.substring(0,2)).getTime();
 
 		var currentdatevalue	=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
-
-		if(generator_code == '0') {
+		
+		if(building_code == '0') {
+			$('.myalignbuild').html('ERR : Select Building Code');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#building_code").focus();
+			return false;
+		} else if(generator_code == '0') {
 			$('.myalignbuild').html('ERR : Select Generator Code');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -221,13 +286,13 @@ $(document).ready(function() {
 			},5000);
 			$("#generator_code").focus();
 			return false;
-		} else if(building_code == '0') {
-			$('.myalignbuild').html('ERR : Select Building Code');
+		} else if(tnumber == '') {
+			$('.myalignbuild').html('ERR : Enter Transaction No.');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#building_code").focus();
+			$("#tnumber").focus();
 			return false;
 		} else if(ddate == '') {
 			$('.myalignbuild').html('ERR : Select Date');
@@ -245,15 +310,15 @@ $(document).ready(function() {
 			},5000);
 			$("#ddate").focus();
 			return false;
-		}  else if(tnumber == '') {
-			$('.myalignbuild').html('ERR : Enter Transaction No.');
+		}  else if(volumeval == '') {
+			$('.myalignbuild').html('ERR : Enter Volume');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#tnumber").focus();
+			$("#volume").focus();
 			return false;
-		} else if(add_currency == '') {
+		}  else if(add_currency == '') {
 			$('.myalignbuild').html('ERR : Enter Currency');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -269,15 +334,7 @@ $(document).ready(function() {
 			},5000);
 			$("#dcost").focus();
 			return false;
-		} else if(volumeval == '') {
-			$('.myalignbuild').html('ERR : Enter Volume');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#volume").focus();
-			return false;
-		}
+		} 
 		$("#formsaveval").val('800');
 		$("#diesel_save").submit();
 	});
@@ -300,32 +357,39 @@ $(document).ready(function() {
   <td>
   <table>
     <tr height="30">
-    <td width="120">Generator Code*</td>
+    <td width="120">Building Name*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><?php
-		$result_state=mysql_query("SELECT id,generator_code from generator");
-		echo '<select name="generator_code" id="generator_code" tabindex="1" >';
-		echo '<option value="0">--Select--</option>';
-		while($row=mysql_fetch_array($result_state))
-		{
-			if($row['id'] == $row_edit['generator_code']){
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT id,building_code,building_name from building");
+			echo '<select name="building_code" id="building_code" tabindex="1">';
+			echo '<option value="0">--Select--</option>';
+			while($row=mysql_fetch_array($result_state))
+			{
+				if($row['id'] == $row_edit['building_code']){
 					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
 				 } else {
 					  $isSelected = ''; // else we remove any tag
 				 }							
-			echo "<option value='".$row['id']."'".$isSelected.">".$row['generator_code']."</option>";
-		}
-		echo '</select>';
-	?>
+				echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
+			}
+			echo '</select>';
+		?>
 	</td>
     </tr>
     
 	<tr height="30">
-     <td width="120">Date</td>
+     <td width="120">Transaction No.</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='ddate' id='ddate' tabindex="3" style="width:70px;" value="<?php echo $row_edit['date']; ?>" class="datepicker textbox"/></td>
+     <td><input type='text' name='tnumber' id='tnumber' readonly tabindex="3" value="<?php echo $row_edit['transaction_number']; ?>" size="12" autocomplete="off" class="textbox"/></td>
 	</tr>
 
+	<tr height="30">
+     <td width="120">Diesel Volume(l)*</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type='text' name='volume' id='volume' style="text-align:right;" tabindex="5" value="<?php echo $row_edit['diesel_volume']; ?>" size="12" autocomplete="off" class="textbox"/></td>
+	</tr>
+	
 	<tr height="30">
 	     <?php
 			$fgmembersite->DBLogin();
@@ -334,14 +398,10 @@ $(document).ready(function() {
 		?>
 		<td width="120" >Currency</td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td><input type='text' name='add_currency' id='add_currency' value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
+		<td><input type='text' name='add_currency' id='add_currency' tabindex="7" value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
 	</tr>
 
-	<tr height="30">
-     <td width="120">Diesel Volume(l)*</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='volume' id='volume' style="text-align:right;" tabindex="5" value="<?php echo $row_edit['diesel_volume']; ?>" size="12" autocomplete="off" class="textbox"/></td>
-	</tr>
+	
 
    </table>
    </td>
@@ -355,36 +415,47 @@ $(document).ready(function() {
   <td>
    <table>
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Building Code*</td>
+		 <td width="120" nowrap="nowrap">Generator Name*</td>
 		 <td><?php
-			$fgmembersite->DBLogin();
-			$result_state=mysql_query("SELECT id,building_code from building");
-			echo '<select name="building_code" id="building_code" tabindex="2">';
-			echo '<option value="0">--Select--</option>';
-			while($row=mysql_fetch_array($result_state))
-			{
-				if($row['id'] == $row_edit['building_code']){
+		$result_state=mysql_query("SELECT id,generator_code,description from generator");
+		echo '<select name="generator_code" id="generator_code" tabindex="2" >';
+		echo '<option value="0">--Select--</option>';
+		while($row=mysql_fetch_array($result_state))
+		{
+			if($row['id'] == $row_edit['generator_code']){
 					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
 				 } else {
 					  $isSelected = ''; // else we remove any tag
 				 }							
-				echo "<option value='".$row['id']."'".$isSelected.">".$row['building_code']."</option>";
-			}
-			echo '</select>';
-		?></td>
+			echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['description'])."</option>";
+		}
+		echo '</select>';
+	?></td>
 	</tr>
      
 	<tr height="30">
-		<td width="120">Transaction No</td>		
+		<td width="120">Transaction Date</td>		
 		<td>
-			<input type='text' name='tnumber' id='tnumber' readonly value="<?php echo $row_edit['transaction_number']; ?>" size="12" autocomplete="off" class="textbox"/>
+			<input type='text' name='ddate' id='ddate' tabindex="4" style="width:70px;" value="<?php echo $row_edit['date']; ?>" class="datepicker textbox"/>
 			<input type='hidden' name='edit_id' id='edit_id' value="<?php echo $row_edit['id']; ?>" />
 		</td>
     </tr>
 
 	<tr height="30">
+		 <td width="120" nowrap="nowrap">Price</td>
+		 <td><input type='text' name='dieprice' id='dieprice' style="text-align:right;" tabindex="6" value="<?php 
+		 if(strstr($row_edit['dieprice'],".")) {
+			echo $row_edit['dieprice'];
+		} else {
+			echo $row_edit['dieprice'].".00";
+		}
+		 
+		?>" size="12" autocomplete="off" class="textbox"/></td>
+	</tr>
+	
+	<tr height="30">
 		 <td width="120" nowrap="nowrap">Diesel Cost*</td>
-		 <td><input type='text' name='dcost' id='dcost' style="text-align:right;" tabindex="4" value="<?php 
+		 <td><input type='text' name='dcost' id='dcost' style="text-align:right;" tabindex="8" value="<?php 
 		 if(strstr($row_edit['Diesel_cost'],".")) {
 			echo $row_edit['Diesel_cost'];
 		} else {

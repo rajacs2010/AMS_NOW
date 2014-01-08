@@ -34,7 +34,7 @@ if(file_exists($header_file))	{
 	exit;
 }
 
-$query_edit				=	"SELECT id,building_code,date,nepa_meter_number,amount,currency FROM nepa WHERE id = '$id'";			
+$query_edit				=	"SELECT id,building_code,date,fromdate,todate,paymentdate,nepa_meter_number,amount,currency FROM nepa WHERE id = '$id'";			
 $res_edit				=	mysql_query($query_edit) or die(mysql_error());
 $row_edit				=	mysql_fetch_array($res_edit);
 
@@ -47,7 +47,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	
 		$user_id		=	$_SESSION['user_id'];
 		$add_currency	=	$fgmembersite->getdbval($_POST['add_currency'],'id','name','currency');
-		if(!mysql_query('UPDATE nepa SET building_code="'.$building_code.'",nepa_meter_number="'.$mnumber.'",date="'.$mdate.'",amount="'.$amount.'",currency="'.$add_currency.'",updated_by="'.$user_id.'",updated_at="'.$current_date.'" WHERE id="'.$edit_id.'"')) {
+		if(!mysql_query('UPDATE nepa SET building_code="'.$building_code.'",nepa_meter_number="'.$mnumber.'",date="'.$mdate.'",fromdate="'.$fromdate.'",todate="'.$todate.'",paymentdate="'.$paymentdate.'",amount="'.$amount.'",currency="'.$add_currency.'",updated_by="'.$user_id.'",updated_at="'.$current_date.'" WHERE id="'.$edit_id.'"')) {
 			die('Error: ' . mysql_error());
 		}
 		$fgmembersite->RedirectToURL("view_nepa.php?success=update");
@@ -124,7 +124,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
   color:transparent;
 }
 .scroll_box {
-	height:141px;
+	height:237px;
 	overflow:auto;
 }
 .alignment2 {
@@ -203,6 +203,9 @@ $(document).ready(function() {
 		//alert("232");
 		var building_code		=	$("#building_code").val();
 		var mdate				=	$("#mdate").val();
+		var fromdate			=	$("#fromdate").val();
+		var todate				=	$("#todate").val();
+		var paymentdate			=	$("#paymentdate").val();
 		var mnumber				=	$("#mnumber").val();
 		var amount				=	$("#amount").val();
 		var add_currency		=	$("#add_currency").val();
@@ -213,10 +216,16 @@ $(document).ready(function() {
 
 		var mdateval 			=	new Date(mdate.substring(6,10)+"/"+mdate.substring(3,5)+"/"+mdate.substring(0,2)).getTime();
 
+		var fromdateval 			=	new Date(fromdate.substring(6,10)+"/"+fromdate.substring(3,5)+"/"+fromdate.substring(0,2)).getTime();
+
+		var todateval 			=	new Date(todate.substring(6,10)+"/"+todate.substring(3,5)+"/"+todate.substring(0,2)).getTime();
+
+		var paymentdateval 			=	new Date(paymentdate.substring(6,10)+"/"+paymentdate.substring(3,5)+"/"+paymentdate.substring(0,2)).getTime();
+		
 		var currentdatevalue	=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
 
 		if(building_code == '0') {
-			$('.myalignbuild').html('ERR : Select Building Code');
+			$('.myalignbuild').html('ERR : Select Building Name');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
@@ -231,23 +240,7 @@ $(document).ready(function() {
 			},5000);
 			$("#mnumber").focus();
 			return false;
-		} else if(add_currency == '') {
-			$('.myalignbuild').html('ERR : Enter Currency');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#add_currency").focus();
-			return false;
-		} else if(amount == '') {
-			$('.myalignbuild').html('ERR : Enter Amount');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#amount").focus();
-			return false;
-		}  else if(mdate == '') {
+		} else if(mdate == '') {
 			$('.myalignbuild').html('ERR : Select Date');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -263,7 +256,95 @@ $(document).ready(function() {
 			},5000);
 			$("#mdate").focus();
 			return false;
-		} 
+		}  else if(fromdate == '') {
+			$('.myalignbuild').html('ERR : Select Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#fromdate").focus();
+			return false;
+		} else if(fromdateval > currentdatevalue) {
+			$('.myalignbuild').html('ERR : Date Greater Than Today');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#fromdate").focus();
+			return false;
+		} else if(todate == '') {
+			$('.myalignbuild').html('ERR : Select Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#todate").focus();
+			return false;
+		} else if(todateval > currentdatevalue) {
+			$('.myalignbuild').html('ERR : Date Greater Than Today');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#todate").focus();
+			return false;
+		} else if(fromdateval > todateval) {
+			$('.myalignbuild').html('ERR : From Date Greater Than To Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#todate").focus();
+			return false;
+		} else if(fromdateval == todateval) {
+			$('.myalignbuild').html('ERR : From Date & To Date Cannot be Same');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#todate").focus();
+			return false;
+		} else if(paymentdate == '') {
+			$('.myalignbuild').html('ERR : Select Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#paymentdate").focus();
+			return false;
+		} else if(paymentdateval > currentdatevalue) {
+			$('.myalignbuild').html('ERR : Date Greater Than Today');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#paymentdate").focus();
+			return false;
+		} else if(paymentdateval < todateval) {
+			$('.myalignbuild').html('ERR : Payment Date Should be Greater Than To Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#paymentdate").focus();
+			return false;
+		}  else if(add_currency == '') {
+			$('.myalignbuild').html('ERR : Enter Currency');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#add_currency").focus();
+			return false;
+		} else if(amount == '') {
+			$('.myalignbuild').html('ERR : Enter Amount');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#amount").focus();
+			return false;
+		}  
 
 		//alert(343);
 		$("#formsaveval").val('800');
@@ -289,11 +370,11 @@ $(document).ready(function() {
   <td>
   <table>
     <tr height="30">
-	 <td width="120" nowrap="nowrap">Building Code*</td>
+	 <td width="120" nowrap="nowrap">Building Name*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 	 <td><?php
 		$fgmembersite->DBLogin();
-		$result_state=mysql_query("SELECT id,building_code from building");
+		$result_state=mysql_query("SELECT id,building_code,building_name from building");
 		echo '<select name="building_code" id="building_code" tabindex="1" >';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state))
@@ -303,13 +384,13 @@ $(document).ready(function() {
 			 } else {
 				  $isSelected = ''; // else we remove any tag
 			 }							
-			echo "<option value='".$row['id']."'".$isSelected.">".$row['building_code']."</option>";
+			echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
 		}
 		echo '</select>';
 	?></td>
 	</tr>
     
-	<tr height="30">
+	<!-- <tr height="30">
 	     <?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$row_edit[currency]'");
@@ -318,12 +399,12 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<td><input type='text' name='add_currency' id='add_currency' value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
-	</tr>
+	</tr>-->
 
 	<tr height="30">
      <td width="120">Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='mdate' id='mdate' tabindex="4" style="width:70px;" value="<?php echo $row_edit['date']; ?>" class="datepicker textbox"/></td>
+     <td><input type='text' name='mdate' id='mdate' tabindex="3" style="width:70px;" value="<?php echo $row_edit['date']; ?>" class="datepicker textbox"/></td>
 	</tr>
 
    </table>
@@ -342,7 +423,7 @@ $(document).ready(function() {
      <td><input type='text' name='mnumber' id='mnumber' style="text-align:right" tabindex="2" value="<?php echo number_format(str_replace(array(",","."),"",$row_edit['nepa_meter_number'])); ?>" size="12" autocomplete="off"class="textbox"/></td>
 	</tr>
 
-	<tr height="30">
+	<!-- <tr height="30">
 		 <td width="120" nowrap="nowrap">Amount Paid*</td>
 		 <td><input type='text' name='amount' id='amount' style="text-align:right" tabindex="3" value="<?php 
 		if(strstr($row_edit['amount'],".")) {
@@ -352,6 +433,85 @@ $(document).ready(function() {
 		} ?>" size="12" autocomplete="off" class="textbox"/>
 		 <input type='hidden' name='edit_id' id='edit_id' value="<?php echo $row_edit['id']; ?>" />
 		 </td>
+	</tr>-->
+
+   </table>
+  </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Right Table End -------------------------------------->
+
+</fieldset>
+  </td>
+</tr>
+</table>
+
+
+<table width="100%" align="left">
+ <tr>
+  <td>
+<fieldset align="left" class="alignment2">
+  <legend ><strong>For Period</strong></legend>
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table>
+    <tr height="30">
+	 <td width="120" nowrap="nowrap">From Date*</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	 <td><input type='text' name='fromdate' id='fromdate' tabindex="4" readonly style="width:70px;" value="<?php echo $row_edit['fromdate']; ?>" class="datepicker textbox"/></td>
+	</tr>
+    
+    <tr height="30">	     
+		<td width="120" >Payment Date*</td>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><input type='text' name='paymentdate' id='paymentdate' tabindex="6" readonly style="width:70px;" value="<?php echo $row_edit['paymentdate']; ?>" class="datepicker textbox"/></td>
+	</tr>
+	
+	<tr height="30">
+	     <?php
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT * FROM currency WHERE id = '$row_edit[currency]'");
+			$row=mysql_fetch_array($result_state);
+		?>
+		<td width="120" >Currency</td>
+		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
+		<td><input type='text' name='add_currency' id='add_currency' value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
+	</tr>
+
+	
+
+   </table>
+   </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Left Table End -------------------------------------->
+
+<table width="50%" align="left">
+ <tr>
+  <td>
+   <table>
+	<tr height="30">
+     <td width="120">To Date*</td>
+     <td><input type='text' name='todate' id='todate' tabindex="5" readonly style="width:70px;" value="<?php echo $row_edit['todate']; ?>" class="datepicker textbox"/></td>
+	</tr>
+	
+	<tr height="30">
+		 <td width="120" nowrap="nowrap"></td>
+		 <td></td>
+	</tr>
+	
+	<tr height="30">
+		 <td width="120" nowrap="nowrap">Amount Paid*</td>
+		 <td><input type='text' name='amount' id='amount' style="text-align:right" tabindex="3" value="<?php 
+		if(strstr($row_edit['amount'],".")) {
+			echo $row_edit['amount'];
+		} else {
+			echo $row_edit['amount'].".00";
+		} ?>" size="12" autocomplete="off" class="textbox"/>
+		 <input type='hidden' name='edit_id' id='edit_id' value="<?php echo $row_edit['id']; ?>" /></td>
 	</tr>
 
    </table>
@@ -365,6 +525,11 @@ $(document).ready(function() {
   </td>
 </tr>
 </table>
+
+
+
+
+
 
 </div>
 

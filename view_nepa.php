@@ -32,9 +32,9 @@ if(file_exists($header_file)) {
 if($_REQUEST['building_name']!='') {
 	$var = @$_REQUEST['building_name'] ;
 	$trimmed = trim($var);	
-	$qry="SELECT ne.id AS NEID,bu.building_code AS BU_CODE,bu.building_name AS BU_NAME,date,nepa_meter_number,amount,ne.currency AS CURR FROM `nepa` ne LEFT JOIN building bu ON ne.building_code = bu.id WHERE bu.building_name LIKE '%".$trimmed."%'";
+	$qry="SELECT ne.id AS NEID,bu.building_code AS BU_CODE,bu.building_name AS BU_NAME,date,nepa_meter_number,amount,ne.currency AS CURR,fromdate,todate,paymentdate FROM `nepa` ne LEFT JOIN building bu ON ne.building_code = bu.id WHERE bu.building_name LIKE '%".$trimmed."%'";
 } else { 
-	$qry="SELECT ne.id AS NEID,bu.building_code AS BU_CODE,bu.building_name AS BU_NAME,date,nepa_meter_number,amount,ne.currency AS CURR FROM `nepa` ne LEFT JOIN building bu ON ne.building_code = bu.id"; 
+	$qry="SELECT ne.id AS NEID,bu.building_code AS BU_CODE,bu.building_name AS BU_NAME,date,nepa_meter_number,amount,ne.currency AS CURR,fromdate,todate,paymentdate FROM `nepa` ne LEFT JOIN building bu ON ne.building_code = bu.id"; 
 }
 $results=mysql_query($qry);
 $num_rows= mysql_num_rows($results);			
@@ -182,6 +182,9 @@ function searchnepaviewajax(page) {  // For pagination and sorting of the Collec
 				<th nowrap="nowrap">Building Code</th>
 				<th nowrap="nowrap">Nepa Meter No.</th>
 				<th nowrap="nowrap">Date</th>
+				<th nowrap="nowrap">From Date</th>
+				<th nowrap="nowrap">To Date</th>
+				<th nowrap="nowrap">Payment Date</th>
 				<th nowrap="nowrap">Amount</th>
 				<th nowrap="nowrap">Currency</th>
 				<th align="right">Edit/Del</th>
@@ -201,6 +204,9 @@ function searchnepaviewajax(page) {  // For pagination and sorting of the Collec
 				<td><?php echo $fetch['BU_CODE']; ?></td>
 				<td><?php echo number_format(str_replace(array(",","."),"",$fetch['nepa_meter_number']));?></td>
 				<td><?php echo $fetch['date']; ?></td>
+				<td><?php echo $fetch['fromdate']; ?></td>
+				<td><?php echo $fetch['todate']; ?></td>
+				<td><?php echo $fetch['paymentdate']; ?></td>
 				<td><?php if(strstr($fetch['amount'],".")) {
 							echo $fetch['amount'];
 						} else {

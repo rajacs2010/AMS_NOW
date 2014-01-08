@@ -15,12 +15,12 @@ $fgmembersite->SetAdminEmail('raja.nuvento@gmail.com');
 //by itself on submitting register.php for the first time
 $fgmembersite->InitDB(/*hostname*/'localhost',
                       /*username*/'root',
-                      /*password*/'password',
+                      /*password*/'hari',
                       /*database name*/'fmcl',
                       /*table name*/'users');
 					$mysql_hostname = "localhost";
 					$mysql_user = "root";
-					$mysql_password = "password";
+					$mysql_password = "hari";
 					$mysql_database = "fmcl_host";
 //For better security. Get a random string from this link: http://tinyurl.com/randstr
 // and put it here

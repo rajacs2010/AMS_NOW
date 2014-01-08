@@ -190,10 +190,9 @@ $(document).live('ready',function() {
 		var mcost=$(this).val();
 		//var numericExpression = /^[+]?[0-9,]+(\.[0-9,]+)?$/;
 		var numericExpression = /^[0-9,]+$/;
-		if(!mcost.match(numericExpression))
-		{
-		$('.myalignbuild').html('ERR : Only Numbers! ');
-		$('#errormsgbuild').css('display','block');
+		if(!mcost.match(numericExpression)) {
+			$('.myalignbuild').html('ERR : Only Numbers! ');
+			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
