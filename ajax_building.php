@@ -93,14 +93,46 @@ $result=mysql_query("SELECT driver_code from driver where id=$selvalue");
 if($_GET["building_code"])
 {
 $selvalue=$_GET["building_code"];
-$result=mysql_query("SELECT generator_code from generator where building_code=$selvalue");
+$result=mysql_query("SELECT id,generator_code from generator where building_code=$selvalue");
 						   while($row=mysql_fetch_array($result))
 							{
 							$emp_name=$row['generator_code'];
+							$generator_id=$row['id'];
 							}
 ?>
-<input type='text' name='generator_code' id='generator_code' value="<?php echo $emp_name; ?>" readonly="true" size="10"/>
+<input type='text' name='generator_code_id' id='generator_code_id' value="<?php echo $emp_name; ?>" readonly="true" size="10"/>
+<input type='hidden' name='generator_code' id='generator_code' value="<?php echo $generator_id; ?>" readonly="true" size="10"/>
 <?php 
+}
+if($_POST["building_id"])
+{
+
+$selvalue=$_POST["building_id"];
+$postid=$_POST["edit_id"];
+	if($_POST["edit_id"])
+	{
+		$result=mysql_query("SELECT id,building_code from generator where building_code=$selvalue") or die(mysql_error());
+		$num_rows = mysql_num_rows($result);
+		while($row=mysql_fetch_array($result))
+							{
+							$generator_id=$row['id'];
+							}
+		if ($num_rows == 1 and $generator_id==$postid)
+		{
+		$num_rows=0;
+		}
+		else
+		{
+		$num_rows=$num_rows;
+		}
+		echo $num_rows;
+	}
+	else
+	{
+	$result=mysql_query("SELECT building_code from generator where building_code=$selvalue") or die(mysql_error());
+	$num_rows = mysql_num_rows($result);
+	echo $num_rows;
+	}
 }
 
 ?>

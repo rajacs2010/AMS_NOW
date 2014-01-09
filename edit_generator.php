@@ -359,6 +359,34 @@ $(document).ready(function() {
 		}		
 	});		
 });
+$(document).ready(function() {
+		$("#building_code").change(function(event) {
+		var building_id=document.getElementById("building_code").value;
+		var edit_id='<?php echo $_GET['id'];?>';
+		$.ajax({
+				url				:	"ajax_building.php",
+				type				:	"post",
+				dataType			:	"text",
+				cache				:	false,
+				data				:	{ "building_id" : building_id,"edit_id" : edit_id },
+				success				:	function(ajaxval) {
+					if (ajaxval!=0)
+					{
+						$('.myalignbuild').html('ERR 0009 : Generator Already Exists For The Building');
+					$('#errormsgbuild').css('display','block');
+						setTimeout(function() {
+							$('#errormsgbuild').hide();
+						},5000);
+						document.getElementById("building_code").value=0;
+						document.getElementById("building_code").focus();
+						return false;
+					}					
+					
+				}
+			});
+		
+		});		
+   });
 </script>
 <?php
 if(isset($_POST['save'])) {

@@ -105,6 +105,23 @@ function validateForm() {
 		document.getElementById("nextduedate").focus();
 		return false;
 	}	
+	
+	var enddate=document.getElementById("nextduedate").value;
+	var enddateval = enddate.substring(6,10)+"/"+enddate.substring(3,5)+"/"+enddate.substring(0,2);
+	var current_date=document.getElementById("hide_date").value;
+	 var current_dateval = current_date.substring(6,10)+"/"+current_date.substring(3,5)+"/"+current_date.substring(0,2);
+
+	var date_check=new Date(enddateval).getTime() > new Date(current_dateval).getTime();
+	if (date_check==false)
+	{
+	$('.myalignbuild').html('ERR 0009 :Date should be greater than current date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("nextduedate").focus();
+		return false;
+	}
 }
 $(function () {		
 	$('#clear').click(function(event) {
@@ -137,6 +154,34 @@ $(document).ready(function() {
 		$(this).val(x.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","));	
 	});
 });
+$(document).ready(function() { 
+$("#building_code").change(function(event) {
+		var building_code=document.getElementById("building_code").value;
+		if (building_code != 0)
+		{
+			
+			$('#code_display').load('ajax_building.php?building_code='+building_code);
+		}
+		else
+		{
+			document.getElementById("generator_code_id").value = "";
+			document.getElementById("generator_code").value = "";
+		}
+    });		
+	  });
+	  $(document).ready(function() { 
+		var building_code=document.getElementById("building_code").value;
+		if (building_code != 0)
+		{
+			
+			$('#code_display').load('ajax_building.php?building_code='+building_code);
+		}
+		else
+		{
+			document.getElementById("generator_code_id").value = "";
+			document.getElementById("generator_code").value = "";
+		}	
+	  });
 	</script>
 <?php
 if(isset($_GET['id']) && intval($_GET['id'])) {
@@ -155,9 +200,13 @@ if(isset($_GET['id']) && intval($_GET['id'])) {
 		$description=$row['description'];
 		$cost=$row['cost'];
 		$currency=$row['currency'];	
+		$building_id=$row['building_id'];
+	    $vendor_code=$row['vendor_code'];
 	}
 }
 if(isset($_POST['save'])) {
+	$building_id=$_POST['building_code'];
+	$vendor=$_POST['vendor_code'];
 	$generator_code=$_POST['generator_code'];
 	$mduedate=$_POST['mduedate'];
 	$status=$_POST['status'];
@@ -169,7 +218,7 @@ if(isset($_POST['save'])) {
 	$user_id=$_SESSION['user_id'];
 	$edit_id=$_POST['edit_id'];
 	$current_date=date("Y-m-d H:i:s");
-	if(!mysql_query('update  generator_maintain SET generator_code="'.$generator_code.'",due_date="'.$mduedate.'", 	status="'.$status.'",done_date="'.$donedate.'",next_due_date="'.$nextduedate.'",description="'.$desc.'",cost="'.$addcost.'",currency="'.$add_currency.'",updated_by="'.$user_id.'",updated_at="'.$current_date.'" WHERE id="'.$edit_id.'" ')) {
+	if(!mysql_query('update  generator_maintain SET generator_code="'.$generator_code.'",due_date="'.$mduedate.'", 	status="'.$status.'",done_date="'.$donedate.'",next_due_date="'.$nextduedate.'",description="'.$desc.'",cost="'.$addcost.'",currency="'.$add_currency.'",vendor_code="'.$vendor_code.'",building_id="'.$building_id.'",updated_by="'.$user_id.'",updated_at="'.$current_date.'" WHERE id="'.$edit_id.'" ')) {
 		die('Error: ' . mysql_error());
 	}
 	$fgmembersite->RedirectToURL("view_generator_maintain.php?success=update");
@@ -182,61 +231,127 @@ if(isset($_POST['save'])) {
 <div id="mytableformreceipt1" align="center"><!--- mytableformreceipt1 div start-->
 <form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 <fieldset class="alignment" align="left">
-  <legend><strong>Generator Maintenance</strong></legend>
-  <table width="100%">
-  <tr>
-  <td width="50%">
-		<table align="left">
-		 <tr>
-		  <td>
-		  <table>
-		<tr height="30">
-			<td width="120">Generator Code*</td>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			<td>
-			<?php
-				$result_state=mysql_query("SELECT id,generator_code from generator");
-				echo '<select name="generator_code" id="generator_code" tabindex="1" >';
-				echo '<option value="0">--Select--</option>';
-				while($row=mysql_fetch_array($result_state)) {
-					if($row['id'] == $generator_code) {
-						  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
-					} else {
-						  $isSelected = ''; // else we remove any tag
-					}
-					echo "<option value='".$row['id']."'".$isSelected.">".$row['generator_code']."</option>";
-				}
-				echo '</select>';
-			?>
-			</td>
-		  </tr>			
-		  <tr height="30">
-			 <td width="120">Status*</td>
+  <legend><strong>Generator Details</strong></legend>
+<table width="50%" align="left"><!-- start--->
+			<tr height="30">
+			 <td width="120">Building Name*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
+				
 				<?php
+									$result_state=mysql_query("SELECT id,building_name from building");
+									echo '<select name="building_code" id="building_code" tabindex="1"  >';
+									echo '<option value="0">--Select--</option>';
+									while($row=mysql_fetch_array($result_state))
+									{
+									
+									if($row['id'] == $building_id){
+								  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+							 } else {
+								  $isSelected = ''; // else we remove any tag
+							 }
+							
+							echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
+									
+									}
+									echo '</select>';
+									?>&nbsp;
+				
+			  </td>
+			</tr>
+			<tr height="30">
+			 <td width="120">Status*</td>
+			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			 <td>	
+<?php
 	$result_state=mysql_query("SELECT id,name from status_bms");
 				echo '<select name="status" id="status" tabindex="3">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state)) {
-					if($row['id'] == $status) {
+				if($row['id'] == $status) {
 						  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
 					} else {
 						  $isSelected = ''; // else we remove any tag
 					}
 					echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
-					}
+				}
 				echo '</select>';
-?>
-				
+?>			
 			  </td>
-		   </tr>
-		   <tr height="30">
-		    <td width="120">Done Date*</td>
-					 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					 <td><input type='text' name='donedate' id='donedate' size="10" tabindex="5" autocomplete="off" class="datepicker" value="<?php echo $done_date;?>"/></td>
+			</tr>		
+</table><!-- end--->
+
+	 <table width="50%" align="left"><!-- start--->
+			<tr height="30">
+			<td width="120">Generator Code</td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td>
+				<div id="code_display">
+				<input type='hidden' name='generator_code' id='generator_code' size="10" tabindex="4" autocomplete="off"/>
+				<input type='text' name='generator_code_id' id='generator_code_id' size="10" tabindex="4" autocomplete="off"/>
+				</div>
+			</td>
 			</tr>
 			<tr height="30">
+				<td width="120">Maintenance Due Date*</td>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
+				<td>
+				<input type="text" name="mduedate" id="mduedate" value="<?php echo $due_date;?>" size="10" autocomplete='off' tabindex="2" class="datepicker"/>	
+				</td>
+				</tr>	
+		</table><!-- end--->		
+</fieldset>
+
+<fieldset class="alignment" align="left">
+  <legend><strong>Maintenance Details</strong></legend>
+<table width="50%" align="left"><!-- start--->
+			<tr height="30">
+			<td width="120">Maintenance Done Date*</td>
+				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				 <td>
+					<input type='text' name='donedate' id='donedate' value="<?php echo $done_date;?>" size="10" tabindex="5" autocomplete="off" class="datepicker"/>
+				  </td>
+			</tr>
+					
+</table><!-- end--->
+
+	 <table width="50%" align="left"><!-- start--->
+		<tr height="30">
+			 <td width="120">Vendor Name*</td>
+			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			 <td>				
+				<?php
+					$result_state=mysql_query("SELECT id,name from vendor_bms");
+					echo '<select name="vendor_code" id="vendor_code" tabindex="11" >';
+					echo '<option value="0">--Select--</option>';
+					while($row=mysql_fetch_array($result_state)) {
+					
+					if($row['id'] == $vendor_code){
+								  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+							 } else {
+								  $isSelected = ''; // else we remove any tag
+							 }
+							
+							echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
+					}
+					echo '</select>';
+				?>&nbsp;				
+			  </td>
+			</tr>
+		</table><!-- end--->	
+
+<table width="100%" align="left"><!-- start--->
+			<tr height="30">
+				 <td width="142">Description</td>
+				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				 <td>					
+					<input type='text' name='desc' id='desc' size="70" tabindex="4" autocomplete="off" value="<?php echo $description;?>"/>					
+				  </td>
+				</tr>
+		</table>
+
+<table width="50%" align="left"><!-- start--->
+				<tr height="30">
 			 <td width="120">Currency</td>
 			 	<?php
 					$result_state=mysql_query("select * from currency where id=1");
@@ -244,56 +359,34 @@ if(isset($_POST['save'])) {
 						$currency_id = $row['id'];
 						$currency_name = $row['name'];
 						$symbol=$row['symbol'];
-					}
+					}							
 				?>
-			 <td><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
-			 <td>			
-				<input type='text' name='add_currency' id='add_currency' value="<?php echo $currency_name;?>" size="4"  readonly="true" tabindex="7" autocomplete="off"/>				
+			 <td width="50" align="right"><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
+			 <td><input type='text' name='add_currency' id='add_currency' value="<?php echo $currency_name;?>" size="4"  readonly="true" tabindex="7" autocomplete="off"/>
 			 </td>
 			</tr>
-		   </table>
-		   </td>
-		 </tr>
-		</table>
-</td>
-<td width="40%" >
-	 <table >
-		<tr>
-		  <td>
-			  <table>
-				<tr height="30">
-					<td width="120">Maintenance Due Date*</td>
-					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
-					<td><input type="text" name="mduedate" id="mduedate" size="10" autocomplete='off' tabindex="2" class="datepicker" value="<?php echo $due_date;?>"/></td>
-				</tr>				
-				<tr height="30">
-					   <td width="120">Description</td>
-					 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					 <td><input type='text' name='desc' id='desc' size="30" tabindex="4" autocomplete="off" value="<?php echo $description;?>"/></td>
-				</tr>
-				<tr height="30">
-					 <td width="120">Next Due Date*</td>
+					<tr height="30">
+				 <td width="120">Next Maintenance Due Date*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			 <td>
-				
-				<input type="text" name="nextduedate" id="nextduedate" size="10" autocomplete='off' tabindex="6" class="datepicker"  value="<?php echo $next_due_date;?>"/>
-				
-			  </td>
+			 <td>				
+				<input type="text" name="nextduedate" id="nextduedate" value="<?php echo $next_due_date;?>" size="10" autocomplete='off' tabindex="6" class="datepicker" />
+				<input type='hidden' name='hide_date' id='hide_date' tabindex="10" value="<?php echo date('d-m-Y'); ?>"/>
+			</td>
+				 
 				</tr>
-				<tr height="30">
-					 <td width="120">Additional Cost</td>
-					 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					 <td><input type="text" name="addcost" id="addcost" style="text-align:right;" size="10" autocomplete='off' tabindex="8" value="<?php echo $cost;?>"/></td>
-			     </tr>
-				</table>
+</table><!-- end--->
+
+	 <table width="50%" align="left"><!-- start--->
+		<tr height="30">
+			 <td width="120"> Cost</td>
+			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			 <td>				
+				<input type="text" name="addcost" id="addcost" style="text-align:right;" size="10" autocomplete='off' tabindex="8" value="<?php echo $cost;?>" />				
 			  </td>
-			 </tr>
-			</table>
-		
- </td>	
-</tr>
-</table> 
+			</tr>
+		</table><!-- end--->			
 </fieldset>
+
 <?php if($_GET['success']=="error") { ?>
 	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "ERR 0009 : Please enter all mandatory (*) data"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
 <?php } ?>

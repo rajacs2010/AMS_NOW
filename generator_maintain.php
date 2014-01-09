@@ -46,6 +46,7 @@ $("#building_code").change(function(event) {
 		}
 		else
 		{
+			document.getElementById("generator_code_id").value = "";
 			document.getElementById("generator_code").value = "";
 		}
     });		
@@ -63,14 +64,24 @@ $("#building_code").change(function(event) {
 </style>
 <script>
 function validateForm() {
-	var generator_code=document.getElementById("generator_code");
-	if(generator_code.value==0) {
-		$('.myalignbuild').html('ERR 0009 : Select Generator Code');
+	var building_code=document.getElementById("building_code");
+	if(building_code.value==0) {
+		$('.myalignbuild').html('ERR 0009 : Select Building Name');
 		$('#errormsgbuild').css('display','block');
 		setTimeout(function() {
 			$('#errormsgbuild').hide();
 		},5000);
-		document.getElementById("generator_code").focus();
+		document.getElementById("building_code").focus();
+		return false;
+	}
+	var status=document.getElementById("status");
+	if(status.value==0) {
+		$('.myalignbuild').html('ERR 0009 : Select Status');
+		$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+		document.getElementById("status").focus();
 		return false;
 	}
 	
@@ -85,16 +96,7 @@ function validateForm() {
 	document.getElementById("mduedate").focus();
 	return false;
 	}
-	var status=document.getElementById("status");
-	if(status.value==0) {
-		$('.myalignbuild').html('ERR 0009 : Select Status');
-		$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-		document.getElementById("status").focus();
-		return false;
-	}
+	
 	var donedate=document.getElementById("donedate");
 	if(donedate.value=="") {
 		$('.myalignbuild').html('ERR 0009 : Select Done Date');
@@ -105,6 +107,16 @@ function validateForm() {
 		document.getElementById("donedate").focus();
 		return false;
 	}	
+	var vendor_code=document.getElementById("vendor_code");
+	if(vendor_code.value==0) {
+		$('.myalignbuild').html('ERR 0009 : Select Vendor');
+		$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+		document.getElementById("vendor_code").focus();
+		return false;
+	}
 	var nextduedate=document.getElementById("nextduedate");
 	if(nextduedate.value=="") {
 		$('.myalignbuild').html('ERR 0009 : Select Next Due Date');
@@ -114,7 +126,26 @@ function validateForm() {
 			},5000);
 		document.getElementById("nextduedate").focus();
 		return false;
-	}	
+	}
+	
+	
+	var enddate=document.getElementById("nextduedate").value;
+	var enddateval = enddate.substring(6,10)+"/"+enddate.substring(3,5)+"/"+enddate.substring(0,2);
+	var current_date=document.getElementById("hide_date").value;
+	 var current_dateval = current_date.substring(6,10)+"/"+current_date.substring(3,5)+"/"+current_date.substring(0,2);
+
+	var date_check=new Date(enddateval).getTime() > new Date(current_dateval).getTime();
+	if (date_check==false)
+	{
+	$('.myalignbuild').html('ERR 0009 :Date should be greater than current date');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("nextduedate").focus();
+		return false;
+	}
+	
 }
 $(function () {		
 	$('#clear').click(function(event) {
@@ -150,16 +181,18 @@ $(document).ready(function() {
 </script>
 <?php
 if(isset($_POST['save'])) {
+	$building_id=$_POST['building_code'];
 	$generator_code=$_POST['generator_code'];
 	$mduedate=$_POST['mduedate'];
 	$status=$_POST['status'];
+	$vendor=$_POST['vendor_code'];
 	$donedate=$_POST['donedate'];
 	$nextduedate=$_POST['nextduedate'];
 	$desc=$_POST['desc'];
 	$addcost=$_POST['addcost'];
 	$add_currency=$fgmembersite->getdbval($_POST['add_currency'],'id','name','currency');
 	$user_id=$_SESSION['user_id'];
-	if(!mysql_query('insert into generator_maintain SET generator_code="'.$generator_code.'",due_date="'.$mduedate.'", 	status="'.$status.'",done_date="'.$donedate.'",next_due_date="'.$nextduedate.'",description="'.$desc.'",cost="'.$addcost.'",currency="'.$add_currency.'",created_by="'.$user_id.'" ')) {
+	if(!mysql_query('insert into generator_maintain SET generator_code="'.$generator_code.'",due_date="'.$mduedate.'", 	status="'.$status.'",done_date="'.$donedate.'",next_due_date="'.$nextduedate.'",description="'.$desc.'",cost="'.$addcost.'",currency="'.$add_currency.'",vendor_code="'.$vendor_code.'",building_id="'.$building_id.'",created_by="'.$user_id.'" ')) {
 		die('Error: ' . mysql_error());
 	}
 	$fgmembersite->RedirectToURL("view_generator_maintain.php?success=create");
@@ -218,7 +251,8 @@ if(isset($_POST['save'])) {
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td>
 				<div id="code_display">
-				<input type='text' name='generator_code' id='generator_code' size="10" tabindex="4" autocomplete="off"/>
+				<input type='hidden' name='generator_code' id='generator_code' size="10" tabindex="4" autocomplete="off"/>
+				<input type='text' name='generator_code_id' id='generator_code_id' size="10" tabindex="4" autocomplete="off"/>
 				</div>
 			</td>
 			</tr>
@@ -252,7 +286,7 @@ if(isset($_POST['save'])) {
 			 <td>				
 				<?php
 					$result_state=mysql_query("SELECT id,name from vendor_bms");
-					echo '<select name="vendor_code_landlord" id="vendor_code_landlord" tabindex="11" >';
+					echo '<select name="vendor_code" id="vendor_code" tabindex="11" >';
 					echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state)) {
 						echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
@@ -293,6 +327,7 @@ if(isset($_POST['save'])) {
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
 				<input type="text" name="nextduedate" id="nextduedate" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete='off' tabindex="6" class="datepicker" />
+				<input type='hidden' name='hide_date' id='hide_date' tabindex="10" value="<?php echo date('d-m-Y'); ?>"/>
 			</td>
 				 
 				</tr>
