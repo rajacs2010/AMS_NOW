@@ -30,6 +30,7 @@ if(file_exists($header_file))	{
 	exit;
 }
 ?>
+
 <script type="text/javascript">
   $(document).ready(function(){
     $('#car_reg_attach').change(function() {
@@ -412,6 +413,82 @@ for (var i = 0; i < 1; i++) {
 }
       return false;
    });
+ });
+
+$(document).ready(function(){
+    $('#others_attach').change(function() {
+var existing = new Array();
+var checkFile = new Array();
+var file = new Array();
+var fileUrl = new Array();
+var counter = 0;
+for (var i = 0; i < 1; i++) {
+    (function(index){
+        file[index] = document.getElementById('others_attach').files[0];
+        if(file[index]) {
+            fileUrl[index] = 'fms_uploads/' + file[index].name;
+            checkFile[index] = new XMLHttpRequest();
+            checkFile[index].onreadystatechange = function() {
+                if (checkFile[index].readyState == 4) {
+                    if (checkFile[index].status == 200) {
+                        existing[index] = true; 
+                        counter += 1;
+                    }
+                    else {
+                        existing[index] = false;
+                        counter += 1;
+                    }
+                    if (counter == fileUrl.length) { 
+                            //existing.length of the array "true, false,,true" (i.e. with one undefined value) would deliver "4". 
+                            //therefore we have to check for the number of set variables in the string rather than the strings length. 
+                            //we use a counter for that purpose. everything after this point is only executed when the last file has been checked! 
+                        if (existing.indexOf(true) == -1) {
+                            //none of the files to be uploaded are already on server
+							var filenamee=document.getElementById("others_attach").value;
+							var extension=filenamee.split('.').pop();
+							if ((extension=="pdf" ) || (extension=="png") || (extension=="jpg") ||(extension=="jpeg") ||(extension=="gif"))
+							{
+							return true;
+							}
+							else
+							{
+								/*alert("Invalid File extension Only (pdf,gif,jpeg,png) are allowed");
+								document.getElementById("attach5").value="";
+								return false;*/
+								$('.myalignbuild').html('ERR : Invalid File Extension, Only (pdf, gif, jpg, png) Are Allowed');
+								$('#errormsgbuild').css('display','block');
+								setTimeout(function() {
+									$('#errormsgbuild').hide();
+								},5000);
+								$("#others_attach").focus();
+								$("#others_attach").val('');
+							}
+                       //return true; 
+                        }
+                        else {
+                            //list filenames and/or upload field numbers of the files that already exist on server
+                            //   ->> inform user... 
+							/*alert("The file name already exits");
+							document.getElementById("attach5").value="";
+                            return false;*/
+							$('.myalignbuild').html('ERR : This Filename Already Exits');
+							$('#errormsgbuild').css('display','block');
+							setTimeout(function() {
+								$('#errormsgbuild').hide();
+							},5000);
+							$("#others_attach").focus();
+							$("#others_attach").val('');
+                        }
+                    }
+                }
+            }
+            checkFile[index].open('HEAD', fileUrl[index], true);
+            checkFile[index].send();
+        }
+    })(i);
+}
+      return false;
+   });
  }); 
 
 function myFunction() {
@@ -566,8 +643,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	}
 	//
 	//
-	if(isset($_FILES["fitness_attach"]["name"]))
-	{
+	if(isset($_FILES["fitness_attach"]["name"])) {
 	$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
 	$temp = explode(".", $_FILES["fitness_attach"]["name"]);
 	$extension = end($temp);
@@ -597,6 +673,32 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 		 $fitness_attach="";
 		}
 	}
+	
+	if(isset($_FILES["others_attach"]["name"])) {
+		$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
+		$temp = explode(".", $_FILES["others_attach"]["name"]);
+		$extension = end($temp);
+		if (in_array($extension, $allowedExts)) {
+			if ($_FILES["others_attach"]["error"] > 0) {
+				echo "Return Code: " . $_FILES["others_attach"]["error"] . "<br>";
+			} else {
+				if (file_exists("fms_uploads/" . $_FILES["others_attach"]["name"]))
+				  {
+				  //echo $_FILES["attach6"]["name"] . " already exists. ";
+				  $others_attach="";
+				  }
+				else
+				  {
+				  $others_attach=$_FILES["others_attach"]["name"];
+				  move_uploaded_file($_FILES["others_attach"]["tmp_name"],"fms_uploads/" . $_FILES["others_attach"]["name"]);
+				 // echo "Stored in: " . "uploads/" . $_FILES["attach6"]["name"];
+				  }
+			}
+		} else {
+			 $others_attach="";
+		}
+	}
+	
 	//
 	//
 	$user_id							=	$_SESSION['user_id'];	
@@ -648,20 +750,21 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	$tax_attach							=	$tax_attach;
 	$pollution_attach					=	$pollution_attach;
 	$fitness_attach						=	$fitness_attach;
+	$others_attach						=	$others_attach;
 		
-	//$sql=('INSERT INTO vehicle SET vehicle_regno="'.$vregno.'",vehichle_reg_date="'.$vdate.'",vehicle_comp_id="'.$comp_id.'",vehicle_company_name="'.$company_name.'",insurance_number="'.$insurance_number.'",insurance_company="'.$insurance_company.'",insurance_date="'.$insurance_date.'",currency="'.$currency.'",insurance_amount="'.$insurance_amount.'",insurance_duedate="'.$insurance_duedate.'",tax_number="'.$tax_number.'",tax_authority="'.$tax_authority.'",tax_date="'.$tax_date.'",tax_currency="'.$tax_currency.'",tax_amount="'.$tax_amount.'",tax_renewal_date="'.$tax_renewal_date.'",fitness_certificate_no="'.$fit_certificate_no.'",fit_date="'.$fit_date.'",next_inspection_date="'.$next_inspection_date.'",certification_currency="'.$certification_currency.'",fitness_certification_cost="'.$certification_cost.'",pollution_certificate_no="'.$pollution_certificate_no.'",pollution_certificate_date="'.$pollution_certificate_date.'",pollution_inspection_date="'.$pollution_inspection_date.'",pollution_currency="'.$pollution_currency.'",pollution_certificate_cost="'.$pollution_certificate_cost.'",make="'.$make.'",model="'.$model.'",year="'.$year.'",model_currency="'.$model_currency.'",model_cost="'.$model_cost.'",maintain_currency="'.$maintain_currency.'",total_maintain_cost="'.$total_maintain_cost.'",cost_month="'.$cost_month.'",total_fuel_cost="'.$total_fuel_cost.'",cost_month_fuel="'.$cost_month_fuel.'",car_reg_attach="'.$car_reg_attach.'",insurance_attach="'.$insurance_attach.'",tax_attach="'.$tax_attach.'",pollution_attach="'.$pollution_attach.'",fitness_attach="'.$fitness_attach.'",created_by="'.$user_id.'"');
+	//$sql=('INSERT INTO vehicle SET vehicle_regno="'.$vregno.'",vehichle_reg_date="'.$vdate.'",vehicle_comp_id="'.$comp_id.'",vehicle_company_name="'.$company_name.'",insurance_number="'.$insurance_number.'",insurance_company="'.$insurance_company.'",insurance_date="'.$insurance_date.'",currency="'.$currency.'",insurance_amount="'.$insurance_amount.'",insurance_duedate="'.$insurance_duedate.'",tax_number="'.$tax_number.'",tax_authority="'.$tax_authority.'",tax_date="'.$tax_date.'",tax_currency="'.$tax_currency.'",tax_amount="'.$tax_amount.'",tax_renewal_date="'.$tax_renewal_date.'",fitness_certificate_no="'.$fit_certificate_no.'",fit_date="'.$fit_date.'",next_inspection_date="'.$next_inspection_date.'",certification_currency="'.$certification_currency.'",fitness_certification_cost="'.$certification_cost.'",pollution_certificate_no="'.$pollution_certificate_no.'",pollution_certificate_date="'.$pollution_certificate_date.'",pollution_inspection_date="'.$pollution_inspection_date.'",pollution_currency="'.$pollution_currency.'",pollution_certificate_cost="'.$pollution_certificate_cost.'",make="'.$make.'",model="'.$model.'",year="'.$year.'",model_currency="'.$model_currency.'",model_cost="'.$model_cost.'",maintain_currency="'.$maintain_currency.'",total_maintain_cost="'.$total_maintain_cost.'",cost_month="'.$cost_month.'",total_fuel_cost="'.$total_fuel_cost.'",cost_month_fuel="'.$cost_month_fuel.'",car_reg_attach="'.$car_reg_attach.'",insurance_attach="'.$insurance_attach.'",tax_attach="'.$tax_attach.'",pollution_attach="'.$pollution_attach.'",fitness_attach="'.$fitness_attach.'",others_attach="'.$others_attach.'",created_by="'.$user_id.'"');
 
 	//echo $sql;
 	//exit;
 	
 	if($edit_id == '') {
-		if(!mysql_query('INSERT INTO vehicle SET vehicle_regno="'.$vregno.'",vehichle_reg_date="'.$vdate.'",vehicle_comp_id="'.$comp_id.'",vehicle_company_name="'.$company_name.'",insurance_number="'.$insurance_number.'",insurance_company="'.$insurance_company.'",insurance_date="'.$insurance_date.'",currency="'.$currency.'",insurance_amount="'.$insurance_amount.'",insurance_duedate="'.$insurance_duedate.'",tax_number="'.$tax_number.'",tax_authority="'.$tax_authority.'",tax_date="'.$tax_date.'",tax_currency="'.$tax_currency.'",tax_amount="'.$tax_amount.'",tax_renewal_date="'.$tax_renewal_date.'",fitness_certificate_no="'.$fit_certificate_no.'",fit_date="'.$fit_date.'",next_inspection_date="'.$next_inspection_date.'",certification_currency="'.$certification_currency.'",fitness_certification_cost="'.$certification_cost.'",pollution_certificate_no="'.$pollution_certificate_no.'",pollution_certificate_date="'.$pollution_certificate_date.'",pollution_inspection_date="'.$pollution_inspection_date.'",pollution_currency="'.$pollution_currency.'",pollution_certificate_cost="'.$pollution_certificate_cost.'",make="'.$make.'",model="'.$model.'",year="'.$year.'",model_currency="'.$model_currency.'",model_cost="'.$model_cost.'",maintain_currency="'.$maintain_currency.'",total_maintain_cost="'.$total_maintain_cost.'",cost_month="'.$cost_month.'",total_fuel_cost="'.$total_fuel_cost.'",cost_month_fuel="'.$cost_month_fuel.'",car_reg_attach="'.$car_reg_attach.'",insurance_attach="'.$insurance_attach.'",tax_attach="'.$tax_attach.'",pollution_attach="'.$pollution_attach.'",fitness_attach="'.$fitness_attach.'",created_by="'.$user_id.'"')) {
+		if(!mysql_query('INSERT INTO vehicle SET vehicle_regno="'.$vregno.'",vehichle_reg_date="'.$vdate.'",vehicle_comp_id="'.$comp_id.'",vehicle_company_name="'.$company_name.'",insurance_number="'.$insurance_number.'",insurance_company="'.$insurance_company.'",insurance_date="'.$insurance_date.'",currency="'.$currency.'",insurance_amount="'.$insurance_amount.'",insurance_duedate="'.$insurance_duedate.'",tax_number="'.$tax_number.'",tax_authority="'.$tax_authority.'",tax_date="'.$tax_date.'",tax_currency="'.$tax_currency.'",tax_amount="'.$tax_amount.'",tax_renewal_date="'.$tax_renewal_date.'",fitness_certificate_no="'.$fit_certificate_no.'",fit_date="'.$fit_date.'",next_inspection_date="'.$next_inspection_date.'",certification_currency="'.$certification_currency.'",fitness_certification_cost="'.$certification_cost.'",pollution_certificate_no="'.$pollution_certificate_no.'",pollution_certificate_date="'.$pollution_certificate_date.'",pollution_inspection_date="'.$pollution_inspection_date.'",pollution_currency="'.$pollution_currency.'",pollution_certificate_cost="'.$pollution_certificate_cost.'",make="'.$make.'",model="'.$model.'",year="'.$year.'",model_currency="'.$model_currency.'",model_cost="'.$model_cost.'",maintain_currency="'.$maintain_currency.'",total_maintain_cost="'.$total_maintain_cost.'",cost_month="'.$cost_month.'",total_fuel_cost="'.$total_fuel_cost.'",cost_month_fuel="'.$cost_month_fuel.'",car_reg_attach="'.$car_reg_attach.'",insurance_attach="'.$insurance_attach.'",tax_attach="'.$tax_attach.'",pollution_attach="'.$pollution_attach.'",fitness_attach="'.$fitness_attach.'",others_attach="'.$others_attach.'",created_by="'.$user_id.'"')) {
 			die('Error: ' . mysql_error());
 		}
 		$fgmembersite->RedirectToURL("view_vehicle.php?success=create");
 		echo "&nbsp;";
 	} elseif($edit_id != '') {
-		if(!mysql_query('INSERT INTO vehicle SET vehicle_regno="'.$vregno.'",vehichle_reg_date="'.$vdate.'",vehicle_comp_id="'.$comp_id.'",vehicle_company_name="'.$company_name.'",insurance_number="'.$insurance_number.'",insurance_company="'.$insurance_company.'",insurance_date="'.$insurance_date.'",currency="'.$currency.'",insurance_amount="'.$insurance_amount.'",insurance_duedate="'.$insurance_duedate.'",tax_number="'.$tax_number.'",tax_authority="'.$tax_authority.'",tax_date="'.$tax_date.'",tax_currency="'.$tax_currency.'",tax_amount="'.$tax_amount.'",tax_renewal_date="'.$tax_renewal_date.'",fitness_certificate_no="'.$fit_certificate_no.'",fit_date="'.$fit_date.'",next_inspection_date="'.$next_inspection_date.'",certification_currency="'.$certification_currency.'",fitness_certification_cost="'.$certification_cost.'",pollution_certificate_no="'.$pollution_certificate_no.'",pollution_certificate_date="'.$pollution_certificate_date.'",pollution_inspection_date="'.$pollution_inspection_date.'",pollution_currency="'.$pollution_currency.'",pollution_certificate_cost="'.$pollution_certificate_cost.'",make="'.$make.'",model="'.$model.'",year="'.$year.'",model_currency="'.$model_currency.'",model_cost="'.$model_cost.'",maintain_currency="'.$maintain_currency.'",total_maintain_cost="'.$total_maintain_cost.'",cost_month="'.$cost_month.'",total_fuel_cost="'.$total_fuel_cost.'",cost_month_fuel="'.$cost_month_fuel.'",car_reg_attach="'.$car_reg_attach.'",insurance_attach="'.$insurance_attach.'",tax_attach="'.$tax_attach.'",pollution_attach="'.$pollution_attach.'",fitness_attach="'.$fitness_attach.'",created_by="'.$user_id.'"')) {
+		if(!mysql_query('INSERT INTO vehicle SET vehicle_regno="'.$vregno.'",vehichle_reg_date="'.$vdate.'",vehicle_comp_id="'.$comp_id.'",vehicle_company_name="'.$company_name.'",insurance_number="'.$insurance_number.'",insurance_company="'.$insurance_company.'",insurance_date="'.$insurance_date.'",currency="'.$currency.'",insurance_amount="'.$insurance_amount.'",insurance_duedate="'.$insurance_duedate.'",tax_number="'.$tax_number.'",tax_authority="'.$tax_authority.'",tax_date="'.$tax_date.'",tax_currency="'.$tax_currency.'",tax_amount="'.$tax_amount.'",tax_renewal_date="'.$tax_renewal_date.'",fitness_certificate_no="'.$fit_certificate_no.'",fit_date="'.$fit_date.'",next_inspection_date="'.$next_inspection_date.'",certification_currency="'.$certification_currency.'",fitness_certification_cost="'.$certification_cost.'",pollution_certificate_no="'.$pollution_certificate_no.'",pollution_certificate_date="'.$pollution_certificate_date.'",pollution_inspection_date="'.$pollution_inspection_date.'",pollution_currency="'.$pollution_currency.'",pollution_certificate_cost="'.$pollution_certificate_cost.'",make="'.$make.'",model="'.$model.'",year="'.$year.'",model_currency="'.$model_currency.'",model_cost="'.$model_cost.'",maintain_currency="'.$maintain_currency.'",total_maintain_cost="'.$total_maintain_cost.'",cost_month="'.$cost_month.'",total_fuel_cost="'.$total_fuel_cost.'",cost_month_fuel="'.$cost_month_fuel.'",car_reg_attach="'.$car_reg_attach.'",insurance_attach="'.$insurance_attach.'",tax_attach="'.$tax_attach.'",pollution_attach="'.$pollution_attach.'",fitness_attach="'.$fitness_attach.'",others_attach="'.$others_attach.'",created_by="'.$user_id.'"')) {
 			die('Error: ' . mysql_error());
 		}
 		$id = mysql_insert_id();
@@ -772,6 +875,9 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 
 $(document).ready(function() {
 	$(window).load(function() {
+
+		$("#vregno").focus();
+		
 		$("#firstdiv").css('display','block');
 		$("#secdiv").css('display','none');
 		$("#thirddiv").css('display','none');
@@ -992,6 +1098,7 @@ $(document).ready(function() {
 		$("#four_span").css('display','none');
 		$("#five_span").css('display','none');
 		$("#six_span").css('display','none');
+		$("#vregno").focus();
 	});
 
 	$("#thirda").on("click",function() {
@@ -1008,7 +1115,7 @@ $(document).ready(function() {
 		$("#four_span").css('display','none');
 		$("#five_span").css('display','none');
 		$("#six_span").css('display','none');
-
+		
 		if($("#building_status").val() == 1) {
 			$("#owneddiv").css('display','block');
 			$("#rentdiv").css('display','none');
@@ -1060,7 +1167,7 @@ $(document).ready(function() {
 
 		var currentdateval				=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
 
-		if(vregno == '') {
+		/*if(vregno == '') {
 			$('.myalignbuild').html('ERR : Enter Registration No.');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1201,7 +1308,7 @@ $(document).ready(function() {
 			},5000);
 			$("#tax_renewal_date").focus();
 			return false;
-		}
+		}*/
 				
 		$("#firstdiv").css('display','none');
 		$("#secdiv").css('display','block');
@@ -1220,6 +1327,7 @@ $(document).ready(function() {
 		$("#four_span").css('display','none');
 		$("#five_span").css('display','none');
 		$("#six_span").css('display','none');
+		$("#fit_certificate_no").focus();		
 	});
 
 	$("#part_save").on("click", function() {
@@ -1244,7 +1352,7 @@ $(document).ready(function() {
 		var year						=	$("#year").val();		
 		var model_currency				=	$("#model_currency").val();
 		var model_cost					=	$("#model_cost").val();											
-
+		var tax_number					=	$("#tax_number").val();
 		var	currentdate					=	new Date();
 
 		var vdateval 					=	new Date(vdate.substring(6,10)+"/"+vdate.substring(3,5)+"/"+vdate.substring(0,2)).getTime();
@@ -1287,7 +1395,7 @@ $(document).ready(function() {
 			},5000);
 			$("#vdate").focus();
 			return false;
-		}	else if(comp_id == '0') {
+		}  else if(comp_id == '0') {
 			$('.myalignbuild').html('ERR : Select Regd. Company');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1295,7 +1403,7 @@ $(document).ready(function() {
 			},5000);
 			$("#comp_id").focus();
 			return false;
-		}  else if(year == '0') {
+		} /*else if(year == '0') {
 			$('.myalignbuild').html('ERR : Select Year');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1335,7 +1443,8 @@ $(document).ready(function() {
 			},5000);
 			$("#model_cost").focus();
 			return false;
-		} else if (insurance_number == ''){
+		} */
+		else if (insurance_number == ''){
 			$('.myalignbuild').html('ERR : Enter Insurance No.');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
@@ -1343,8 +1452,8 @@ $(document).ready(function() {
 			},5000);
 			$("#insurance_number").focus();
 			return false;
-		} else if (insurance_company	== ''){
-			$('.myalignbuild').html('ERR : Enter Insurance Company');
+		} else if (insurance_company	== '0'){
+			$('.myalignbuild').html('ERR : Select Insurance Company');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
@@ -1387,24 +1496,44 @@ $(document).ready(function() {
 			$("#insurance_duedate").focus();
 			return false;
 		}
-
-		if (tax_dateval > currentdatevalue){
-			$('.myalignbuild').html('ERR : Tax Date Greater Than Today');
+		if (insurance_dateval > insurance_duedateval || insurance_dateval == insurance_duedateval){
+			$('.myalignbuild').html('ERR : Ins. Eff. Date Should be Less Than Renewal Date!');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#tax_date").focus();
+			$("#insurance_date").focus();
 			return false;
 		}
-		if (tax_renewal_dateval < currentdatevalue){
-			$('.myalignbuild').html('ERR : Tax Renewal Date Less Than Today');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#tax_renewal_date").focus();
-			return false;
+		
+		if(tax_number != '') {
+			if (tax_dateval > currentdatevalue){
+				$('.myalignbuild').html('ERR : Tax Date Greater Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#tax_date").focus();
+				return false;
+			}
+			if (tax_renewal_dateval < currentdatevalue){
+				$('.myalignbuild').html('ERR : Tax Renewal Date Less Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#tax_renewal_date").focus();
+				return false;
+			}			
+			if (tax_dateval > tax_renewal_dateval || tax_dateval == tax_renewal_dateval){
+				$('.myalignbuild').html('ERR : Tax Eff. Date Should be Less Than Renewal Date!');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#tax_date").focus();
+				return false;
+			}
 		}
 				
 		$("#edit_id").val('123');
@@ -1415,6 +1544,391 @@ $(document).ready(function() {
 
 	$("#seca").on("click", function() {
 		//alert("232");
+		var vregno						=	$("#vregno").val();
+		var vdate						=	$("#vdate").val();
+		var comp_id						=	$("#comp_id").val();
+		var insurance_number			=	$("#insurance_number").val();
+		var insurance_company			=	$("#insurance_company").val();
+		var insurance_date				=	$("#insurance_date").val();
+		var currency					=	$("#currency").val();
+		var insurance_amount			=	$("#insurance_amount").val();
+		var insurance_duedate			=	$("#insurance_duedate").val();
+		var tax_number					=	$("#tax_number").val();
+		var tax_authority				=	$("#tax_authority").val();
+		var tax_date					=	$("#tax_date").val();
+		var tax_currency				=	$("#tax_currency").val();
+		var tax_amount					=	$("#tax_amount").val();
+		var tax_renewal_date			=	$("#tax_renewal_date").val();
+		var make						=	$("#make").val();
+		var model						=	$("#model").val();
+		var year						=	$("#year").val();		
+		var model_currency				=	$("#model_currency").val();
+		var model_cost					=	$("#model_cost").val();											
+		var tax_number					=	$("#tax_number").val();
+		var	currentdate					=	new Date();
+
+		var vdateval 					=	new Date(vdate.substring(6,10)+"/"+vdate.substring(3,5)+"/"+vdate.substring(0,2)).getTime();
+		
+		var insurance_dateval 			=	new Date(insurance_date.substring(6,10)+"/"+insurance_date.substring(3,5)+"/"+insurance_date.substring(0,2)).getTime();
+		
+		var insurance_duedateval 		=	new Date(insurance_duedate.substring(6,10)+"/"+insurance_duedate.substring(3,5)+"/"+insurance_duedate.substring(0,2)).getTime();
+
+		var tax_dateval 				=	new Date(tax_date.substring(6,10)+"/"+tax_date.substring(3,5)+"/"+tax_date.substring(0,2)).getTime();
+		
+		var tax_renewal_dateval 		=	new Date(tax_renewal_date.substring(6,10)+"/"+tax_renewal_date.substring(3,5)+"/"+tax_renewal_date.substring(0,2)).getTime();
+
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
+
+		var currentdateval				=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
+
+		//alert(currentdateval);		
+		
+		if(vregno == '') {
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Enter Registration No.');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#vregno").focus();
+			return false;
+		} else if(vdate == '') {
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Select Regn. Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#vdate").focus();
+			return false;
+		} else if (vdateval > currentdatevalue){
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Date Greater Than Today!');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#vdate").focus();
+			return false;
+		}  else if(comp_id == '0') {
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Select Regd. Company');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#comp_id").focus();
+			return false;
+		} else if (insurance_number == ''){
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Enter Insurance No.');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#insurance_number").focus();
+			return false;
+		} else if (insurance_company	== '0'){
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Select Insurance Company');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#insurance_company").focus();
+			return false;
+		} else if (insurance_amount == ''){
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Enter Insurance Amount');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#insurance_amount").focus();
+			return false;
+		} if (insurance_date == ''){
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Enter Insurance Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#insurance_date").focus();
+			return false;
+		} 
+		if (insurance_dateval > currentdatevalue){
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Insurance Date Greater Than Today');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#insurance_date").focus();
+			return false;
+		}		
+		if (insurance_duedateval < currentdatevalue){
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			//alert('edssdfsd');
+			$('.myalignbuild').html('ERR : Ins. Renewal Date Less Than Today');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#insurance_duedate").focus();
+			return false;
+		}
+		if (insurance_dateval > insurance_duedateval || insurance_dateval == insurance_duedateval){
+
+			$("#firstdiv").css('display','block');
+			$("#secdiv").css('display','none');
+			$("#thirddiv").css('display','none');
+			$("#fourdiv").css('display','none');
+
+			$("#first_span").css('display','inline');
+			$("#part_span").css('display','inline');
+
+			$("#prev_span").css('display','none');
+			$("#sec_span").css('display','none');
+			$("#third_span").css('display','none');
+			$("#four_span").css('display','none');
+			$("#five_span").css('display','none');
+			$("#six_span").css('display','none');
+			
+			$('.myalignbuild').html('ERR : Ins. Eff. Date Should be Less Than Renewal Date!');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#insurance_date").focus();
+			return false;
+		}
+		
+		if(tax_number != '') {
+			if (tax_dateval > currentdatevalue){
+
+				$("#firstdiv").css('display','block');
+				$("#secdiv").css('display','none');
+				$("#thirddiv").css('display','none');
+				$("#fourdiv").css('display','none');
+
+				$("#first_span").css('display','inline');
+				$("#part_span").css('display','inline');
+
+				$("#prev_span").css('display','none');
+				$("#sec_span").css('display','none');
+				$("#third_span").css('display','none');
+				$("#four_span").css('display','none');
+				$("#five_span").css('display','none');
+				$("#six_span").css('display','none');
+				
+				$('.myalignbuild').html('ERR : Tax Date Greater Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#tax_date").focus();
+				return false;
+			}
+			if (tax_renewal_dateval < currentdatevalue){
+
+				$("#firstdiv").css('display','block');
+				$("#secdiv").css('display','none');
+				$("#thirddiv").css('display','none');
+				$("#fourdiv").css('display','none');
+
+				$("#first_span").css('display','inline');
+				$("#part_span").css('display','inline');
+
+				$("#prev_span").css('display','none');
+				$("#sec_span").css('display','none');
+				$("#third_span").css('display','none');
+				$("#four_span").css('display','none');
+				$("#five_span").css('display','none');
+				$("#six_span").css('display','none');
+				
+				$('.myalignbuild').html('ERR : Tax Renewal Date Less Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#tax_renewal_date").focus();
+				return false;
+			}			
+			if (tax_dateval > tax_renewal_dateval || tax_dateval == tax_renewal_dateval){
+
+				$("#firstdiv").css('display','block');
+				$("#secdiv").css('display','none');
+				$("#thirddiv").css('display','none');
+				$("#fourdiv").css('display','none');
+
+				$("#first_span").css('display','inline');
+				$("#part_span").css('display','inline');
+
+				$("#prev_span").css('display','none');
+				$("#sec_span").css('display','none');
+				$("#third_span").css('display','none');
+				$("#four_span").css('display','none');
+				$("#five_span").css('display','none');
+				$("#six_span").css('display','none');
+				
+				$('.myalignbuild').html('ERR : Tax Eff. Date Should be Less Than Renewal Date!');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#tax_date").focus();
+				return false;
+			}
+		}
+				
 		var fit_date						=	$("#fit_date").val();
 		var next_inspection_date			=	$("#next_inspection_date").val();	
 		var pollution_certificate_date		=	$("#pollution_certificate_date").val();
@@ -1426,8 +1940,6 @@ $(document).ready(function() {
 		var pollution_currency				=	$("#pollution_currency").val();
 		var pollution_certificate_cost		=	$("#pollution_certificate_cost").val();
 
-		var	currentdate						=	new Date();
-
 		var fit_dateval 					=	new Date(fit_date.substring(6,10)+"/"+fit_date.substring(3,5)+"/"+fit_date.substring(0,2)).getTime();
 		
 		var next_inspection_dateval 		=	new Date(next_inspection_date.substring(6,10)+"/"+next_inspection_date.substring(3,5)+"/"+next_inspection_date.substring(0,2)).getTime();
@@ -1435,49 +1947,66 @@ $(document).ready(function() {
 		var pollution_certificate_dateval	=	new Date(pollution_certificate_date.substring(6,10)+"/"+pollution_certificate_date.substring(3,5)+"/"+pollution_certificate_date.substring(0,2)).getTime();
 
 		var pollution_inspection_dateval	=	new Date(pollution_inspection_date.substring(6,10)+"/"+pollution_inspection_date.substring(3,5)+"/"+pollution_inspection_date.substring(0,2)).getTime();
-
-		var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
-
-		var currentdateval				=	 currentdate.getDate()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getFullYear();
 		
-		
-		if (fit_dateval > currentdatevalue){
-			$('.myalignbuild').html('ERR : Fitness Date Greater Than Today');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#fit_date").focus();
-			return false;
-		}
-		if (next_inspection_dateval < currentdatevalue){
-			$('.myalignbuild').html('ERR : Fitness Inspection Date Less Than Today');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#next_inspection_date").focus();
-			return false;
+		if(fit_certificate_no != '') {
+			if (fit_dateval > currentdatevalue){
+				$('.myalignbuild').html('ERR : Fitness Date Greater Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#fit_date").focus();
+				return false;
+			}
+			if (next_inspection_dateval < currentdatevalue){
+				$('.myalignbuild').html('ERR : Fitness Inspection Date Less Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#next_inspection_date").focus();
+				return false;
+			}
+			if (fit_dateval > next_inspection_dateval || fit_dateval == next_inspection_dateval){
+				$('.myalignbuild').html('ERR : Fitness Eff. Date Should be Less Than Renewal Date!');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#fit_date").focus();
+				return false;
+			}
 		}
 
-		if (pollution_certificate_dateval > currentdatevalue){
-			$('.myalignbuild').html('ERR : Pollution Date Greater Than Today');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#pollution_certificate_date").focus();
-			return false;
-		}
-		if (pollution_inspection_dateval < currentdatevalue){
-			$('.myalignbuild').html('ERR : Pollution Inspection Date Less Than Today');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#pollution_inspection_date").focus();
-			return false;
-		}		
+		if(pollution_certificate_no != '') {
+			if (pollution_certificate_dateval > currentdatevalue){
+				$('.myalignbuild').html('ERR : Pollution Date Greater Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#pollution_certificate_date").focus();
+				return false;
+			}
+			if (pollution_inspection_dateval < currentdatevalue){
+				$('.myalignbuild').html('ERR : Pollution Inspection Date Less Than Today');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#pollution_inspection_date").focus();
+				return false;
+			}
+			if (pollution_certificate_dateval > pollution_inspection_dateval || pollution_certificate_dateval == pollution_inspection_dateval){
+				$('.myalignbuild').html('ERR : Pollution Eff. Date Should be Less Than Renewal Date!');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#pollution_certificate_date").focus();
+				return false;
+			}
+		}	
 		$("#formsaveval").val('800');
 		$("#building_save").submit();
 	});
@@ -1488,9 +2017,6 @@ $(document).ready(function() {
 <div align="center" class="headingsgr">VEHICLE</div>
 <div id="mytableformbuild" align="center">
 
-<!-- <div class="header_bold">BUILDING</div>
-<div class="scroll">
- -->
 <!-- onSubmit="return submitBuildForm();"  -->
 <form id='building_save' action="<?php echo $_SERVER['PHP_SELF']; ?>" method='post' enctype="multipart/form-data">
 
@@ -1507,7 +2033,7 @@ $(document).ready(function() {
   <td>
   <table>
     <tr height="30">
-    <td width="120">Number*</td>
+    <td width="120">Regn. No.*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><input type='text' name='vregno' id='vregno' size="20" autocomplete="off" tabindex="1" class="textbox"/></td>
     </tr>
@@ -1524,7 +2050,7 @@ $(document).ready(function() {
 		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
-			echo '<option value="'.$row['comp_id'].'">'.$row['comp_name'].'</option>';
+			echo '<option value="'.$row['comp_id'].'">'.$fgmembersite->upperstate($row['comp_name']).'</option>';
 		}
 		echo '</select>';
 		?>&nbsp;
@@ -1532,9 +2058,9 @@ $(document).ready(function() {
 	</tr>
 	
 	 <tr height="30">
-    <td width="120">Make*</td>
+    <td width="120">Make</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='make' id='make' size="20" autocomplete="off" tabindex="5" class="textbox"/></td>
+    <td><input type='text' name='make' id='make' size="47" autocomplete="off" tabindex="5" class="textbox"/></td>
     </tr>
     
     <tr height="30">
@@ -1546,7 +2072,7 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='model_currency' id='model_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='model_currency' id='model_currency' tabindex="7" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
     
 
@@ -1563,15 +2089,15 @@ $(document).ready(function() {
    <table>
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Date</td>
-		 <td><input type='text' name='vdate' id='vdate' tabindex="2" value="<?php echo date('d-m-Y'); ?>" class="datepicker textbox"/></td>
+		 <td><input type='text' name='vdate' id='vdate' tabindex="2" size="10" value="<?php echo date('d-m-Y'); ?>" class="datepicker textbox"/></td>
 	</tr>
      
 	<tr height="30">
-     <td width="120">Year*</td>
+     <td width="120">Year</td>
 	 <td><select id="year" name="year" autocomplete="off" tabindex="4"  >
      	<option value="0">--Select--</option>
      	<?php 
-     		for ($i = 1920; $i <=date('Y'); $i++) { ?>
+     		for ($i = date('Y'); $i >=1921; $i--) { ?>
      			<option value="<?php echo $i; ?>"><?php echo $i; ?></option>     			
      	<?php }	?>
      </select>
@@ -1579,13 +2105,13 @@ $(document).ready(function() {
 	</tr>
 	
 	<tr height="30">
-     <td width="120" nowrap="nowrap">Model*</td>
+     <td width="120" nowrap="nowrap">Model</td>
      <td><input type='text' name='model' id='model' size="20" autocomplete="off" tabindex="6" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
-    <td width="120">Cost*</td>
-    <td><input type='text' name='model_cost' id='model_cost' tabindex="7" style="text-align:right;" size="20" autocomplete="off" class="textbox"/></td>
+    <td width="120">Cost</td>
+    <td><input type='text' name='model_cost' id='model_cost' tabindex="8" style="text-align:right;" size="20" autocomplete="off" class="textbox"/></td>
     </tr>   
 	
    </table>
@@ -1614,7 +2140,7 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Number*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='insurance_number' id='insurance_number' tabindex="8" style="text-align:right;" size="20" autocomplete="off" class="textbox" /></td>
+    <td><input type='text' name='insurance_number' id='insurance_number' tabindex="9" size="20" autocomplete="off" class="textbox" /></td>
     </tr>
     
 	<tr height="30">
@@ -1626,13 +2152,13 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='currency' id='currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='currency' id='currency' tabindex="11" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="insurance_date" name="insurance_date" tabindex="11" value="<?php echo date('d-m-Y'); ?>" size="20" autocomplete="off" class="datepicker areatext" /></td>
+     <td><input type="text" id="insurance_date" name="insurance_date" tabindex="13" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" class="datepicker areatext" /></td>
 	</tr>
    </table>
    </td>
@@ -1647,16 +2173,26 @@ $(document).ready(function() {
   <table>
 	<tr height="30">
      <td width="120" nowrap="nowrap">Company*</td>
-     <td><input type='text' name='insurance_company' id='insurance_company' tabindex="9" size="46" autocomplete="off" class="textbox" /></td>
+     <td><?php
+			$result_state=mysql_query("select id,name,vendor_code from vendor");
+			echo '<select name="insurance_company" id="insurance_company" tabindex="10" style="width:100px;">';
+			echo '<option value="0">--Select--</option>';
+			while($row=mysql_fetch_array($result_state)) {
+				echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+			}
+			echo '</select>';
+	    ?>
+     
+     <!-- <input type='text' name='insurance_company' id='insurance_company' tabindex="9" size="46" autocomplete="off" class="textbox" />--></td>
 	</tr>
      
 	<tr height="30">
     <td width="120">Premium Amt*</td>
-    <td><input type='text' name='insurance_amount' id='insurance_amount' tabindex="10" style="text-align:right;" size="20" autocomplete="off" class="textbox"/></td>
+    <td><input type='text' name='insurance_amount' id='insurance_amount' tabindex="12" style="text-align:right;" size="20" autocomplete="off" class="textbox"/></td>
     </tr>    	
     <tr height="30">
     <td width="120">Renewal Date</td>
-    <td><input type='text' name='insurance_duedate' id='insurance_duedate' tabindex="12" value="<?php echo date('d-m-Y'); ?>" size="20" autocomplete="off" class="datepicker textbox"/></td>
+    <td><input type='text' name='insurance_duedate' id='insurance_duedate' tabindex="14" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" class="datepicker textbox"/></td>
     </tr>
       </table>
        </td>
@@ -1683,7 +2219,7 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Number</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='tax_number' id='tax_number' style="text-align:right;" size="20" autocomplete="off" tabindex="13" class="textbox"/></td>
+    <td><input type='text' name='tax_number' id='tax_number' size="20" autocomplete="off" tabindex="15" class="textbox"/></td>
     </tr>
     
 	<tr height="30">
@@ -1695,13 +2231,13 @@ $(document).ready(function() {
 		<td width="120" >Currency</td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='tax_currency' id='tax_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='tax_currency' id='tax_currency' tabindex="17" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="tax_date" name="tax_date" value="<?php echo date('d-m-Y'); ?>" size="20" autocomplete="off" tabindex="16" class="datepicker areatext" /></td>
+     <td><input type="text" id="tax_date" name="tax_date" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="19" class="datepicker areatext" /></td>
 	</tr>
    </table>
    </td>
@@ -1716,16 +2252,16 @@ $(document).ready(function() {
   <table>
 	<tr height="30">
      <td width="120" nowrap="nowrap">Authority</td>
-     <td><input type='text' name='tax_authority' id='tax_authority' size="20" autocomplete="off" tabindex="14" class="textbox"/></td>
+     <td><input type='text' name='tax_authority' id='tax_authority' tabindex="16" size="20" autocomplete="off" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
     <td width="120">Amount</td>
-    <td><input type='text' name='tax_amount' id='tax_amount' style="text-align:right;" size="20" autocomplete="off" tabindex="15" class="textbox"/></td>
+    <td><input type='text' name='tax_amount' id='tax_amount' style="text-align:right;" size="20" autocomplete="off" tabindex="18" class="textbox"/></td>
     </tr>    	
     <tr height="30">
     <td width="120">Renewal Date</td>
-    <td><input type='text' name='tax_renewal_date' id='tax_renewal_date' value="<?php echo date('d-m-Y'); ?>" size="20" autocomplete="off" tabindex="17" class="datepicker textbox"/></td>
+    <td><input type='text' name='tax_renewal_date' id='tax_renewal_date' value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="20" class="datepicker textbox"/></td>
     </tr>
       </table>
        </td>
@@ -1735,11 +2271,6 @@ $(document).ready(function() {
 </td>
 </tr>
 </table>
-
-
-
-
-
 
 </div>
 
@@ -1759,7 +2290,7 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Number</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='fit_certificate_no' id='fit_certificate_no' style="text-align:right;" size="20" autocomplete="off" tabindex="1" class="textbox"/></td>
+    <td><input type='text' name='fit_certificate_no' id='fit_certificate_no' size="20" autocomplete="off" tabindex="1" class="textbox"/></td>
     </tr>
     
 	<tr height="30">
@@ -1771,13 +2302,13 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='certification_currency' id='certification_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='certification_currency' id='certification_currency' size="4" value="<?php echo $row['name']; ?>" tabindex="3" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Next Inspection Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="next_inspection_date" name="next_inspection_date" value="<?php echo date('d-m-Y'); ?>" size="20" autocomplete="off" tabindex="4" class="datepicker areatext" /></td>
+     <td><input type="text" id="next_inspection_date" name="next_inspection_date" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="5" class="datepicker areatext" /></td>
 	</tr>
    </table>
    </td>
@@ -1792,7 +2323,7 @@ $(document).ready(function() {
   <table>
 	<tr height="30">
      <td width="120" nowrap="nowrap">Date</td>
-     <td><input type='text' name='fit_date' id='fit_date' value="<?php echo date('d-m-Y'); ?>" size="20" autocomplete="off" tabindex="2" class="datepicker textbox"/></td>
+     <td><input type='text' name='fit_date' id='fit_date' value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="2" class="datepicker textbox"/></td>
 	</tr>
      
 	<tr height="30">
@@ -1823,7 +2354,7 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Number</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='pollution_certificate_no' id='pollution_certificate_no' style="text-align:right;" size="20" autocomplete="off" tabindex="5" class="textbox"/></td>
+    <td><input type='text' name='pollution_certificate_no' id='pollution_certificate_no' size="20" autocomplete="off" tabindex="6" class="textbox"/></td>
     </tr>
     
 	<tr height="30">
@@ -1835,13 +2366,13 @@ $(document).ready(function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='pollution_currency' id='pollution_currency' size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td><input type='text' name='pollution_currency' id='pollution_currency' tabindex="8" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Next Inspection Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="pollution_inspection_date" name="pollution_inspection_date" value="<?php echo date('d-m-Y'); ?>" size="20" autocomplete="off" tabindex="8" class="datepicker areatext" /></td>
+     <td><input type="text" id="pollution_inspection_date" name="pollution_inspection_date" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="10" class="datepicker areatext" /></td>
 	</tr>
    </table>
    </td>
@@ -1856,12 +2387,12 @@ $(document).ready(function() {
   <table>
 	<tr height="30">
      <td width="120" nowrap="nowrap">Date</td>
-     <td><input type='text' name='pollution_certificate_date' id='pollution_certificate_date' value="<?php echo date('d-m-Y'); ?>" size="20" autocomplete="off" tabindex="6" class="datepicker textbox"/></td>
+     <td><input type='text' name='pollution_certificate_date' id='pollution_certificate_date' value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="7" class="datepicker textbox"/></td>
 	</tr>
      
 	<tr height="30">
     <td width="120">Cost</td>
-    <td><input type='text' name='pollution_certificate_cost' id='pollution_certificate_cost' style="text-align:right;" size="20" autocomplete="off" tabindex="7" class="textbox"/></td>
+    <td><input type='text' name='pollution_certificate_cost' id='pollution_certificate_cost' style="text-align:right;" size="20" autocomplete="off" tabindex="9" class="textbox"/></td>
     </tr>    	    
       </table>
        </td>
@@ -1881,7 +2412,7 @@ $(document).ready(function() {
  <tr>
   <td>
 <fieldset align="left" class="alignment2">
-  <legend><strong>Attachment</strong></legend>
+  <legend><strong>Attached Certification</strong></legend>
 <table width="50%" align="left">
  <tr>
   <td>
@@ -1889,20 +2420,20 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Registration</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='file' name='car_reg_attach' id='car_reg_attach' tabindex="9" class="textbox"/></td>
+    <td><input type='file' name='car_reg_attach' id='car_reg_attach' tabindex="11" class="textbox"/></td>
     </tr>
     
 	<tr height="30">
      	<td width="120" >Tax</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='file' name='tax_attach' id='tax_attach' tabindex="11" class="textbox"/></td>
+		<td><input type='file' name='tax_attach' id='tax_attach' tabindex="13" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Fitness</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='file' name='fitness_attach' id='fitness_attach' tabindex="13" class="textbox"/></td>
+     <td><input type='file' name='fitness_attach' id='fitness_attach' tabindex="15" class="textbox"/></td>
 	</tr>
    </table>
    </td>
@@ -1917,12 +2448,17 @@ $(document).ready(function() {
   <table>
 	<tr height="30">
      <td width="120" nowrap="nowrap">Insurance</td>
-     <td><input type='file' name='insurance_attach' id='insurance_attach' tabindex="10" class="textbox"/></td>
+     <td><input type='file' name='insurance_attach' id='insurance_attach' tabindex="12" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
     <td width="120">Pollution</td>
-    <td><input type='file' name='pollution_attach' id='pollution_attach' tabindex="12" class="textbox"/></td>
+    <td><input type='file' name='pollution_attach' id='pollution_attach' tabindex="14" class="textbox"/></td>
+    </tr>
+    
+    <tr height="30">
+    <td width="120">Others</td>
+    <td><input type='file' name='others_attach' id='others_attach' tabindex="16" class="textbox"/></td>
     </tr>    	    
       </table>
        </td>
@@ -1983,6 +2519,7 @@ if($_GET['success']=="exists") {
 			<?php } ?>
 <!-- </div> -->
 </div>
+
 <?php
 $footerfile='./layout/footer.php';
 if(file_exists($footerfile)) {

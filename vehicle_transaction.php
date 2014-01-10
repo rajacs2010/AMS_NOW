@@ -154,6 +154,9 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 </style>
 <script type="text/javascript" language="javascript">
 $(document).live('ready',function() {
+
+	$("#vehicle_reg_id").focus();
+	
 	$("#vendor_id").change(function(event){
 		var selvalue_vendor_id=document.getElementById("vendor_id").value;
 		if (selvalue_vendor_id != 0) {			 
@@ -459,15 +462,15 @@ $(document).live('ready',function() {
 	</tr>
 
 	<tr height="30">
-		<td width="120" >Vendor Code*</td>
+		<td width="120" >Vendor Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><?php
-				$result_state=mysql_query("select * from vendor");
+				$result_state=mysql_query("SELECT id,name FROM vendor");
 				echo '<select name="vendor_id" id="vendor_id" tabindex="5">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{
-					echo '<option value="'.$row['id'].'">'.$row['vendor_code'].'</option>';
+					echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
 				}
 				echo '</select>';
 	           ?></td>
@@ -573,7 +576,7 @@ $(document).live('ready',function() {
 	</tr>
      
 	<tr height="30">
-		<td width="120">Vendor Name</td>
+		<td width="120">Vendor Code</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><div id="display_vendor_id">
 			<input type='text' name='vendor_name' id='vendor_name' tabindex="6" readonly autocomplete="off" class="textbox" />

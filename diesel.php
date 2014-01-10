@@ -137,6 +137,9 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 <script type="text/javascript" language="javascript">
 
 $(document).ready(function() {
+
+	$("#building_code").focus();
+	
 	$(function () {
 		/*$('#closebutton').button({
 			icons: {
