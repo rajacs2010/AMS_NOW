@@ -38,10 +38,10 @@ error_reporting(E_ALL & ~E_NOTICE);
 <li><a href="#"><span style="padding-left:10px;">VALUE SETS</span></a>
        <ul>
            <li><a href="jobtype.php">Job Type</a>
-		   <li><a href="city.php">Cost Type</a>
-		   <li><a href="building_type.php">Cost Element</a>
-		   <li><a href="currency.php">Currency</a>
-		   <li><a href="status_bms.php">Status</a>
+		   <li><a href="costtype.php">Cost Type</a>
+		   <li><a href="costelement.php">Cost Element</a>
+		   <li><a href="responsibility.php">Responsibility Center</a>
+		   <li><a href="uom_ams.php">UOM</a>
       </ul>
 </li>
           <!--  <li><a href="../valueSets/branch.php">Branch</a></li>
