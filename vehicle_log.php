@@ -152,6 +152,9 @@ function validate_time(timeStr) {
     return valid;
 }
 $(document).live('ready',function() {
+
+	$("#vehicle_reg_no").focus();
+	
 	$("#assignment_number").change(function(event){
 		var selvalue_assno_log=document.getElementById("assignment_number").value;
 		if (selvalue_assno_log != 0) {			 
@@ -451,14 +454,14 @@ $(document).live('ready',function() {
     </tr>
     
 	<tr height="30">
-     <td width="120">Driver Code*</td>
+     <td width="120">Driver Name*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
-			$result_state=mysql_query("SELECT id,driver_code FROM driver");
+			$result_state=mysql_query("SELECT id,emp_name FROM driver");
 			echo '<select name="driver_code" id="driver_code" tabindex="3">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$row['driver_code'].'</option>';
+				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['emp_name']).'</option>';
 			}
 			echo '</select>';
       	?>
@@ -494,7 +497,7 @@ $(document).live('ready',function() {
 			}
 		}
 	?>
-   <input type='text' name='trip_no' id='trip_no' style="width:80px;" class="textbox" value="<?php echo $customer_code;?>" readonly="true"/>
+   <input type='text' name='trip_no' id='trip_no' tabindex="5" style="width:80px;" class="textbox" value="<?php echo $customer_code;?>" readonly="true"/>
        </td>
 	</tr>
 
@@ -503,9 +506,9 @@ $(document).live('ready',function() {
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
      	<span id="display_starting_date">
-     	<input type="text" name="starting_date" id="starting_date" size="10" value="<?php echo date('d-m-Y'); ?>" readonly tabindex="5" autocomplete="off" />
+     	<input type="text" name="starting_date" id="starting_date" size="10" value="<?php echo date('d-m-Y'); ?>" readonly tabindex="7" autocomplete="off" />
      	</span>
-     	<input type="text" name="starting_time" id="starting_time" size="5" maxlength="5" class="textbox" tabindex="6" autocomplete="off" />(Eg: 19:47)
+     	<input type="text" name="starting_time" id="starting_time" size="5" maxlength="5" class="textbox" tabindex="8" autocomplete="off" />(Eg: 19:47)
      </td>
 	</tr>
 	
@@ -513,20 +516,20 @@ $(document).live('ready',function() {
      <td width="120">Starting Reading*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
-		<input type="text" name="starting_reading" id="starting_reading" tabindex="9" class="textbox" autocomplete="off" style="text-align:right;" />
+		<input type="text" name="starting_reading" id="starting_reading" tabindex="11" class="textbox" autocomplete="off" style="text-align:right;" />
 	 </td>
 	</tr>
 	
 	<tr height="30">
      <td width="120">Total Distance</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='total_distance' id='total_distance' readonly class="textbox" autocomplete="off" style="text-align:right;" /></td>
+     <td><input type='text' name='total_distance' id='total_distance' tabindex="13" readonly class="textbox" autocomplete="off" style="text-align:right;" /></td>
 	</tr>
 	
 	<tr height="30">
      <td width="120">Travel Description</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='desc_log' id='desc_log' size="42" class="textbox" tabindex="12" autocomplete="off" />
+     <td><input type='text' name='desc_log' id='desc_log' size="42" class="textbox" tabindex="15" autocomplete="off" />
 	 </td>
 	</tr>
 	
@@ -558,10 +561,10 @@ $(document).live('ready',function() {
    
    
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Driver Name</td>
+		 <td width="120" nowrap="nowrap">Driver Code</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td><div id="display_driver_id">
-			<input type='text' name='driver_nameval' id='driver_nameval' readonly autocomplete="off" class="textbox" />
+			<input type='text' name='driver_nameval' id='driver_nameval' tabindex="4" readonly autocomplete="off" class="textbox" />
 			</div></td>
 	</tr>
      
@@ -569,7 +572,7 @@ $(document).live('ready',function() {
 		<td width="120">Trip Description</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><div id="display_vendor_id">
-			<input type='text' name='trip_desc' id='trip_desc' size="42" tabindex="4" autocomplete="off" class="textbox" />
+			<input type='text' name='trip_desc' id='trip_desc' size="42" tabindex="6" autocomplete="off" class="textbox" />
 			</div>
 		</td>
     </tr>
@@ -579,16 +582,16 @@ $(document).live('ready',function() {
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td>
 		 	<span id="display_ending_date">
-		 	<input type='text' name='ending_date' id='ending_date' size="10" value="<?php echo date('d-m-Y'); ?>" readonly class="textbox" tabindex="7" autocomplete="off" />
+		 	<input type='text' name='ending_date' id='ending_date' size="10" value="<?php echo date('d-m-Y'); ?>" readonly class="textbox" tabindex="9" autocomplete="off" />
 		 	</span>
-		 	<input type='text' name='ending_time' id='ending_time' size="5" maxlength="5" class="textbox" tabindex="8" autocomplete="off" />(Eg: 19:47)
+		 	<input type='text' name='ending_time' id='ending_time' size="5" maxlength="5" class="textbox" tabindex="10" autocomplete="off" />(Eg: 19:47)
 		 </td>
 	</tr>
 	
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Ending Reading*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='ending_reading' id='ending_reading' class="textbox" tabindex="10" autocomplete="off"  style="text-align:right;"/></td>
+		 <td><input type='text' name='ending_reading' id='ending_reading' class="textbox" tabindex="12" autocomplete="off"  style="text-align:right;"/></td>
 	</tr>
 	
 	<tr height="30">
@@ -597,7 +600,7 @@ $(document).live('ready',function() {
 		 <td><?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("select id,name from uom");
-			echo '<select name="uom_log" id="uom_log" tabindex="11">';
+			echo '<select name="uom_log" id="uom_log" tabindex="14">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';

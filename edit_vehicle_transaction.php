@@ -158,6 +158,9 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 </style>
 <script type="text/javascript" language="javascript">
 $(document).live('ready',function() {
+
+	$("#vehicle_reg_id").focus();
+	
 	$("#vendor_id").change(function(event){
 		var selvalue_vendor_id=document.getElementById("vendor_id").value;
 		if (selvalue_vendor_id != 0) {			 
@@ -487,7 +490,7 @@ $(document).live('ready',function() {
 					 } else {
 						  $isSelected = ''; // else we remove any tag
 					 }							
-					echo "<option value='".$row['id']."'".$isSelected.">".$row['vendor_code']."</option>";
+					echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 				}
 				echo '</select>';
 	           ?></td>
@@ -523,7 +526,7 @@ $(document).live('ready',function() {
 		<td width="120" >Currency </td>
 		<td><img width="15px" height="15px" src="images/<?php echo $row['symbol']; ?>"></td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
-		<td><input type='text' name='total_currency' id='total_currency' value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
+		<td><input type='text' name='total_currency' id='total_currency' tabindex="9" value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
 	</tr>
 	
 	<tr height="30">
@@ -573,7 +576,7 @@ $(document).live('ready',function() {
 		<td width="120">Vendor Name</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><div id="display_vendor_id">
-			<input type='text' name='vendor_name' id='vendor_name' value="<?php echo $fgmembersite->upperstate($fgmembersite->getdbval($row_edit[vendor_id], 'name', 'id', 'vendor')); ?>" tabindex="6" readonly autocomplete="off" class="textbox" />
+			<input type='text' name='vendor_name' id='vendor_name' value="<?php echo $fgmembersite->getdbval($row_edit[vendor_id], 'vendor_code', 'id', 'vendor'); ?>" tabindex="6" readonly autocomplete="off" class="textbox" />
 			</div>
 		</td>
     </tr>
@@ -609,35 +612,35 @@ $(document).live('ready',function() {
 				or die("Opps some thing went wrong");
 				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info order by emp_id",$bd);
-				echo '<select name="emp_bought_id" id="emp_bought_id" class="selectbox">';
+				echo '<select name="emp_bought_id" id="emp_bought_id" style="width:100px;" tabindex="14" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_emp_id)) {
 					if($row['emp_code'] == $row_edit['emp_code']){
 						  $isSelected 	= 	' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
-						  $first_name	=	$row["first_name"];
+						  $first_name	=	$row["emp_code"];
 					 } else {
 						  $isSelected = ''; // else we remove any tag
 					 }							
-					echo "<option value='".$row['emp_code']."'".$isSelected.">".$fgmembersite->upperstate($row['emp_code'])."</option>";
+					echo "<option value='".$row['emp_code']."'".$isSelected.">".$fgmembersite->upperstate($row['first_name'])."</option>";
 				}
-				echo '</select>&nbsp;<span id="display_bought_id"><input type="text" name="emp_nameval" id="emp_nameval" class="textbox" value="'.$first_name.'" readonly="true" /></span>';
+				echo '</select>&nbsp;<span id="display_bought_id"><input type="text" name="emp_nameval" id="emp_nameval" size="6" class="textbox" value="'.$first_name.'" readonly="true" /></span>';
 			}
 			if($selvalue==2) {
 				$result_state=mysql_query("select * from driver");
-				echo '<select name="driver_bought_id" id="driver_bought_id" class="selectbox">';
+				echo '<select name="driver_bought_id" id="driver_bought_id" tabindex="14" style="width:100px;" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{	
 					if($row['id'] == $row_edit['driver_code_id']){
 						$isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag		
-						$driver_name	=	$row["emp_name"]; 
+						$driver_name	=	$row["driver_code"]; 
 					 } else {
 						  $isSelected = ''; // else we remove any tag
 					 }							
-					echo "<option value='".$row['id']."'".$isSelected.">".$row['driver_code']."</option>";
+					echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['emp_name'])."</option>";
 					//echo '<option value="'.$row['id'].'">'.$row['driver_code'].'</option>';
 				}
-				echo '</select>&nbsp;<span id="display_bought_id"><input type="text" name="vendor_name" id="vendor_name" class="textbox" value="'.$driver_name.'" readonly="true"/></span>';
+				echo '</select>&nbsp;<span id="display_bought_id"><input type="text" name="vendor_name" id="vendor_name" size="6" class="textbox" value="'.$driver_name.'" readonly="true"/></span>';
 			}			
 			if($selvalue==3) {
 				echo '<input type="text" name="bought_id" id="bought_id" value="'.$row_edit[others].'" class="textbox"/>';

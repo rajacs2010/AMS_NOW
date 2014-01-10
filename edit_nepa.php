@@ -143,6 +143,9 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 <script type="text/javascript" language="javascript">
 
 $(document).ready(function() {
+
+	$("#building_code").focus();
+	
 	$(function () {
 		/*$('#closebutton').button({
 			icons: {
@@ -477,7 +480,7 @@ $(document).ready(function() {
 		?>
 		<td width="120" >Currency</td>
 		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td><input type='text' name='add_currency' id='add_currency' value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
+		<td><input type='text' name='add_currency' id='add_currency' tabindex="7" value="<?php echo $row['name']; ?>" size="4" readonly class="textbox"/></td>
 	</tr>
 
 	
@@ -505,7 +508,7 @@ $(document).ready(function() {
 	
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Amount Paid*</td>
-		 <td><input type='text' name='amount' id='amount' style="text-align:right" tabindex="3" value="<?php 
+		 <td><input type='text' name='amount' id='amount' style="text-align:right" tabindex="8" value="<?php 
 		if(strstr($row_edit['amount'],".")) {
 			echo $row_edit['amount'];
 		} else {
