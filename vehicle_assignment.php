@@ -311,7 +311,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{
-							echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+							echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
 
 							}
 							echo '</select>';

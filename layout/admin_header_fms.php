@@ -98,10 +98,10 @@ error_reporting(E_ALL & ~E_NOTICE);
 				<ul>
 					<li><a href="vehicle_allocation_type.php">Vehicle Allocation</a></li>
 				   <li><a href="driver_allocate.php">Driver Allocation</a></li>
-			<li><a href="vehicle_assignment.php">Vehicle Assignment</a></li>
-			<li><a href="vehicle_status.php">Vehicle Status Update</a></li>
+			<li><a href="vehicle_assignment.php">Vehicle Assignment</a></li>	
 				<li><a href="vehicle_transaction.php">Vehicle Transactions</a></li>
 			<li><a href="vehicle_log.php">Vehicle Log</a></li>
+			<li><a href="vehicle_status.php">Vehicle Status Update</a></li>
          <!--	  <li><a href="#">Value Sets </a>
           <ul>
         <li><a href="allocation_type.php">Allocation Type</a></li>

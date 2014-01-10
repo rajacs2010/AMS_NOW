@@ -336,7 +336,7 @@ $assignment_desc=$row['assignment_desc'];
 								  $isSelected = ''; // else we remove any tag
 							 }
 							
-							echo "<option value='".$row['id']."'".$isSelected.">".$row['name']."</option>";
+							echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 
 							}
 							echo '</select>';
