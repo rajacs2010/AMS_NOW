@@ -2479,7 +2479,7 @@ $(document).ready(function() {
 	<tr height="30">
      <td width="120">State</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><div id="display_state"><input type='text' type="text" name='state' id='state' tabindex="9" readonly class="textbox" /></div></td>
+     <td><div id="display_state"><input type="text" name='state' id='state' tabindex="9" readonly class="textbox" /></div></td>
 	</tr>
 
    </table>

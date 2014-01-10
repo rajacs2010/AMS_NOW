@@ -2121,7 +2121,7 @@ $(document).ready(function() {
 	</tr>
 	
 	 <tr height="30">
-    <td width="120">Make*</td>
+    <td width="120">Make</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><input type='text' name='make' id='make' value="<?php echo $make; ?>" size="20" autocomplete="off" tabindex="5" class="textbox"/></td>
     </tr>
@@ -2157,11 +2157,11 @@ $(document).ready(function() {
 	</tr>
      
 	<tr height="30">
-     <td width="120">Year*</td>
+     <td width="120">Year</td>
 	 <td><select id="year" name="year" autocomplete="off" tabindex="4"  >
      	<option value="0">--Select--</option>
      	<?php 
-     		for ($i = date('Y'); $i >=1921; $i--) { 
+     		for ($i = date('Y'); $i >=1980; $i--) { 
      			if($i == $year){
 				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
 			 } else {
@@ -2175,12 +2175,12 @@ $(document).ready(function() {
 	</tr>
 	
 	<tr height="30">
-     <td width="120" nowrap="nowrap">Model*</td>
+     <td width="120" nowrap="nowrap">Model</td>
      <td><input type='text' name='model' id='model' value="<?php echo $model;?>" size="20" autocomplete="off" tabindex="6" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
-    <td width="120">Cost*</td>
+    <td width="120">Cost</td>
     <td><input type='text' name='model_cost' id='model_cost' value="<?php echo $model_cost;?>" tabindex="8" style="text-align:right;" size="20" autocomplete="off" class="textbox"/></td>
     </tr>   
 	

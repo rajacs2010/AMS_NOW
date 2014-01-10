@@ -2097,7 +2097,7 @@ $(document).ready(function() {
 	 <td><select id="year" name="year" autocomplete="off" tabindex="4"  >
      	<option value="0">--Select--</option>
      	<?php 
-     		for ($i = date('Y'); $i >=1921; $i--) { ?>
+     		for ($i = date('Y'); $i >=1980; $i--) { ?>
      			<option value="<?php echo $i; ?>"><?php echo $i; ?></option>     			
      	<?php }	?>
      </select>

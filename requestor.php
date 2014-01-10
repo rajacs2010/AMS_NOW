@@ -1,570 +1,667 @@
-<?PHP
+<?php
 require_once("./include/membersite_config.php");
 $fgmembersite->DBLogin();
-if(!$fgmembersite->CheckLogin())
-{
+
+ini_set("display_errors",true);
+error_reporting(E_ALL & ~E_NOTICE);
+
+extract($_REQUEST);
+/*echo "<pre>";
+print_r($_REQUEST);
+echo "</pre>";
+
+echo "<pre>";
+print_r($_FILES);
+echo "</pre>";*/
+//exit;
+
+if(!$fgmembersite->CheckLogin()) {
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
 
+if ($fgmembersite->usertype() == 1)	{
+	//$header_file='./layout/admin_header_bms.php';
+	$header_file='./layout/admin_header_ams.php';
+}
+
+if(file_exists($header_file)) {
+	include_once($header_file);
+} else {
+	$fgmembersite->RedirectToURL("index.php");
+	exit;
+}
+if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
+	$fgmembersite->DBLogin();
+	$vehicle_reg_id			=	$_POST['vehicle_reg_id'];
+	$transaction_date		=	$_POST['transaction_date'];
+	$transaction_type_id	=	$_POST['transaction_type_id'];
+	$transaction_number		=	$_POST['code'];
+	$vendor_id				=	$_POST['vendor_id'];
+	$uom_id					=	$_POST['uom'];
+	$units					=	$_POST['units'];
+	$currency_id			=	$fgmembersite->getdbval($_POST['total_currency'],'id','name','currency');
+	$rate					=	$_POST['rate'];
+	$cost					=	$_POST['cost'];
+	$desc					=	$_POST['desc'];
+	$bought_by				=	$_POST['bought_by'];
+	if($bought_by == 1) {	
+		$emp_code				=	$_POST['emp_bought_id'];
+		$driver_code_id			=	'';
+		$others					=	'';
+	} else if ($bought_by == 2) {
+		$emp_code				=	'';
+		$driver_code_id			=	$_POST['driver_bought_id'];
+		$others					=	'';
+	} elseif ($bought_by == 3) {
+		$emp_code				=	'';
+		$driver_code_id			=	'';
+		$others					=	$_POST['bought_id'];
+	} 
+	$user_id					=	$_SESSION['user_id'];
+	//echo 'INSERT INTO vehicle_transaction SET vehicle_reg_id="'.$vehicle_reg_id.'",transaction_date="'.$transaction_date.'",transaction_type_id="'.$transaction_type_id.'",transaction_number="'.$transaction_number.'",vendor_id="'.$vendor_id.'",uom_id="'.$uom_id.'",units="'.$units.'",currency_id="'.$currency_id.'",rate="'.$rate.'",cost="'.$cost.'",trans_desc="'.$desc.'",bought_by="'.$bought_by.'",emp_code="'.$emp_code.'",driver_code_id="'.$driver_code_id.'",others="'.$others.'",created_by="'.$user_id.'" '; 
+	//exit;
+	if(!mysql_query('INSERT INTO vehicle_transaction SET vehicle_reg_id="'.$vehicle_reg_id.'",transaction_date="'.$transaction_date.'",transaction_type_id="'.$transaction_type_id.'",transaction_number="'.$transaction_number.'",vendor_id="'.$vendor_id.'",uom_id="'.$uom_id.'",units="'.$units.'",currency_id="'.$currency_id.'",rate="'.$rate.'",cost="'.$cost.'",trans_desc="'.$desc.'",bought_by="'.$bought_by.'",emp_code="'.$emp_code.'",driver_code_id="'.$driver_code_id.'",others="'.$others.'",created_by="'.$user_id.'" ')) {
+	die('Error: ' . mysql_error());
+}
+	echo'<script> window.location="view_vehicle_transaction.php?success=create"; </script> ';
+}
 ?>
-<?php
-if($fgmembersite->usertype() == 1)
-{
-$header_file='./layout/admin_header.php';
+<style type="text/css">
+.confirmMAp {
+	margin:0 auto;
+	display:none;
+	background:#EEEEEE;
+	color:#fff;
+	width:622px;
+	height:350px;
+	position:fixed;
+	left:250px;
+	top:100px;
+	border:1px solid #EEEEEE;
+	z-index:2;
+	border-radius:5px 5px 5px 5px;
 }
-if(file_exists($header_file))
-{
-include_once($header_file);
+.ShowMap{
+	display:none;
+	z-index:2;
+	position:fixed;
+	_position:absolute; /* hack for internet explorer */
+	width:620px;
+	height:320px;
+	color:#FFF;
+	border-radius:5px;
+	background-color:#FFF;
+	border:1px solid #cecece;
 }
-else
-{
-$fgmembersite->RedirectToURL("index.php");
-exit;
+
+#mainareabuild {
+	width:100%;
+	height:530px;
+	background:#ebebeb;
+	/* overflow-y:auto; */
 }
-?>
-<style>
-input[type="text"]:disabled
-{
-background:#dddddd;
+.myalignbuild {
+	padding-top:8px;
+	margin:0 auto;
+	color:#FF0000;
+}
+#mytableformbuild {
+    background: none repeat scroll 0 0 #FFFFFF;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+}
+#errormsgbuild {
+	width:45%;
+	height:30px;
+	background:#c1c1c1;
+	margin-left:auto;
+	margin-right:auto;
+	border-radius:10px;
+	padding-top:0px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-ms-border-radius:10px;
+	-o-border-radius:10px;
+	text-align:center;
+}
+#closebutton {
+  position:relative;
+  top:-35px;
+  right:-219px;
+  border:none;
+  background:url(images/close_pop.png) no-repeat;
+  color:transparent;
+}
+.scroll_box {
+	height:420px;
+	overflow:auto;
+}
+.alignment2 {
+    font-size: 16px;
+    margin-left: 10px;
+    padding-left: 20px;
+    width: 95%;
+}
+.alignment3 {
+	font-size: 16px;
+    margin-left: 10px;
+    padding-left: 2px;
+    width: 90%;
 }
 </style>
-
 <script type="text/javascript" language="javascript">
-   $(document).ready(function() {
-	$("#genrator_status").change(function(event){
-	var selvalue_status=document.getElementById("genrator_status").value;
-	//alert(selvalue_status);
-	if (selvalue_status == 1 )
-	{
-	$("#total_currency").removeAttr("disabled"); 
-	$("#cost").removeAttr("disabled"); 
-	$("#datepurchase").removeAttr("disabled"); 
-	$("#rent").attr("disabled", "disabled");  
-	$("#periodfrom").attr("disabled", "disabled"); 
-	$("#renewaldate").attr("disabled", "disabled"); 
-	}
-	if (selvalue_status == 2)
-	{
-	$("#total_currency").attr("disabled", "disabled"); 
-	$("#cost").attr("disabled", "disabled"); 
-	$("#datepurchase").attr("disabled", "disabled"); 
-	$("#rent").removeAttr("disabled"); 
-	$("#periodfrom").removeAttr("disabled"); 
-	$("#renewaldate").attr("disabled", "disabled"); 
-	
-	}
-	if (selvalue_status == 3)
-	{
-	$("#total_currency").attr("disabled", "disabled"); 
-	$("#cost").attr("disabled", "disabled"); 
-	$("#datepurchase").attr("disabled", "disabled"); 
-	$("#rent").attr("disabled", "disabled");  
-	$("#periodfrom").attr("disabled", "disabled"); 
-	$("#renewaldate").removeAttr("disabled"); 
-	
-	
-	}
-	if (selvalue_status == 0)
-	{
-	$("#total_currency").removeAttr("disabled"); 
-	$("#cost").removeAttr("disabled"); 
-	$("#datepurchase").removeAttr("disabled");
-	$("#rent").removeAttr("disabled"); 
-	$("#periodfrom").removeAttr("disabled");
-	$("#renewaldate").removeAttr("disabled");	
-	}
+$(document).live('ready',function() {
 
+	//alert(12121);
+	$("#request_type").focus();
+	//alert(8989);
 
-      });		
-   });
-   </script>
-   <script src="scripts/date.js"></script>
-<link rel="stylesheet" href="style/date.css" media="screen">
-   <script type="text/javascript">
-	window.onload = function(){
-		new JsDatePick({
-			useMode:2,
-			target:"datepurchase",
-			dateFormat:"%Y-%m-%d"
-			/*selectedDate:{				This is an example of what the full configuration offers.
-				day:5,						For full documentation about these settings please see the full version of the code.
-				month:9,
-				year:2006
+	$("#city_id").change(function(event) {
+		var selvalue=document.getElementById("city_id").value;
+		if (selvalue != 0) {
+			$('#display_state').load('ajax_requestor.php?selvalue='+selvalue);
+		}
+		else {
+			document.getElementById("state_name").value = "";			
+		}
+	});
+	
+	$("#off_buil_id").change(function(event){
+		var selvalue_off_buil_id=document.getElementById("off_buil_id").value;
+		if (selvalue_off_buil_id != 0) {			 
+	          $('#display_off_buil_code').load('ajax_requestor.php?selvalue_off_buil_id='+selvalue_off_buil_id);
+		} else {
+			document.getElementById("off_buil_code").value = "";		
+		}
+	 });
+
+	$("#res_buil_id").change(function(event){
+		var selvalue_res_buil_id=document.getElementById("res_buil_id").value;
+		if (selvalue_res_buil_id != 0) {			 
+	          $('#display_res_buil_code').load('ajax_requestor.php?selvalue_res_buil_id='+selvalue_res_buil_id);
+		} else {
+			document.getElementById("res_buil_code").value = "";		
+		}
+	 });
+
+	$("#request_type").live('change',function(event){
+		var selvalue_request_type=$(this).val();
+		if (selvalue_request_type != 0) {
+	          $('#display_request_type').load('ajax_requestor.php?selvalue_request_type='+selvalue_request_type);
+		}
+	});		
+	$("#guest_request_id").live('change',function(event){
+		var selvalue_bought_by=document.getElementById("guest_request_id").value;
+		if (selvalue_bought_by != 0) {
+	          $('#display_request_id').load('ajax_requestor.php?guest_request_id='+selvalue_bought_by);
+		}
+	});
+	$("#emp_request_id").live('change',function(event){
+		var selvalue_bought_by=document.getElementById("emp_request_id").value;
+		if (selvalue_bought_by != 0) {
+	          $('#display_request_id').load('ajax_requestor.php?emp_request_id='+selvalue_bought_by);
+		}
+	});
+	
+	$(function () {
+		/*$('#closebutton').button({
+			icons: {
+				primary : "../images/close_pop.png",
 			},
-			yearsRange:[1978,2020],
-			limitToToday:false,
-			cellColorScheme:"beige",
-			dateFormat:"%m-%d-%Y",
-			imgPath:"img/",
-			weekStartDay:1*/
-		});
+			text:false
+		});*/
 		
-                                new JsDatePick({
-                    useMode:2,
-                    target:"renewaldate",
-                    dateFormat:"%Y-%m-%d"
-
-                });
-				            
-		              
-	};
-</script>
-<script>
-function validateForm()
-{
-
-	var generatorname=document.getElementById("generatorname");
-	if(generatorname.value=="")
-	{
-	alert("Please enter the generator name");
-	document.getElementById("generatorname").focus();
-	return false;
-	}
-	var desc=document.getElementById("desc");
-	if(desc.value=="")
-	{
-	alert("Please enter the description");
-	document.getElementById("desc").focus();
-	return false;
-	}
+		$('#closebutton').click(function(event) {
+			//alert('232');
+			$('#errormsgbuild').hide();
+			return false;
+		});		
+	});
 	
-	
-	
-	var building_code=document.getElementById("building_code");
-	if(building_code.value==0)
-	{
-	alert("Please select the building code");
-	document.getElementById("building_code").focus();
-	return false;
-	}
-	var make=document.getElementById("make");
-	if(make.value=="")
-	{
-	alert("Please enter the make");
-	document.getElementById("make").focus();
-	return false;
-	}
-	
-	var model=document.getElementById("model");
-	if(model.value=="")
-	{
-	alert("Please enter the model");
-	document.getElementById("model").focus();
-	return false;
-	}
-	var rating=document.getElementById("rating");
-	if(rating.value=="")
-	{
-	alert("Please enter the rating");
-	document.getElementById("rating").focus();
-	return false;
-	}
-	var genrator_status=document.getElementById("genrator_status");
-	if(genrator_status.value==0)
-	{
-	alert("Please select the genrator status");
-	document.getElementById("genrator_status").focus();
-	return false;
-	}
-		if(genrator_status.value==1)
-	{
-		var total_currency=document.getElementById("total_currency");
-		if(total_currency.value=="")
-		{
-		alert("Please select the currency");
-		document.getElementById("total_currency").focus();
-		return false;
-		}
-		var cost=document.getElementById("cost");
-		if(cost.value=="")
-		{
-		alert("Please enter the cost");
-		document.getElementById("cost").focus();
-		return false;
-		}
-		
-		var datepurchase=document.getElementById("datepurchase").value;
-		if(datepurchase==""||datepurchase==0 || !datepurchase)
-		{
-		alert("Please select the datepurchase");
-		document.getElementById("datepurchase").focus();
-		return false;
-		}
-	}
-		
-		if(genrator_status.value==2)
-	{
-		var rent=document.getElementById("rent");
-		if(rent.value=="")
-		{
-		alert("Please enter the rent");
-		document.getElementById("rent").focus();
-		return false;
-		}
-		var periodfrom=document.getElementById("periodfrom");
-		if(periodfrom.value==0)
-		{
-		alert("Please select the period");
-		document.getElementById("periodfrom").focus();
-		return false;
-		}
-	}
-		var contract_number=document.getElementById("contract_number");
-		if(contract_number.value=="")
-		{
-		alert("Please enter the contract number");
-		document.getElementById("contract_number").focus();
-		return false;
-		}
-		
-		var maintain_currency=document.getElementById("maintain_currency");
-		if(maintain_currency.value==0)
-		{
-		alert("Please enter  the maintain currency");
-		document.getElementById("maintain_currency").focus();
-		return false;
-		}
-		
-		var vendor=document.getElementById("vendor");
-		if(vendor.value=="")
-		{
-		alert("Please enter the vendor");
-		document.getElementById("vendor").focus();
-		return false;
-		}
-		
-		var mcost=document.getElementById("mcost");
-		if(mcost.value=="")
-		{
-		alert("Please enter the mcost");
-		document.getElementById("mcost").focus();
-		return false;
-		}
-		var maintain_period=document.getElementById("maintain_period");
-		if(maintain_period.value==0)
-		{
-		alert("Please enter the maintain period");
-		document.getElementById("maintain_period").focus();
-		return false;
-		}
-		if(genrator_status.value==3)
-	{	
-		var renewaldate=document.getElementById("renewaldate").value;
-		if(renewaldate==""||renewaldate==0 || !renewaldate)
-		{
-		alert("Please select the renewaldate");
-		document.getElementById("renewaldate").focus();
-		return false;
-		}
-	}
-}
-	
-	
-</script>
+	$("#part_save").on("click", function() {
+		//alert("232");
+		var request_type		=	$("#request_type").val();
+		var comp_id				=	$("#comp_id").val();
+		var division_id			=	$("#division_id").val();
+		var city_id				=	$("#city_id").val();
+		var off_loc				=	$("#off_loc").val();
+		var off_buil			=	$("#off_buil").val();
+		var off_buil_id			=	$("#off_buil_id").val();
+		var off_floor			=	$("#off_floor").val();
+		var office_val			=	$("#office_val").val();
+		var res_buil_id			=	$("#res_buil_id").val();
+		var unit_num			=	$("#unit_num").val();
+		var email_id			=	$("#email_id").val();
+		var mobile_no			=	$("#mobile_no").val();
+		var alt_num				=	$("#alt_num").val();
+		var req_picture			=	$("#req_picture").val();
 
-<?php
-if(isset($_POST['save'])) {
-$generator_code=$_POST['code'];
-$generatorname=$_POST['generatorname'];
-$desc=$_POST['desc'];
-$building_code=$_POST['building_code'];
-$make=$_POST['make'];
-$model=$_POST['model'];
-$rating=$_POST['rating'];
-$genrator_status=$_POST['genrator_status'];
-$total_currency=$_POST['total_currency'];
-$cost=$_POST['cost'];
-$datepurchase=$_POST['datepurchase'];
-$rent=$_POST['rent'];
-$periodfrom=$_POST['periodfrom'];
-$contract_number=$_POST['contract_number'];
-$vendor=$_POST['vendor'];
-$mcost=$_POST['mcost'];
-$maintain_currency=$_POST['maintain_currency'];
-$maintain_period=$_POST['maintain_period'];
-$renewaldate=$_POST['renewaldate'];
-$user_id=$_SESSION['user_id'];
-if(!mysql_query('insert into generator SET generator_code="'.$generator_code.'",generator_name="'.$generatorname.'", 	description="'.$desc.'",building_code="'.$building_code.'",make="'.$make.'",model="'.$model.'",rating="'.$rating.'",generator_status="'.$genrator_status.'",currency="'.$total_currency.'",cost="'.$cost.'",dateofpurchase="'.$datepurchase.'",rent="'.$rent.'",period="'.$periodfrom.'",contract_number="'.$contract_number.'",vendor="'.$vendor.'", 	maintenance_cost="'.$mcost.'",maintain_currency="'.$maintain_currency.'",maintain_period="'.$maintain_period.'",contract_renewaldate="'.$renewaldate.'",created_by="'.$user_id.'" '))
-{
-die('Error: ' . mysql_error());
-}
-$fgmembersite->RedirectToURL("generator.php?success=true");
-}
-
-
-
-?>
-
-<div id="inside_content">
-&nbsp;
-<?php
-if(isset($_GET['success']))
-{
-if ($_GET['success']=="true")
-{
-
-?>
-<span class="success_message">Generator created successfully</span>
-<?php
-}
-
-}
-?>
-&nbsp;
-<div class="header_bold">Generator creation</div>
-<div class="scroll">
-<form id='generator_save' action="<?php echo $_SERVER['PHP_SELF'];?>" onsubmit="return validateForm();"  method='post' accept-charset='UTF-8' enctype="multipart/form-data">
-
-<table id="building_class" align="center" width="90%"CELLPADDING="3" CELLSPACING="0"  style=" border: 0px solid #00BFFF; border-top:0px;font-family: Arial;
-    font-size: 12px;"      >
-  <!--<tr>
-    <th style="background: url('images/th.png'); height: 29px;color:#ffffff;text-align: left;font-size: 14px;text-align:center">
-Building
-    </th
-<th style=" height: 29px;text-align: left;font-size: 14px;text-align:center">
-Building
-    </th>
-  </tr>-->
-  <tr>
-    <td align="center" style=" padding:30px 50px 30px 0px;">
-  
-
-<input type='hidden' name='submitted' id='submitted' value='1'/>
-             <!-- The inner table below is a container for form -->
-                <table style="font-family:Arial;" width="100%"  cellpadding="10px" class="htmlForm" cellspacing="0" border="0">
-
-                    <tr>
-						<td  width="150px"><label style="margin-left:0px;">Generator code<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<?php
-		 if(!isset($_GET[id]) && $_GET[id] == '') {
-			$cusid					=	"SELECT generator_code FROM  generator ORDER BY id DESC";			
-			$cusold					=	mysql_query($cusid) or die(mysql_error());
-			$cuscnt					=	mysql_num_rows($cusold);
-			//$cuscnt					=	0; // comment if live
-			if($cuscnt > 0) {
-				$row_cus					  =	 mysql_fetch_array($cusold);
-				$cusnumber	  =	$row_cus['generator_code'];
-
-				$getcusno						=	abs(str_replace("GE",'',strstr($cusnumber,"GE")));
-				$getcusno++;
-				if($getcusno < 10) {
-					$createdcode	=	"00".$getcusno;
-				} else if($getcusno < 100) {
-					$createdcode	=	"0".$getcusno;
-				} else {
-					$createdcode	=	$getcusno;
-				}
-
-				$customer_code				=	"GE".$createdcode;
-			} else {
-				$customer_code				=	"GE001";
+		if(request_type == '0') {
+			$('.myalignbuild').html('ERR : Select Requestor Type');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#request_type").focus();
+			return false;
+		} 
+		if(request_type == '1') {
+			if($('#emp_request_id').val() == '0') {
+				$('.myalignbuild').html('ERR : Select Employee Name');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#emp_request_id").focus();
+				return false;
 			}
+		} if(request_type == '2') {
+			if($('#guest_request_id').val() == '0') {
+				$('.myalignbuild').html('ERR : Select Guest Name');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#guest_request_id").focus();
+				return false;
+			}
+		} 
+
+		if(comp_id == '0') {
+			$('.myalignbuild').html('ERR : Select Company');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#comp_id").focus();
+			return false;
+		} else if(division_id == '0') {
+			$('.myalignbuild').html('ERR : Select Division');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#division_id").focus();
+			return false;
+		}  else if(city_id == '0') {
+			$('.myalignbuild').html('ERR : Select City');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#city_id").focus();
+			return false;
+		} else if(off_buil_id == '0') {
+			$('.myalignbuild').html('ERR : Select Office Building Name');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#off_buil_id").focus();
+			return false;
+		} else if(res_buil_id == '0') {
+			$('.myalignbuild').html('ERR : Select Residence Building Name');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#res_buil_id").focus();
+			return false;
+		} else if(email_id == '') {
+			$('.myalignbuild').html('ERR : Enter Email');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#email_id").focus();
+			return false;
+		} 
+
+		if(email_id != '') {
+
+			var reg				=	/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+			var email_to_lower	=	$("#emailid").val();
+			var email_address	=	email_id.toLowerCase();
+			if(reg.test(email_address) == false) {
+				$('.myalignbuild').html('ERR : Invalid Email Address');
+				$('#errormsgbuild').css('display','block');
+				setTimeout(function() {
+					$('#errormsgbuild').hide();
+				},5000);
+				$("#email_id").focus();
+				return false;							
+			}			
 		}
-	?>
-						<input type='text' name='code' id='code' class="textbox" value="<?php echo $customer_code;?>" readonly="true"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Generator Name<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='generatorname' id='generatorname' class="textbox"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Description<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<textarea name='desc' id='desc' class="areatext"></textarea>
-						</td>
-						
-						
-						
-                    </tr>
-					
-					<tr>
-						<td  width="150px"><label style="margin-left:0px;">Building Code<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<?php
-							$result_state=mysql_query("SELECT id,building_code from building");
-							echo '<select name="building_code" id="building_code" >';
-							echo '<option value="0">Please select a  building code</option>';
-							while($row=mysql_fetch_array($result_state))
-							{
-							echo '<option value="'.$row['id'].'">'.$row['building_code'].'</option>';
-
-							}
-							echo '</select>';
-							?>
-							</td>
-						
-						<td  width="150px">
-						
-						<label style="margin-left:0px;">Make<em style="font-style:normal;color:red;">*</em></label>
-						
-						</td>
-                        <td>
-						<input type='text' name='make' id='make' class="textbox" />
-					
-						</td>
-						<td  width="150px">
-						
-						<label style="margin-left:0px;">Model<em style="font-style:normal;color:red;">*</em></label>
-						
-						</td>
-                        <td>
-						<input type='text' name='model' id='model' class="textbox" />
-					
-						</td>
-			
-					</tr>
-					<tr>
-						<td  width="150px"><label style="margin-left:0px;">Rating<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='rating' id='rating' class="textbox"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Owned/rented/lease<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<select name="genrator_status" id="genrator_status" class="selectbox">
-							<option value="0">Please select</option>
-							<option value="1">owned</option>
-							<option value="2">rented</option>
-							<option value="3">lease</option>
-							</select>
-				
-							</td>
-						<td  width="150px"><label style="margin-left:0px;">Currency<em style="font-style:normal;color:red;">*</em></label></td>
-                       
-						<td>
-							<?php
-							$fgmembersite->DBLogin();
-							$result_state=mysql_query("select * from currency");
-							echo '<select name="total_currency" id="total_currency" class="selectbox">';
-							echo '<option value="0">Please select a  currency</option>';
-							while($row=mysql_fetch_array($result_state))
-							{
-							echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
-
-							}
-							echo '</select>';
-							?>
-							</td>
-						
-			
-					</tr>
-					<tr>
-					<td  width="150px"><label style="margin-left:0px;">Cost<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='cost' id='cost' class="textbox"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Date of Purchase<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='datepurchase' id='datepurchase' class="textbox"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Rent<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='rent' id='rent' class="textbox"/>
-						</td>
-						
-					
-			
-					</tr>
-					<tr>
-					<td  width="150px"><label style="margin-left:0px;">Period<em style="font-style:normal;color:red;">*</em></label></td>
-				
-							<td>
-							<select name="periodfrom" id="periodfrom" class="selectbox">
-							<option value="0">Please select</option>
-							<option value="1">monthly</option>
-							<option value="2">quarterly</option>
-							<option value="3">halfyearly</option>
-							<option value="4">yearly</option>
-							</select>
-							</td>
-						
-			
-						<td  width="150px"><label style="margin-left:0px;">Maintenance contract number<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-					<input type='text' name='contract_number' id='contract_number' class="textbox"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Currency<em style="font-style:normal;color:red;">*</em></label></td>
-								   
-						<td>
-							<?php
-							$fgmembersite->DBLogin();
-							$result_state=mysql_query("select * from currency");
-							echo '<select name="maintain_currency" id="maintain_currency" class="selectbox">';
-							echo '<option value="0">Please select a  currency</option>';
-							while($row=mysql_fetch_array($result_state))
-							{
-							echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
-
-							}
-							echo '</select>';
-							?>
-							</td>
-					</tr>
-					<tr>
-						
-						<td  width="150px"><label style="margin-left:0px;">Vendor<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='vendor' id='vendor' class="textbox"/>
-						</td>
-						<td  width="150px"><label style="margin-left:0px;">Maintenance cost<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-							<input type='text' name='mcost' id='mcost' class="textbox"/>
-						</td>
-			<td  width="150px"><label style="margin-left:0px;">Period<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='maintain_period' id='maintain_period' class="textbox" />
-						</td>
-					</tr>
-					<tr>
-						
-						
-						
-						<td  width="150px"><label style="margin-left:0px;">Contract renewal date<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td>
-						<input type='text' name='renewaldate' id='renewaldate' class="textbox"/>
-						</td>
-			
-					</tr>
-					
-					
-					
-		<tr >
-            <td  width="150px" >&nbsp;</td>
-            <td align="center" colspan="5">
-	
-			<input type='submit'  class="flatbutton" name='save' id="save" value='Save'/>
-			<input type='button'  class="flatbutton" name='view' id="view" value='View' onclick="location.href='view_generator.php'"/>
-	
-            </td>
-        </tr>
 		
-		
-                </table>
-                </form>            </td>
-
-        </tr>
-
-
-
-
+		//return false;
+		$("#formsaveval").val('800');
+		$("#diesel_save").submit();
+	});
+}); 
+</script>
+<div id="mainareabuild">
+<div class="mcf"></div>
+<div align="center" class="headingsgr">REQUESTOR</div>
+<div id="mytableformbuild" align="center">
+<form id='diesel_save' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8' >
+<div class="scroll_box">
+<div id="firstdiv">
+<table width="100%" align="left">
+ <tr>
+  <td>
+<fieldset align="left" class="alignment2">
+  <legend ><strong>Requestor</strong></legend>
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table>
+    <tr height="30">
+     <td width="120">Employee/Guest*</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><select name='request_type' id='request_type' tabindex="1" >
+		<option value="0">--Select--</option>
+		<option value="1">Employee</option>
+		<option value="2">Guest</option>
+		</select>
+	 </td>
+	</tr>
+    
     </table>
-	</form>
+   </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Left Table End -------------------------------------->
+
+<table width="50%" align="left">
+ <tr>
+  <td>
+   <table>
+   
+   <tr height="30">
+		 <td width="120" nowrap="nowrap">Employee/Guest*</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td><div id="display_request_type">
+			<input type="text" name="request_option" id="request_option" tabindex="2" readonly="true" />
+			</div>
+		 </td>
+	</tr>
+   </table>
+  </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Right Table End -------------------------------------->
+
+</fieldset>
+  </td>
+</tr>
+</table>
+
+
+<table width="100%" align="left">
+ <tr>
+  <td>
+<fieldset align="left" class="alignment2">
+  <legend ><strong>Company & Office Details</strong></legend>
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table>
+    <tr height="30">
+     <td width="120">Company*</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><?php
+		$fgmembersite->DBLogin();
+		$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
+		or die("Opps some thing went wrong");
+		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
+		$result_emp_id=mysql_query("select * from master_companies  order by comp_name",$bd);
+		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
+		echo '<option value="0">--Select--</option>';
+		while($row=mysql_fetch_array($result_emp_id)) {
+			echo '<option value="'.$row['comp_id'].'">'.$fgmembersite->upperstate($row['comp_name']).'</option>';
+		}
+		echo '</select>';
+		?>&nbsp;
+	 </td>
+	</tr>
+    
+    <tr height="30">
+    <td width="120" nowrap="nowrap">City*</td>
+	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td><?php
+    	$fgmembersite->DBLogin();
+		$result_state=mysql_query("select id,name from city");
+		echo '<select name="city_id" id="city_id" tabindex="5">';
+		echo '<option value="0">--Select--</option>';
+		while($row=mysql_fetch_array($result_state)) {
+			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+		}
+		echo '</select>';
+	?>
+	</td>
+    </tr>
+    
+	<tr height="30">
+     <td width="120">Office Location</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type='text' name='off_loc' id='off_loc' tabindex="7" value="" class="textbox"/></td>
+	</tr>
+
+	<tr height="30">
+		<td width="120" nowrap="nowrap">Office Bldg. Name*</td>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><?php
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT id,building_code,building_name FROM building WHERE building_type = '1'");
+			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" >';
+			echo '<option value="0">--Select--</option>';
+			while($row=mysql_fetch_array($result_state)) {
+				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['building_name']).'</option>';
+			}
+			echo '</select>';
+		?></td>
+	</tr>
+
+	<tr height="30">
+     <td width="120">Office Floor</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type='text' name='off_floor' id='off_floor' tabindex="11" value="" class="textbox"/></td>
+	</tr>
+	
+	<tr height="30">
+		<td width="120" >Res. Bldg. Name*</td>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><?php
+			$fgmembersite->DBLogin();
+			$result_state=mysql_query("SELECT id,building_code,building_name FROM building WHERE building_type = '2'");
+			echo '<select name="res_buil_id" id="res_buil_id" tabindex="13" >';
+			echo '<option value="0">--Select--</option>';
+			while($row=mysql_fetch_array($result_state)) {
+				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['building_name']).'</option>';
+			}
+			echo '</select>';
+		?></td>
+	</tr>
+	
+	<tr height="30">
+     <td width="120">Unit Number</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type='text' name='unit_num' id='unit_num' tabindex="15" value="" class="textbox"/></td>
+	</tr>
+   </table>
+   </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Left Table End -------------------------------------->
+
+<table width="50%" align="left">
+ <tr>
+  <td>
+   <table>
+   
+   <tr height="30">
+		 <td width="120" nowrap="nowrap">Division*</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td><?php
+				$result_state=mysql_query("select id,name from department");
+				echo '<select name="division_id" id="division_id" tabindex="4">';
+				echo '<option value="0">--Select--</option>';
+				while($row=mysql_fetch_array($result_state))
+				{
+					echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+				}
+				echo '</select>';
+			?>
+		 </td>
+	</tr>
+	
+   <tr height="30">
+     <td width="120">State</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td>
+     <div id="display_state"><input type='text' name='state_name' id='state_name' tabindex="6" readonly value=""/ ></div>
+     </td>
+	</tr>
+   
+   
+	<tr height="30">
+		 <td width="120" nowrap="nowrap">Office Bldg.</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td><input type='text' name='off_buil' id='off_buil' tabindex="8" value="" class="textbox"/></td>
+	</tr>
+     
+	<tr height="30">
+		<td width="120">Office Bldg. Code</td>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><div id="display_off_buil_code">
+			<input type='text' name='off_buil_code' id='off_buil_code' tabindex="10" size="6" readonly autocomplete="off" class="textbox" />
+			</div>
+		</td>
+    </tr>
+
+	<tr height="30">
+		 <td width="120" nowrap="nowrap">Office</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td><input type='text' name='office_val' id='office_val' class="textbox" tabindex="12" autocomplete="off" /></td>
+	</tr>
+	
+	<tr height="30">
+		 <td width="120">Res. Bldg. Code</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td><div id="display_res_buil_code">
+			<input type='text' name='res_buil_code' id='res_buil_code' tabindex="14" size="6" readonly autocomplete="off" class="textbox" />
+			</div>
+		</td>
+	</tr>	
+
+   </table>
+  </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Right Table End -------------------------------------->
+
+</fieldset>
+  </td>
+</tr>
+</table>
+
+
+<table width="100%" align="left">
+ <tr>
+  <td>
+<fieldset align="left" class="alignment2">
+  <legend ><strong>Contact Details</strong></legend>
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table>
+    <tr height="30">
+     <td width="120">Email ID*</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type='text' name='email_id' id='email_id' tabindex="16" autocomplete="off" class="textbox" /></td>
+	</tr>
+    
+    <tr height="30">
+    <td width="120" nowrap="nowrap">Alternate No.</td>
+	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td><input type='text' name='alt_num' id='alt_num' tabindex="18" autocomplete="off" class="textbox" /></td>
+    </tr>
+   </table>
+   </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Left Table End -------------------------------------->
+
+<table width="50%" align="left">
+ <tr>
+  <td>
+   <table>
+   
+   <tr height="30">
+		 <td width="120" nowrap="nowrap">Mobile No.</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td><input type="text" name="mobile_no" id="mobile_no" tabindex="17" autocomplete="off" class="textbox" /></td>
+	</tr>
+	
+   <tr height="30">
+     <td width="120">Picture</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type='file' name='req_picture' id='req_picture' tabindex="19" value="" autocomplete="off" class="textbox" /></td>
+	</tr>
+
+   </table>
+  </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Right Table End -------------------------------------->
+
+</fieldset>
+  </td>
+</tr>
+</table>
+
 
 
 
 </div>
+
+
+</div>
+</div>
+ <table width="100%" style="clear:both">
+      <tr align="center" height="35px;">
+      <td nowrap="nowrap">	  
+	  <input type="submit" name="part_save" id="part_save" class="buttons" value="Save" />&nbsp;&nbsp;&nbsp;&nbsp;
+	 <input type="hidden" name="formsaveval" id="formsaveval" /> <!-- This will give the value when form is submitted, otherwise it will empty -->
+	 <input type="hidden" name="edit_id" id="edit_id" /> <!-- This is the partial saved id of the building table when partial save is completed, it will get the id from the db (ajax) -->
+     <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
+     <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=3'"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_requestor.php'"/></td>
+	 </td>
+     </tr>
+  </table>
+	<div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
+</form>
+<!-- </div> -->
 </div>
 
+<div id="backgroundChatPopup"></div>
+<!-- <div id="map-canvas" style="width: 500px; height: 300px"></div> -->
 <?php
 $footerfile='./layout/footer.php';
-if(file_exists($footerfile))
-{
-include_once($footerfile);
-}
-else
-{
-echo _FILENOTFOUNT.$footerfile;
+if(file_exists($footerfile)) {
+	include_once($footerfile);
+} else {
+	echo _FILENOTFOUNT.$footerfile;
 }
 ?>
