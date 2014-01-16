@@ -15,7 +15,8 @@ print_r($_FILES);
 echo "</pre>";*/
 //exit;
 
-if(!$fgmembersite->CheckLogin()) {
+if(!$fgmembersite->CheckLogin())
+{
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
@@ -25,7 +26,11 @@ if ($fgmembersite->usertype() == 1)	{
 	$header_file='./layout/admin_header_ams.php';
 }
 
-if(file_exists($header_file)) {
+$query_edit				=	"SELECT id,request_type,emp_request_id,guest_request_id,comp_id,division_id,city_id,off_loc,off_buil,off_buil_id,off_floor,office_val,res_buil_id,unit_num,email_id,mobile_no,alt_num,req_picture FROM requestor WHERE id = '$id'";			
+$res_edit				=	mysql_query($query_edit) or die(mysql_error());
+$row_edit				=	mysql_fetch_array($res_edit);
+
+if(file_exists($header_file))	{
 	include_once($header_file);
 } else {
 	$fgmembersite->RedirectToURL("index.php");
@@ -33,33 +38,28 @@ if(file_exists($header_file)) {
 }
 if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	
-	//$fgmembersite->pre($_POST);
-	//$fgmembersite->pre($_FILES);
-	//exit;
-	
 	if(isset($_FILES["req_picture"]["name"])) {
 		$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
 		$temp = explode(".", $_FILES["req_picture"]["name"]);
-		//$fgmembersite->pre($temp);
 		$extension = end($temp);
 		if (in_array($extension, $allowedExts)) {
 			if ($_FILES["req_picture"]["error"] > 0) {
 				echo "Return Code: " . $_FILES["req_picture"]["error"] . "<br>";
 			} else {
-				//echo "user_picture/" . $_FILES["req_picture"]["name"];
-				//exit;
-				//$fgmembersite->pre($temp);
-				$current_timestamp		=	time();				
-				$cur_file_name			=	$current_timestamp."_".$temp[0].".".$temp[1];
-				//$fgmembersite->pre($temp);
-				//echo $cur_file_name;
-				//exit;
+				
+				if($req_picture_old == '') {
+					$current_timestamp		=	time();				
+					$cur_file_name			=	$current_timestamp."_".$temp[0].".".$temp[1];
+				} else {					
+					$cur_file_name			=	$req_picture_old;
+				}
+				
 				$req_picture=$cur_file_name;
 				move_uploaded_file($_FILES["req_picture"]["tmp_name"],"user_picture/" . $cur_file_name);
 				//echo "Stored in: " . "uploads/" . $_FILES["saleagreement"]["name"];
 			}
 		} else {
-			$req_picture="";
+			$req_picture=$req_picture_old;
 		}
 	}
 	
@@ -87,16 +87,22 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	$mobile_no				=	$_POST['mobile_no'];
 	$alt_num				=	$_POST['alt_num'];
 	$req_picture			=	$req_picture;
+		
+		//echo 'UPDATE requestor SET request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",comp_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'",off_loc="'.$off_loc.'",off_buil="'.$off_buil.'",off_buil_id="'.$off_buil_id.'",off_floor="'.$off_floor.'",office_val="'.$office_val.'",res_buil_id="'.$res_buil_id.'",unit_num="'.$unit_num.'",email_id="'.$email_id.'",mobile_no="'.$mobile_no.'",alt_num="'.$alt_num.'",req_picture="'.$req_picture.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"';
 	
-	$user_id					=	$_SESSION['user_id'];
-	//echo 'INSERT INTO vehicle_transaction SET vehicle_reg_id="'.$vehicle_reg_id.'",transaction_date="'.$transaction_date.'",transaction_type_id="'.$transaction_type_id.'",transaction_number="'.$transaction_number.'",vendor_id="'.$vendor_id.'",uom_id="'.$uom_id.'",units="'.$units.'",currency_id="'.$currency_id.'",rate="'.$rate.'",cost="'.$cost.'",trans_desc="'.$desc.'",bought_by="'.$bought_by.'",emp_code="'.$emp_code.'",driver_code_id="'.$driver_code_id.'",others="'.$others.'",created_by="'.$user_id.'" '; 
+	//echo $sql;
 	//exit;
-	if(!mysql_query('INSERT INTO requestor SET request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",comp_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'",off_loc="'.$off_loc.'",off_buil="'.$off_buil.'",off_buil_id="'.$off_buil_id.'",off_floor="'.$off_floor.'",office_val="'.$office_val.'",res_buil_id="'.$res_buil_id.'",unit_num="'.$unit_num.'",email_id="'.$email_id.'",mobile_no="'.$mobile_no.'",alt_num="'.$alt_num.'",req_picture="'.$req_picture.'",created_by="'.$user_id.'" ')) {
-	die('Error: ' . mysql_error());
-}
-	echo'<script> window.location="view_requestor.php?success=create"; </script> ';
+	
+	$user_id		=	$_SESSION['user_id'];
+		
+	if(!mysql_query('UPDATE requestor SET request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",comp_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'",off_loc="'.$off_loc.'",off_buil="'.$off_buil.'",off_buil_id="'.$off_buil_id.'",off_floor="'.$off_floor.'",office_val="'.$office_val.'",res_buil_id="'.$res_buil_id.'",unit_num="'.$unit_num.'",email_id="'.$email_id.'",mobile_no="'.$mobile_no.'",alt_num="'.$alt_num.'",req_picture="'.$req_picture.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
+			die('Error: ' . mysql_error());
+		}
+		$fgmembersite->RedirectToURL("view_requestor.php?success=update");
+		echo "&nbsp;";
 }
 ?>
+<link href="css/popup.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 .confirmMAp {
 	margin:0 auto;
@@ -143,7 +149,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
     margin-right: auto;
     width: 95%;
 }
-#errormsgbuild {
+#errormsgbuild{
 	width:45%;
 	height:30px;
 	background:#c1c1c1;
@@ -183,9 +189,10 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 }
 </style>
 <script type="text/javascript" language="javascript">
-$(document).live('ready',function() {
 
-	$('#req_picture').change(function() {
+$(document).ready(function() {
+
+$('#req_picture').change(function() {
 		
 		var existing = new Array();
 		var checkFile = new Array();
@@ -325,7 +332,7 @@ $(document).live('ready',function() {
 			$('#errormsgbuild').hide();
 			return false;
 		});		
-	});
+	});	
 	
 	$("#part_save").on("click", function() {
 		//alert("232");
@@ -441,9 +448,7 @@ $(document).live('ready',function() {
 				$("#email_id").focus();
 				return false;							
 			}			
-		}
-		
-		//return false;
+		} 
 		$("#formsaveval").val('800');
 		$("#diesel_save").submit();
 	});
@@ -456,6 +461,7 @@ $(document).live('ready',function() {
 <form id='diesel_save' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 <div class="scroll_box">
 <div id="firstdiv">
+
 <table width="100%" align="left">
  <tr>
   <td>
@@ -468,10 +474,12 @@ $(document).live('ready',function() {
     <tr height="30">
      <td width="120">Employee/Guest*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><select name='request_type' id='request_type' tabindex="1" >
-		<option value="0">--Select--</option>
-		<option value="1">Employee</option>
-		<option value="2">Guest</option>
+     <td><input type='hidden' name='edit_id' id='edit_id' value="<?php echo $row_edit['id']; ?>" />
+     <?php $selvalue=$row_edit["request_type"]; ?>
+     	<select name='request_type' id='request_type' tabindex="1" >
+			<option value="0">--Select--</option>
+			<option value="1" <?php if($selvalue == 1) { echo "selected"; } ?> >Employee</option>
+			<option value="2" <?php if($selvalue == 2) { echo "selected"; } ?> >Guest</option>
 		</select>
 	 </td>
 	</tr>
@@ -492,7 +500,44 @@ $(document).live('ready',function() {
 		 <td width="120" nowrap="nowrap">Employee/Guest*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td><div id="display_request_type">
-			<input type="text" name="request_option" id="request_option" tabindex="2" readonly="true" />
+		 	<?php
+			if($selvalue==1) {
+				$fgmembersite->DBLogin();
+				$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
+				or die("Opps some thing went wrong");
+				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
+				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info order by emp_id",$bd);
+				echo '<select name="emp_request_id" id="emp_request_id" style="width:100px;" tabindex="14" class="selectbox">';
+				echo '<option value="0">--Select--</option>';
+				while($row=mysql_fetch_array($result_emp_id)) {
+					if($row['emp_code'] == $row_edit['emp_request_id']){
+						  $isSelected 	= 	' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+						  $first_name	=	$row["emp_code"];
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }							
+					echo "<option value='".$row['emp_code']."'".$isSelected.">".$fgmembersite->upperstate($row['first_name'])."</option>";
+				}
+				echo '</select>&nbsp;<span id="display_request_id"><input type="text" name="emp_codeval" id="emp_codeval" size="6" class="textbox" value="'.$first_name.'" readonly="true" /></span>';
+			}
+			if($selvalue==2) {
+				$result_state=mysql_query("select id,name,guest_code from guest");
+				echo '<select name="guest_request_id" id="guest_request_id" tabindex="14" style="width:100px;" class="selectbox">';
+				echo '<option value="0">--Select--</option>';
+				while($row=mysql_fetch_array($result_state))
+				{	
+					if($row['id'] == $row_edit['guest_request_id']){
+						$isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag		
+						$driver_name	=	$row["guest_code"]; 
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }							
+					echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
+					//echo '<option value="'.$row['id'].'">'.$row['driver_code'].'</option>';
+				}
+				echo '</select>&nbsp;<span id="display_request_id"><input type="text" name="guest_codeval" id="guest_codeval" size="6" class="textbox" value="'.$driver_name.'" readonly="true"/></span>';
+			}
+			?>			
 			</div>
 		 </td>
 	</tr>
@@ -526,11 +571,16 @@ $(document).live('ready',function() {
 		$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-		$result_emp_id=mysql_query("select * from master_companies  order by comp_name",$bd);
+		$result_emp_id=mysql_query("select comp_id,comp_name from master_companies  order by comp_name",$bd);
 		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
-			echo '<option value="'.$row['comp_id'].'">'.$fgmembersite->upperstate($row['comp_name']).'</option>';
+			if($row['comp_id'] == $row_edit['comp_id']){
+				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+			 } else {
+				  $isSelected = ''; // else we remove any tag
+			 }
+			 echo "<option value='".$row['comp_id']."'".$isSelected.">".$fgmembersite->upperstate($row['comp_name'])."</option>";
 		}
 		echo '</select>';
 		?>&nbsp;
@@ -546,7 +596,12 @@ $(document).live('ready',function() {
 		echo '<select name="city_id" id="city_id" tabindex="5">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
-			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+			if($row['id'] == $row_edit['city_id']){
+				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+			 } else {
+				  $isSelected = ''; // else we remove any tag
+			 }
+			 echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 		}
 		echo '</select>';
 	?>
@@ -556,7 +611,7 @@ $(document).live('ready',function() {
 	<tr height="30">
      <td width="120">Office Location</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='off_loc' id='off_loc' tabindex="7" value="" class="textbox"/></td>
+     <td><input type='text' name='off_loc' id='off_loc' tabindex="7" value="<?php echo $row_edit['off_loc']; ?>" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -568,7 +623,13 @@ $(document).live('ready',function() {
 			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" >';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['building_name']).'</option>';
+				if($row['id'] == $row_edit['off_buil_id']){
+					$isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag		
+					$buil_off_code	=	$row['building_code'];
+				 } else {
+					  $isSelected = ''; // else we remove any tag
+				 }							
+				echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
 			}
 			echo '</select>';
 		?></td>
@@ -577,7 +638,7 @@ $(document).live('ready',function() {
 	<tr height="30">
      <td width="120">Office Floor</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='off_floor' id='off_floor' tabindex="11" value="" class="textbox"/></td>
+     <td><input type='text' name='off_floor' id='off_floor' tabindex="11" value="<?php echo $row_edit['off_floor']; ?>" class="textbox"/></td>
 	</tr>
 	
 	<tr height="30">
@@ -589,7 +650,13 @@ $(document).live('ready',function() {
 			echo '<select name="res_buil_id" id="res_buil_id" tabindex="13" >';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['building_name']).'</option>';
+				if($row['id'] == $row_edit['res_buil_id']){
+				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+				  $buil_res_code	=	$row['building_code'];
+				 } else {
+					  $isSelected = ''; // else we remove any tag
+				 }							
+				echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
 			}
 			echo '</select>';
 		?></td>
@@ -598,7 +665,7 @@ $(document).live('ready',function() {
 	<tr height="30">
      <td width="120">Unit Number</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='unit_num' id='unit_num' tabindex="15" value="" class="textbox"/></td>
+     <td><input type='text' name='unit_num' id='unit_num' tabindex="15" value="<?php echo $row_edit['unit_num']; ?>" class="textbox"/></td>
 	</tr>
    </table>
    </td>
@@ -621,7 +688,12 @@ $(document).live('ready',function() {
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{
-					echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+					if($row['id'] == $row_edit['division_id']){
+					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }							
+					echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 				}
 				echo '</select>';
 			?>
@@ -632,7 +704,11 @@ $(document).live('ready',function() {
      <td width="120">State</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
-     <div id="display_state"><input type='text' name='state_name' id='state_name' tabindex="6" readonly value=""/ ></div>
+     <div id="display_state">
+    <?php $result_state=mysql_query("SELECT st.name AS ST_NAME FROM city ci LEFT JOIN state st ON ci.state_id = st.id WHERE ci.id = '$row_edit[city_id]' "); 
+    $row_state	=	mysql_fetch_array($result_state);
+    ?>
+     <input type='text' name='state_name' id='state_name' tabindex="6" readonly value="<?php echo $fgmembersite->upperstate($row_state[ST_NAME]); ?>" /></div>
      </td>
 	</tr>
    
@@ -640,14 +716,14 @@ $(document).live('ready',function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Office Bldg.</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='off_buil' id='off_buil' tabindex="8" value="" class="textbox"/></td>
+		 <td><input type='text' name='off_buil' id='off_buil' tabindex="8" value="<?php echo $row_edit['off_buil']; ?>" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
 		<td width="120">Office Bldg. Code</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><div id="display_off_buil_code">
-			<input type='text' name='off_buil_code' id='off_buil_code' tabindex="10" size="6" readonly autocomplete="off" class="textbox" />
+			<input type='text' name='off_buil_code' id='off_buil_code' value="<?php echo $buil_off_code; ?>" tabindex="10" size="6" readonly autocomplete="off" class="textbox" />
 			</div>
 		</td>
     </tr>
@@ -655,14 +731,14 @@ $(document).live('ready',function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Office</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_val' id='office_val' class="textbox" tabindex="12" autocomplete="off" /></td>
+		 <td><input type='text' name='office_val' id='office_val' value="<?php echo $row_edit[office_val]; ?>" class="textbox" tabindex="12" autocomplete="off" /></td>
 	</tr>
 	
 	<tr height="30">
 		 <td width="120">Res. Bldg. Code</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td><div id="display_res_buil_code">
-			<input type='text' name='res_buil_code' id='res_buil_code' tabindex="14" size="6" readonly autocomplete="off" class="textbox" />
+			<input type='text' name='res_buil_code' id='res_buil_code' value="<?php echo $buil_res_code; ?>" tabindex="14" size="6" readonly autocomplete="off" class="textbox" />
 			</div>
 		</td>
 	</tr>	
@@ -692,13 +768,13 @@ $(document).live('ready',function() {
     <tr height="30">
      <td width="120">Email ID*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='email_id' id='email_id' tabindex="16" autocomplete="off" class="textbox" /></td>
+     <td><input type='text' name='email_id' id='email_id' value="<?php echo $row_edit[email_id]; ?>" tabindex="16" autocomplete="off" class="textbox" /></td>
 	</tr>
     
     <tr height="30">
     <td width="120" nowrap="nowrap">Alternate No.</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='alt_num' id='alt_num' tabindex="18" autocomplete="off" class="textbox" /></td>
+    <td><input type='text' name='alt_num' id='alt_num' value="<?php echo $row_edit[alt_num]; ?>" tabindex="18" autocomplete="off" class="textbox" /></td>
     </tr>
    </table>
    </td>
@@ -715,13 +791,16 @@ $(document).live('ready',function() {
    <tr height="30">
 		 <td width="120" nowrap="nowrap">Mobile No.</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" name="mobile_no" id="mobile_no" tabindex="17" autocomplete="off" class="textbox" /></td>
+		 <td><input type="text" name="mobile_no" id="mobile_no" value="<?php echo $row_edit[mobile_no]; ?>" tabindex="17" autocomplete="off" class="textbox" /></td>
 	</tr>
 	
    <tr height="30">
      <td width="120">Picture</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='file' name='req_picture' id='req_picture' tabindex="19" value="" autocomplete="off" class="textbox" /></td>
+     <td><?php echo $row_edit['req_picture']; ?>
+     	<input type='file' name='req_picture' id='req_picture' tabindex="19" value="" autocomplete="off" class="textbox" />
+     	<input type='hidden' value="<?php echo $row_edit['req_picture']; ?>" name='req_picture_old' id='req_picture_old' />
+     </td>
 	</tr>
 
    </table>
@@ -737,8 +816,6 @@ $(document).live('ready',function() {
 </table>
 
 
-
-
 </div>
 
 
@@ -749,9 +826,8 @@ $(document).live('ready',function() {
       <td nowrap="nowrap">	  
 	  <input type="submit" name="part_save" id="part_save" class="buttons" value="Save" />&nbsp;&nbsp;&nbsp;&nbsp;
 	 <input type="hidden" name="formsaveval" id="formsaveval" /> <!-- This will give the value when form is submitted, otherwise it will empty -->
-	 <input type="hidden" name="edit_id" id="edit_id" /> <!-- This is the partial saved id of the building table when partial save is completed, it will get the id from the db (ajax) -->
      <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
-     <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=3'"/>&nbsp;&nbsp;&nbsp;&nbsp;
+     <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=2'"/>&nbsp;&nbsp;&nbsp;&nbsp;
 	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_requestor.php'"/></td>
 	 </td>
      </tr>

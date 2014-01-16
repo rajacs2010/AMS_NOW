@@ -1,0 +1,45 @@
+﻿commited on 10012014 at 2033 
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	modified:   requestor.php
+#	new file:   user_picture/Chrysanthemum.jpg
+#
+# Changes not staged for commit:
+#   (use "git add/rm <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	deleted:    fms_uploads/add1.gif
+#	deleted:    fms_uploads/adminbutt.jpg
+#	deleted:    fms_uploads/adminbutto.jpg
+#	deleted:    fms_uploads/appbutto.jpg
+#	deleted:    fms_uploads/arrow.gif
+#	deleted:    fms_uploads/back.png
+#	deleted:    fms_uploads/bigload.gif
+#	deleted:    fms_uploads/bigload.jpg
+#	deleted:    fms_uploads/buttonn.png
+#	deleted:    fms_uploads/~save.gif
+#	deleted:    uploads/Chrysanthemum.jpg
+#	deleted:    uploads/Desert.jpg
+#	deleted:    uploads/Hydrangeas.jpg
+#	deleted:    uploads/Jellyfish.jpg
+#	deleted:    uploads/Koala.jpg
+#	deleted:    uploads/Lighthouse.jpg
+#	deleted:    uploads/Penguins.jpg
+#	deleted:    uploads/Tulips.jpg
+#	deleted:    uploads/arrow.gif
+#	deleted:    uploads/back.png
+#	deleted:    uploads/bigload.gif
+#	deleted:    uploads/bigload.jpg
+#	deleted:    uploads/buttonn.png
+#	deleted:    uploads/close_pop.png
+#	deleted:    uploads/currency.gif
+#	deleted:    uploads/fileclose.png
+#	deleted:    uploads/front_play.png
+#	deleted:    uploads/go2.png
+#	deleted:    uploads/index.jpg
+#
+

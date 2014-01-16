@@ -44,7 +44,7 @@ if($_GET["emp_request_id"]) {  // Ajax Show of Employee Code
 	$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
 	or die("Opps some thing went wrong");
 	mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-	$result_emp_id=mysql_query("select emp_code from pim_emp_info  WHERE emp_id = '$selvalue'",$bd);
+	$result_emp_id=mysql_query("select emp_code from pim_emp_info  WHERE emp_code = '$selvalue'",$bd);
 	while($row=mysql_fetch_array($result_emp_id)) {
 		$emp_code_val=$row['emp_code'];
 	}
