@@ -8,7 +8,7 @@ if(!$fgmembersite->CheckLogin()) {
     exit;
 }
 if ($fgmembersite->usertype() == 1) {
-	$header_file='./layout/admin_header_fms.php';
+	$header_file='./layout/admin_header_ams.php';
 }
 if(file_exists($header_file)) {
 	include_once($header_file);
