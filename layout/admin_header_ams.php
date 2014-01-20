@@ -122,6 +122,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 					</li>
 						<li><a href="#"> <span style="padding-left:10px;"><?php echo $_SESSION['username'];?></span></a>
 					<ul>
+					<li><a href="register.php" title="">User Registration</a></li>
 					<li><a href="logout.php" title="">Logout</a></li>
 					</ul>
 					

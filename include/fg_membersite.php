@@ -733,7 +733,7 @@ class FGMembersite
  */
         if(!$this->IsFieldUnique($formvars,'username'))
         {
-            $this->HandleError("This UserName is already used. Please try another username");
+            $this->HandleError("ERR 0009 :UserName already Exists");
             return false;
         }        
         if(!$this->InsertIntoDB($formvars))

@@ -1,62 +1,97 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <link rel="shortcut icon" href="../images/favicon.ico" />
-  <title>AMS</title>
-  <meta name="description" content=""/>
-  <meta name="keywords" content=""/>
-
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1"/>
-  <link rel="stylesheet" href="style/superfish.css" media="screen">
-    <script type='text/javascript' src='scripts/gen_validatorv31.js'></script>
-	<script src="scripts/jquery.js"></script>
-    <script src="scripts/pwdwidget.js" type="text/javascript"></script>  
-      <script type = "text/javascript" >
-
-function disableBackButton()
+<?PHP
+require_once("./include/membersite_config.php");
+require_once ("./include/ajax_pagination.php");
+$fgmembersite->DBLogin();
+EXTRACT($_REQUEST);
+if(!$fgmembersite->CheckLogin())
 {
-window.history.forward();
-}
-setTimeout("disableBackButton()", 0);
-
-</script> 
-  <style type="" >
-    body a {color:#ffffff;}
-.bottom a{color:#ffffff; text-decoration: none;}
-.htmlForm td{
-    font-family: Arial;
-    font-size:14px;
-    color:#3b3b3b;
-
-}
-.htmlForm input[type="text"],input[type="password"],select{
-    border:1px #00BFFF solid;
-    font-family:Arial;
-    font-size:14px;
-    padding:2px;
-     background-color:#F2F5F7;
-	 width:200px;
+    $fgmembersite->RedirectToURL("index.php");
+    exit;
 }
 
+?>
+<?php
+if ($fgmembersite->usertype() == 1)
+{
+$header_file='./layout/admin_header_ams.php';
+}
+if(file_exists($header_file))
+{
+include_once($header_file);
+}
+else
+{
+$fgmembersite->RedirectToURL("index.php");
+exit;
+}
+?> 
 
-
-
+<style>
+#closebutton {
+    background: url("images/close_pop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    color: rgba(0, 0, 0, 0);
+    position: relative;
+    right: -220px;
+    top: -35px;
+}
+#closebutton1 {
+    background: url("images/close_pop.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    color: rgba(0, 0, 0, 0);
+    position: relative;
+    right: -190px;
+    top: -35px;
+}
 </style>
    <script>
+   $(function () {		
+
+	$('#closebutton1').click(function(event) {
+		//alert('232');
+		$('#errormsg').hide();
+		return false;
+	});		
+	$('#closebutton').click(function(event) {
+		//alert('232');
+		$('#errormsgbuild').hide();
+		return false;
+	});
+});
 function register()
 {
-var firstname=document.getElementById("name").value;
+var firstname=document.getElementById("select_name").value;
 	if(firstname==0)
 	{
-		alert("Please Select  the name");
-		document.getElementById("name").focus();
+		
+		$('.myalignbuild').html('ERR 0009 : Select Name');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("select_name").focus();
+		return false;
+	}
+	
+		var username=document.getElementById("username").value;
+	if(username=="")
+	{
+	$('.myalignbuild').html('ERR 0009 : Enter Username');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("username").focus();
 		return false;
 	}
 	var email=document.getElementById("email");
 	if(email.value=="")
 	{
-	alert("Please enter the email");
+	$('.myalignbuild').html('ERR 0009 : Enter Email');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
 	document.getElementById("email").focus();
 	return false;
 	}
@@ -67,53 +102,44 @@ var firstname=document.getElementById("name").value;
 			var address=email_to_lower.toLowerCase();
 			   if(reg.test(address) == false) 
 			{
-			      alert('Invalid Email Address');
+			      $('.myalignbuild').html('ERR 0009 : Invalid Email Address');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
 				document.getElementById("email").focus();
 			      return false;
 	   					
 			}
 		 	 
 		}
-		var username=document.getElementById("username").value;
-	if(username=="")
-	{
-		alert("Please enter the username");
-		document.getElementById("username").focus();
-		return false;
-	}
+	
 		var password=document.getElementById("password").value;
 	if(password=="")
 	{
-		alert("Please enter the password");
+	$('.myalignbuild').html('ERR 0009 : Enter password');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
 		document.getElementById("password").focus();
 		return false;
 	}
-	
+	var usertype=document.getElementById("usertype").value;
+	if(usertype==0)
+	{
+		$('.myalignbuild').html('ERR 0009 : Select usertype');
+		$('#errormsgbuild').css('display','block');
+		setTimeout(function() {
+			$('#errormsgbuild').hide();
+		},5000);
+		document.getElementById("usertype").focus();
+		return false;
+	}
 }
-</script>
-</head>
-
-
-
- <body>
-   
-<div class="page">
-<div class="top">
-<div class="header">
-<div class="header-top">
-<table width="100%"><tbody><tr><td width="10%"><a href="#"><img alt="fmcl" src="images/logo_fmcl.png" border="0" width="70" height="70"></a></td><td width="78%" align="center"> <em style="color:#0092b3;font-style: normal; font-weight: bold;font-size: 30px;"> Admin Maintenance And Support System</em>
-</td><td width="10%" align="right"><a href="#"><img alt="fmcl" src="images/kcs.png" border="0" width="70" height="70"/></a></td></tr></tbody></table>
-</div>
-
-<!--<div class="header-img">-->
-
-</div>
-</div>
-</div>
-</div>
- <div class="bodycontent">
+</script> 
  <?PHP
-require_once("./include/membersite_config.php");
+
 
 if(isset($_POST['submitted']))
 {
@@ -124,11 +150,6 @@ if(isset($_POST['submitted']))
 }
 
 ?>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-  
   
   <!-- Form Code Start -->
   
@@ -142,11 +163,24 @@ mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 
 <script type="text/javascript" language="javascript">
    $(document).ready(function() {
-	$("#name").change(function(event){
-	var selvalue=document.getElementById("name").value;
+	$("#select_name").change(function(event){
+	var selvalue=document.getElementById("select_name").value;
 	if (selvalue != 0)
 	{
-          $('#display_content').load('getuserdata.php?selvalue='+selvalue);
+		  $.ajax({
+				url				:	"getuserdata.php",
+				type				:	"post",
+				dataType			:	"text",
+				cache				:	false,
+				data				:	{ "selvalue" : selvalue },
+				success				:	function(ajaxval) {
+					//alert(ajaxval);
+					var splitval	=	ajaxval.split("~");
+					$("#email").val(splitval[0]);
+					$("#username").val(splitval[1]);
+				}
+			});
+				
 	}
 	else
 	{
@@ -163,162 +197,116 @@ mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		 if($_GET['nsuccess'] == 'true')
 		{
         	 echo "<div style='float:right;width:580px;color:green;font-size:18px;'>User created successfully</div>";
-    		}
+    	}
 		else
 		{
          	echo '<div class="error">SORRY, PROBLEM SUBMITTING YOUR DATA</div>';
 		}
 	}
 ?>
+<div id="mainarea"><!--- mainarea  div start-->
+<div class="mcf"></div>
+<div align="center" class="headingsgr">REGISTRATION</div>
+<div id="mytableformreceipt1" align="center">
 <div id='fg_membersite'>
-<div style="float:right;width:996px;">
-<form id='register' action='<?php echo $fgmembersite->GetSelfScript(); ?>' method='post' accept-charset='UTF-8'>
+<fieldset class="alignment" align="left">
+  <legend><strong>Registration</strong></legend>
 
 <!---login--->
-
-<table align="center" width="30%"CELLPADDING="3" CELLSPACING="0"  style=" border: 1px solid #00BFFF; border-top:0px;font-family: Arial;
-    font-size: 12px;"      >
-  <tr>
-    <th style="background: url('images/th.png'); height: 29px;color:#ffffff;text-align: left;font-size: 14px;text-align:center">
-Register
-    </th>
-  </tr>
-  <tr>
-    <td align="center" style=" padding:30px 50px 30px 0px;">
-
-<form id='register' action='<?php echo $fgmembersite->GetSelfScript(); ?>' method='post' accept-charset='UTF-8'>
+<form id='register' action='<?php echo $fgmembersite->GetSelfScript(); ?>' method='post' accept-charset='UTF-8' onsubmit="return register();">
 <input type='hidden' name='submitted' id='submitted' value='1'/>
-<div><span class='error'><?php echo $fgmembersite->GetErrorMessage(); ?></span></div> 
-  <div id="display_content">
-             <!-- The inner table below is a container for form -->
-                <table style="font-family:Arial;" width="100%"  cellpadding="10px" class="htmlForm" cellspacing="0" border="0">
-
-				 <tr>
-                       <td  width="150px"><label style="margin-left:60px;">Name<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td> 						<?php
-					
+<table width="50%" align="left">
+<tr height="30">
+<td width="148">Name*</td>
+<td>
+<?php
 $result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-echo '<select name="namee" id="name" class="selectbox">';
-echo '<option value="0">Please select a user name</option>';
+echo '<select name="select_name" id="select_name" tabindex="1" style="width:120px;">';
+echo '<option value="0">--Employee--</option>';
 while($row=mysql_fetch_array($result_emp_id))
 {
 echo '<option value="'.$row['emp_code'].'">'.$row['first_name'].'</option>';
-
 }
 echo '</select>';
-?><br/>
-    <span id='register_name_errorloc' class='error'></span></td>
-                    </tr>
-					<div id="display_content">
-					 <tr>
-                       <td  width="150px"><label style="margin-left:60px;">Email<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td> <input type='text' name='email' id='email' value='<?php echo $fgmembersite->SafeDisplay('email') ?>' maxlength="50" /><br/>
-    <span id='register_email_errorloc' class='error'></span></td>
-                    </tr>
-				
-                    <tr>
-                       <td  width="150px"><label style="margin-left:60px;">Username<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td> 
-						<div id ="display_emp_code">
-						<input type='text' name='username' id='username' value='<?php echo $fgmembersite->SafeDisplay('username') ?>' readonly="true" maxlength="50" />					
-</div>
-<br/>
-    <span id='register_username_errorloc' class='error'></span></td>
-                    </tr>
-</div>
- 
-                    <tr>
-                        <td  width="150px"><label style="margin-left:60px;">Password<em style="font-style:normal;color:red;">*</em></label></td>
-                        <td  ><input type='password' id='password' name='password' class="textbox" value="<?php echo htmlentities($_POST['password']);?>" ><br/>
-						 <span id='register_password_errorloc' class='error'></span>
+?>
 </td>
-                    </tr>
+</tr>
+<tr height="30">
+<td width="148">Email</td>
+<td>
+<input type='text' name='email' id='email'  value="" size="20" tabindex="3" autocomplete="off"/>
+</td>
+</tr>
+</table>
+<table width="50%" align="left">
+<tr height="30">
+<td width="148">Username</td>
+<td>
+<input type='text' name='username' id='username'  value=""  size="20" tabindex="2" autocomplete="off"/>
+</td>
+</tr>
+<tr height="30">
+<td width="148">Password*</td>
+<td>
+<input type='password' name='password' id='password'  value="" size="20"tabindex="4" autocomplete="off"/>
+</td>
+</tr>
+</table>
+<table width="50%" align="left">
+<tr height="30">
+<td width="148">Usertype*</td>
+<td>
+<select name="usertype" id="usertype">
+<option value="0">--Select--</option>
+<option value="1">Admin</option>
+<option value="2">Users</option>
+</select>
+</select>
+</td>
+</tr>
 
-<tr >
-            <td  width="150px" >&nbsp;</td>
-            <td align="right">
-			<input type="hidden" name="usertype" value="2" id="usertype"/>
-                <input class="flatbutton" name="commit"  size="20" type="submit" value="Submit" onclick="return register();" />
-              <style>
-
-              </style>
-<script type='text/javascript'>
-// <![CDATA[
-
-   var pwdwidget = new PasswordWidget('thepwddiv','password');
-    pwdwidget.MakePWDWidget();
-    
-    var frmvalidator  = new Validator("register");
-    frmvalidator.EnableOnPageErrorDisplay();
-    frmvalidator.EnableMsgsTogether();
-    frmvalidator.addValidation("name","req","Please provide your name");
-
-    frmvalidator.addValidation("email","req","Please provide your email address");
-
-    frmvalidator.addValidation("email","email","Please provide a valid email address");
-
-    frmvalidator.addValidation("username","req","Please provide a username");
-    
-    frmvalidator.addValidation("password","req","Please provide a password");
-
-// ]]>
-</script>
-
-            </td>
-        </tr>
-		<tr >
-            <td  width="150px">&nbsp;</td>
-            <td align="right">
-                <!--<input class="flatbutton" name="signup" onclick="return validate_form()" size="20" type="button" value="Signup" />-->
-				<a style="color:blue;"href="index.php">Login</a>
-          
+</table>
 
 
-            </td>
-        </tr>
-		<tr >
-            <td  width="150px">&nbsp;</td>
-            <td align="right">
-               
-          
-&nbsp;
+</div>
 
-            </td>
-        </tr>
-                </table>
-				</div>
-                </form>            </td>
+</fieldset>
+<br/><br/>
+</div>
+  <div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
+<?php
+$error_message=$fgmembersite->GetErrorMessage();
+?>
+<?php if($error_message!="") {?>
+<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo $fgmembersite->GetErrorMessage(); ?></h3><button id="closebutton1" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
+<?php }?>
+<table width="100%" style="clear:both">
+  <tbody><tr height="50px;" align="center">
+	<td>
+		<input type="submit" value="Save" class="buttons" id="save" name="save">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="reset" id="clear" value="Clear" class="buttons" name="reset">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='ams_temp.php?id=1'" class="buttons" value="Cancel" name="cancel">&nbsp;&nbsp;&nbsp;&nbsp;
+		 <input type="button" onclick="window.location='view_user.php'" class="buttons" value="View" name="View">
+	</td>
+  </tr>
+  </table>
+</div>
 
-        </tr>
-
-
-
-
-    </table>
-	
-<!----login end--->
-
-
-</form>
 
 <!--
 Form Code End (see html-form-guide.com for more info.)
 -->
-  
-  </div>
-  </div>
-
- <br></br><br></br>
-  <br></br><br></br> <br></br><br></br>
 
 
-</div>
- 
-<div class="footer"><div class="headedsfdsfr-top">
-<table width="98%"><tbody><tr><td width="20%"><a style="color:#0092b3;font-style: normal; font-weight: bold;font-size: 18px;text-decoration:none;" href="#">Powered by kcs</a></td><td width="78%" align="center"> <em style="color:#0092b3;font-style: normal; font-weight: bold;font-size: 18px;">&#169; Copyright 2013 KCS. All rights reserved.</em>
-</td><td width="10%"></td></tr></tbody></table>
-</div></div>
- 
-</body>
-</html>
+<?php
+$footerfile='./layout/footer.php';
+if(file_exists($footerfile))
+{
+include_once($footerfile);
+}
+else
+{
+echo _FILENOTFOUNT.$footerfile;
+}
+?>
 

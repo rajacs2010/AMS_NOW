@@ -81,33 +81,6 @@ ob_start();
 </ul>
   
   </li>
-                  	<li><a href="#">&nbsp;</a>
-					 <ul>
-					 <!--
-           <li><a href="#">Value Sets </a>
-          <ul>
-        <li><a href="allocation_type.php">Allocation Type</a></li>
-            <li><a href="assignment_type.php">Assignment Type</a></li>
-            <li><a href="status.php">Status</a></li>
-            <li><a href="transaction_type.php">Transaction Type</a></li> 
-			<li><a href="department.php">Division/Department</a></li> 
-          </ul>
-        </li>
-	    <li><a href="#" title="">&nbsp;</a>
-		<ul>
-		
-       <li><a href="vehicle.php">Vehicle</a></li>
-            <li><a href="vehicle_allocation_type.php">Vehicle Allocation Type </a></li>
-			 <li><a href="driver.php">Driver</a></li>
-            <li><a href="driver_allocate.php">Driver Allocation </a></li>
-			 <li><a href="vehicle_assignment.php">Vehicle Assignment</a></li>
-			  <li><a href="vehicle_status.php">Vehicle Status</a></li>
-            <li><a href="vendor.php">Vendor</a></li>
-			</ul>-->
-			</li>
-</ul>
-					
-					</li>
 						<li><a href="#"> <?php echo $_SESSION['username'];?></a>
 					<ul>
 					<li><a href="logout.php" title="">Logout</a></li>
