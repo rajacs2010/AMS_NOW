@@ -8,34 +8,20 @@ if(!$fgmembersite->CheckLogin()) {
     exit;
 }
 
-if($_GET["selvalue_off_buil_id"]) {  // Ajax Show of Employee Code
-	$selvalue_off_buil_id=$_GET["selvalue_off_buil_id"];	
+if($_GET["request_takenby"]) {  // Ajax Show of Employee Code
+	$selvalue=$_GET["request_takenby"];	
 	$fgmembersite->DBLogin();
-	$result_off_buil_id=mysql_query("SELECT building_code FROM building  WHERE id = '$selvalue_off_buil_id' ");
-	while($row_off_buil_id=mysql_fetch_array($result_off_buil_id)) {
-		$off_buil_code=$row_off_buil_id['building_code'];
+	$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
+	or die("Opps some thing went wrong");
+	mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
+	$result_emp_id=mysql_query("select emp_code from pim_emp_info  WHERE emp_code = '$selvalue'",$bd);
+	while($row=mysql_fetch_array($result_emp_id)) {
+		$emp_code_val=$row['emp_code'];
 	}
 	?>
-	<input type='text' name='off_buil_code' id='off_buil_code' size="6" tabindex="10" class="textbox" value="<?php echo $off_buil_code; ?>" readonly="true" />
+	<input type='text' name='emp_codetakenby' id='emp_codetakenby' tabindex="9" size="6" class="textbox" value="<?php echo $emp_code_val; ?>" readonly="true" />
 	<?php
 }
-
-if($_GET["selvalue_res_buil_id"]) {  // Ajax Show of Employee Code
-	$selvalue_res_buil_id=$_GET["selvalue_res_buil_id"];	
-	$fgmembersite->DBLogin();
-	$result_res_buil_id=mysql_query("SELECT building_code FROM building WHERE id = '$selvalue_res_buil_id' ");
-	while($row_res_buil_id=mysql_fetch_array($result_res_buil_id)) {
-		$res_buil_code=$row_res_buil_id['building_code'];
-	}
-	?>
-	<input type='text' name='res_buil_code' id='res_buil_code' size="6" tabindex="14" class="textbox" value="<?php echo $res_buil_code; ?>" readonly="true" />
-	<?php
-}
-
-
-
-
-
 
 
 if($_GET["emp_request_id"]) {  // Ajax Show of Employee Code
@@ -54,7 +40,7 @@ if($_GET["emp_request_id"]) {  // Ajax Show of Employee Code
 }
 if($_GET["guest_request_id"]) {  // Ajax Show of Guest Code
 	$selvalue=$_GET["guest_request_id"];
-	$result=mysql_query("SELECT guest_code from guest WHERE id = $selvalue");
+	$result=mysql_query("SELECT guest_code FROM guest WHERE id = $selvalue");
 		while($row=mysql_fetch_array($result)) {
 			$guest_codeval=$row['guest_code'];
 		}
@@ -70,7 +56,7 @@ if($_GET["selvalue_request_type"]) {  // Ajax Replace of Employee/Guest Name
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by first_name",$bd) or die(mysql_error());
-		echo '<select name="emp_request_id" id="emp_request_id" tabindex="2" style="width:100px;" class="selectbox">';
+		echo '<select name="emp_request_id" id="emp_request_id" tabindex="3" style="width:100px;" class="selectbox">';
 		echo '<option value="0">--Employee--</option>';
 		while($row=mysql_fetch_array($result_emp_id))
 		{
@@ -80,7 +66,7 @@ if($_GET["selvalue_request_type"]) {  // Ajax Replace of Employee/Guest Name
 	}
 	if($selvalue==2) {
 		$result_state=mysql_query("select id,name from guest");
-		echo '<select name="guest_request_id" id="guest_request_id" tabindex="2" style="width:100px;" class="selectbox">';
+		echo '<select name="guest_request_id" id="guest_request_id" tabindex="3" style="width:100px;" class="selectbox">';
 		echo '<option value="0">--Guest--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{

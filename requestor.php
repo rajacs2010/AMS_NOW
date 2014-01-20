@@ -64,6 +64,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	}
 	
 	$fgmembersite->DBLogin();
+	$req_code				=	$_POST['req_code'];
 	$request_type			=	$_POST['request_type'];
 		
 	if($request_type == 1) {		
@@ -91,7 +92,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	$user_id					=	$_SESSION['user_id'];
 	//echo 'INSERT INTO vehicle_transaction SET vehicle_reg_id="'.$vehicle_reg_id.'",transaction_date="'.$transaction_date.'",transaction_type_id="'.$transaction_type_id.'",transaction_number="'.$transaction_number.'",vendor_id="'.$vendor_id.'",uom_id="'.$uom_id.'",units="'.$units.'",currency_id="'.$currency_id.'",rate="'.$rate.'",cost="'.$cost.'",trans_desc="'.$desc.'",bought_by="'.$bought_by.'",emp_code="'.$emp_code.'",driver_code_id="'.$driver_code_id.'",others="'.$others.'",created_by="'.$user_id.'" '; 
 	//exit;
-	if(!mysql_query('INSERT INTO requestor SET request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",comp_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'",off_loc="'.$off_loc.'",off_buil="'.$off_buil.'",off_buil_id="'.$off_buil_id.'",off_floor="'.$off_floor.'",office_val="'.$office_val.'",res_buil_id="'.$res_buil_id.'",unit_num="'.$unit_num.'",email_id="'.$email_id.'",mobile_no="'.$mobile_no.'",alt_num="'.$alt_num.'",req_picture="'.$req_picture.'",created_by="'.$user_id.'" ')) {
+	if(!mysql_query('INSERT INTO requestor SET req_code="'.$req_code.'",request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",comp_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'",off_loc="'.$off_loc.'",off_buil="'.$off_buil.'",off_buil_id="'.$off_buil_id.'",off_floor="'.$off_floor.'",office_val="'.$office_val.'",res_buil_id="'.$res_buil_id.'",unit_num="'.$unit_num.'",email_id="'.$email_id.'",mobile_no="'.$mobile_no.'",alt_num="'.$alt_num.'",req_picture="'.$req_picture.'",created_by="'.$user_id.'" ')) {
 	die('Error: ' . mysql_error());
 }
 	echo'<script> window.location="view_requestor.php?success=create"; </script> ';
@@ -466,6 +467,38 @@ $(document).live('ready',function() {
   <td>
   <table>
     <tr height="30">
+     <td width="120">Requestor Code</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><?php
+		 if(!isset($_GET[id]) && $_GET[id] == '') {
+			$cusid					=	"SELECT req_code FROM requestor ORDER BY id DESC";			
+			$cusold					=	mysql_query($cusid) or die(mysql_error());
+			$cuscnt					=	mysql_num_rows($cusold);
+			//$cuscnt					=	0; // comment if live
+			if($cuscnt > 0) {
+				$row_cus					  =	 mysql_fetch_array($cusold);
+				$cusnumber	  =	$row_cus['req_code'];
+
+				$getcusno						=	abs(str_replace("REQ",'',strstr($cusnumber,"REQ")));
+				$getcusno++;
+				if($getcusno < 10) {
+					$createdcode	=	"00".$getcusno;
+				} else if($getcusno < 100) {
+					$createdcode	=	"0".$getcusno;
+				} else {
+					$createdcode	=	$getcusno;
+				}
+
+				$customer_code				=	"REQ".$createdcode;
+			} else {
+				$customer_code				=	"REQ001";
+			}
+		}
+	?>
+   <input type='text' name='req_code' id='req_code' tabindex="1" style="width:60px;" class="textbox" value="<?php echo $customer_code;?>" readonly="true"/></td>
+	</tr>	
+	
+    <tr height="30">
      <td width="120">Employee/Guest*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><select name='request_type' id='request_type' tabindex="1" >
@@ -487,7 +520,12 @@ $(document).live('ready',function() {
  <tr>
   <td>
    <table>
-   
+   <tr height="30">
+		 <td width="120" nowrap="nowrap"></td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td></td>
+	</tr>
+	
    <tr height="30">
 		 <td width="120" nowrap="nowrap">Employee/Guest*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>

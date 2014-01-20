@@ -26,7 +26,7 @@ if ($fgmembersite->usertype() == 1)	{
 	$header_file='./layout/admin_header_ams.php';
 }
 
-$query_edit				=	"SELECT id,req_code,request_type,emp_request_id,guest_request_id,comp_id,division_id,city_id,off_loc,off_buil,off_buil_id,off_floor,office_val,res_buil_id,unit_num,email_id,mobile_no,alt_num,req_picture FROM requestor WHERE id = '$id'";			
+$query_edit				=	"SELECT id,req_number,request_type, emp_request_id,guest_request_id,req_date,request_jobtype,req_desc,request_through,request_takenby,additional_det,expected_date,estimated_date,est_cost,actual_cost,completion_date,attach1,attach2,attach3 FROM requestor WHERE id = '$id'";			
 $res_edit				=	mysql_query($query_edit) or die(mysql_error());
 $row_edit				=	mysql_fetch_array($res_edit);
 
@@ -38,32 +38,83 @@ if(file_exists($header_file))	{
 }
 if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	
-	if(isset($_FILES["req_picture"]["name"])) {
+	if(isset($_FILES["attach1"]["name"])) {
 		$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
-		$temp = explode(".", $_FILES["req_picture"]["name"]);
+		$temp = explode(".", $_FILES["attach1"]["name"]);
 		$extension = end($temp);
 		if (in_array($extension, $allowedExts)) {
-			if ($_FILES["req_picture"]["error"] > 0) {
-				echo "Return Code: " . $_FILES["req_picture"]["error"] . "<br>";
+			if ($_FILES["attach1"]["error"] > 0) {
+				echo "Return Code: " . $_FILES["attach1"]["error"] . "<br>";
 			} else {
 				
-				if($req_picture_old == '') {
+				if($attach1_old == '') {
 					$current_timestamp		=	time();				
 					$cur_file_name			=	$current_timestamp."_".$temp[0].".".$temp[1];
 				} else {					
-					$cur_file_name			=	$req_picture_old;
+					$cur_file_name			=	$attach1_old;
 				}
 				
-				$req_picture=$cur_file_name;
-				move_uploaded_file($_FILES["req_picture"]["tmp_name"],"user_picture/" . $cur_file_name);
+				$attach1=$cur_file_name;
+				move_uploaded_file($_FILES["attach1"]["tmp_name"],"request/" . $cur_file_name);
 				//echo "Stored in: " . "uploads/" . $_FILES["saleagreement"]["name"];
 			}
 		} else {
-			$req_picture=$req_picture_old;
+			$attach1=$attach1_old;
 		}
 	}
 	
+	if(isset($_FILES["attach2"]["name"])) {
+		$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
+		$temp = explode(".", $_FILES["attach2"]["name"]);
+		$extension = end($temp);
+		if (in_array($extension, $allowedExts)) {
+			if ($_FILES["attach2"]["error"] > 0) {
+				echo "Return Code: " . $_FILES["attach2"]["error"] . "<br>";
+			} else {
+				
+				if($attach2_old == '') {
+					$current_timestamp		=	time();				
+					$cur_file_name			=	$current_timestamp."_".$temp[0].".".$temp[1];
+				} else {					
+					$cur_file_name			=	$attach1_old;
+				}
+				
+				$attach2=$cur_file_name;
+				move_uploaded_file($_FILES["attach2"]["tmp_name"],"request/" . $cur_file_name);
+				//echo "Stored in: " . "uploads/" . $_FILES["saleagreement"]["name"];
+			}
+		} else {
+			$attach2=$attach1_old;
+		}
+	}
+	
+	if(isset($_FILES["attach3"]["name"])) {
+		$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
+		$temp = explode(".", $_FILES["attach3"]["name"]);
+		$extension = end($temp);
+		if (in_array($extension, $allowedExts)) {
+			if ($_FILES["attach3"]["error"] > 0) {
+				echo "Return Code: " . $_FILES["attach3"]["error"] . "<br>";
+			} else {
+				
+				if($attach3_old == '') {
+					$current_timestamp		=	time();				
+					$cur_file_name			=	$current_timestamp."_".$temp[0].".".$temp[1];
+				} else {					
+					$cur_file_name			=	$attach3_old;
+				}
+				
+				$attach3=$cur_file_name;
+				move_uploaded_file($_FILES["attach3"]["tmp_name"],"request/" . $cur_file_name);
+				//echo "Stored in: " . "uploads/" . $_FILES["saleagreement"]["name"];
+			}
+		} else {
+			$attach3=$attach3_old;
+		}
+	}
+
 	$fgmembersite->DBLogin();
+	$req_number				=	$_POST['req_number'];
 	$request_type			=	$_POST['request_type'];
 		
 	if($request_type == 1) {		
@@ -73,32 +124,32 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 		$emp_request_id		=	'';
 		$guest_request_id	=	$_POST[guest_request_id];
 	} 
-	$comp_id				=	$_POST['comp_id'];
-	$division_id			=	$_POST['division_id'];
-	$city_id				=	$_POST['city_id'];
-	$off_loc				=	$_POST['off_loc'];
-	$off_buil				=	$_POST['off_buil'];
-	$off_buil_id			=	$_POST['off_buil_id'];
-	$off_floor				=	$_POST['off_floor'];
-	$office_val				=	$_POST['office_val'];
-	$res_buil_id			=	$_POST['res_buil_id'];
-	$unit_num				=	$_POST['unit_num'];
-	$email_id				=	$_POST['email_id'];
-	$mobile_no				=	$_POST['mobile_no'];
-	$alt_num				=	$_POST['alt_num'];
-	$req_picture			=	$req_picture;
+	$req_date				=	$_POST['req_date'];
+	$request_jobtype		=	$_POST['request_jobtype'];
+	$req_desc				=	$_POST['req_desc'];
+	$request_through		=	$_POST['request_through'];
+	$request_takenby		=	$_POST['request_takenby'];
+	$additional_det			=	$_POST['additional_det'];
+	$expected_date			=	$_POST['expected_date'];
+	$estimated_date			=	$_POST['estimated_date'];
+	$est_cost				=	$_POST['est_cost'];
+	$actual_cost			=	$_POST['actual_cost'];
+	$completion_date		=	$_POST['completion_date'];
+	$attach1				=	$attach1;
+	$attach2				=	$attach2;
+	$attach3				=	$attach3;
 		
-		//echo 'UPDATE requestor SET request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",comp_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'",off_loc="'.$off_loc.'",off_buil="'.$off_buil.'",off_buil_id="'.$off_buil_id.'",off_floor="'.$off_floor.'",office_val="'.$office_val.'",res_buil_id="'.$res_buil_id.'",unit_num="'.$unit_num.'",email_id="'.$email_id.'",mobile_no="'.$mobile_no.'",alt_num="'.$alt_num.'",req_picture="'.$req_picture.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"';
+		//echo 'UPDATE INTO request SET req_number="'.$req_number.'",request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",req_date="'.$req_date.'",request_jobtype="'.$request_jobtype.'",req_desc="'.$req_desc.'",request_through="'.$request_through.'",request_takenby="'.$request_takenby.'",additional_det="'.$additional_det.'",expected_date="'.$expected_date.'",estimated_date="'.$estimated_date.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",completion_date="'.$completion_date.'",attach1="'.$attach1.'",attach2="'.$attach2.'",attach3="'.$attach3.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"';
 	
 	//echo $sql;
 	//exit;
 	
 	$user_id		=	$_SESSION['user_id'];
 		
-	if(!mysql_query('UPDATE requestor SET request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",comp_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'",off_loc="'.$off_loc.'",off_buil="'.$off_buil.'",off_buil_id="'.$off_buil_id.'",off_floor="'.$off_floor.'",office_val="'.$office_val.'",res_buil_id="'.$res_buil_id.'",unit_num="'.$unit_num.'",email_id="'.$email_id.'",mobile_no="'.$mobile_no.'",alt_num="'.$alt_num.'",req_picture="'.$req_picture.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
+	if(!mysql_query('UPDATE INTO request SET req_number="'.$req_number.'",request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",req_date="'.$req_date.'",request_jobtype="'.$request_jobtype.'",req_desc="'.$req_desc.'",request_through="'.$request_through.'",request_takenby="'.$request_takenby.'",additional_det="'.$additional_det.'",expected_date="'.$expected_date.'",estimated_date="'.$estimated_date.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",completion_date="'.$completion_date.'",attach1="'.$attach1.'",attach2="'.$attach2.'",attach3="'.$attach3.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
 			die('Error: ' . mysql_error());
 		}
-		$fgmembersite->RedirectToURL("view_requestor.php?success=update");
+		$fgmembersite->RedirectToURL("view_request.php?success=update");
 		echo "&nbsp;";
 }
 ?>
@@ -192,7 +243,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 
 $(document).ready(function() {
 
-$('#req_picture').change(function() {
+$('#attach1').change(function() {
 		
 		var existing = new Array();
 		var checkFile = new Array();
@@ -201,9 +252,9 @@ $('#req_picture').change(function() {
 		var counter = 0;
 		for (var i = 0; i < 1; i++) {
 		    (function(index){
-		        file[index] = document.getElementById('req_picture').files[0];
+		        file[index] = document.getElementById('attach1').files[0];
 		        if(file[index]) {
-		            fileUrl[index] = 'user_picture/' + file[index].name;
+		            fileUrl[index] = 'request/' + file[index].name;
 		            checkFile[index] = new XMLHttpRequest();
 		            checkFile[index].onreadystatechange = function() {
 		                if (checkFile[index].readyState == 4) {
@@ -221,7 +272,7 @@ $('#req_picture').change(function() {
 		                            //we use a counter for that purpose. everything after this point is only executed when the last file has been checked! 
 		                        if (existing.indexOf(true) == -1) {
 		                            //none of the files to be uploaded are already on server
-									var filenamee=document.getElementById("req_picture").value;
+									var filenamee=document.getElementById("attach1").value;
 									var extension=filenamee.split('.').pop();
 									if ((extension=="pdf" ) || (extension=="png") || (extension=="jpg") ||(extension=="jpeg") ||(extension=="gif"))
 									{
@@ -237,8 +288,8 @@ $('#req_picture').change(function() {
 										setTimeout(function() {
 											//$('#errormsgbuild').hide();
 										},5000);
-										$("#req_picture").focus();
-										$("#req_picture").val('');
+										$("#attach1").focus();
+										$("#attach1").val('');
 									}
 									//return true; 
 		                        }
@@ -267,55 +318,226 @@ $('#req_picture').change(function() {
 		}
 		      return false;
 		   });
+
+
+$('#attach2').change(function() {
+		
+		var existing = new Array();
+		var checkFile = new Array();
+		var file = new Array();
+		var fileUrl = new Array();
+		var counter = 0;
+		for (var i = 0; i < 1; i++) {
+		    (function(index){
+		        file[index] = document.getElementById('attach2').files[0];
+		        if(file[index]) {
+		            fileUrl[index] = 'request/' + file[index].name;
+		            checkFile[index] = new XMLHttpRequest();
+		            checkFile[index].onreadystatechange = function() {
+		                if (checkFile[index].readyState == 4) {
+		                    if (checkFile[index].status == 200) {
+		                        existing[index] = true; 
+		                        counter += 1;
+		                    }
+		                    else {
+		                        existing[index] = false;
+		                        counter += 1;
+		                    }
+		                    if (counter == fileUrl.length) { 
+		                            //existing.length of the array "true, false,,true" (i.e. with one undefined value) would deliver "4". 
+		                            //therefore we have to check for the number of set variables in the string rather than the strings length. 
+		                            //we use a counter for that purpose. everything after this point is only executed when the last file has been checked! 
+		                        if (existing.indexOf(true) == -1) {
+		                            //none of the files to be uploaded are already on server
+									var filenamee=document.getElementById("attach2").value;
+									var extension=filenamee.split('.').pop();
+									if ((extension=="pdf" ) || (extension=="png") || (extension=="jpg") ||(extension=="jpeg") ||(extension=="gif"))
+									{
+										return true;
+									}
+									else
+									{
+										/*alert("Invalid File extension Only (pdf,gif,jpeg,png) are allowed");
+										document.getElementById("saleagreement").value="";
+										return false;*/
+										$('.myalignbuild').html('ERR : Invalid File Extension, Only (pdf, gif, jpg, png) Are Allowed');
+										$('#errormsgbuild').css('display','block');
+										setTimeout(function() {
+											//$('#errormsgbuild').hide();
+										},5000);
+										$("#attach2").focus();
+										$("#attach2").val('');
+									}
+									//return true; 
+		                        }
+		                        else {
+		                            //list filenames and/or upload field numbers of the files that already exist on server
+		                            //   ->> inform user... 
+									/*alert("The file name already exits");
+									document.getElementById("saleagreement").value="";
+		                            return false;*/
+
+									/*$('.myalignbuild').html('ERR : This Filename Already Exits');
+									$('#errormsgbuild').css('display','block');
+									setTimeout(function() {
+										$('#errormsgbuild').hide();
+									},5000);
+									$("#req_picture").focus();
+									$("#req_picture").val('');*/
+		                        }
+		                    }
+		                }
+		            }
+		            checkFile[index].open('HEAD', fileUrl[index], true);
+		            checkFile[index].send();
+		        }
+		    })(i);
+		}
+		      return false;
+		   });
+
+
+$('#attach3').change(function() {
+	
+	var existing = new Array();
+	var checkFile = new Array();
+	var file = new Array();
+	var fileUrl = new Array();
+	var counter = 0;
+	for (var i = 0; i < 1; i++) {
+	    (function(index){
+	        file[index] = document.getElementById('attach3').files[0];
+	        if(file[index]) {
+	            fileUrl[index] = 'request/' + file[index].name;
+	            checkFile[index] = new XMLHttpRequest();
+	            checkFile[index].onreadystatechange = function() {
+	                if (checkFile[index].readyState == 4) {
+	                    if (checkFile[index].status == 200) {
+	                        existing[index] = true; 
+	                        counter += 1;
+	                    }
+	                    else {
+	                        existing[index] = false;
+	                        counter += 1;
+	                    }
+	                    if (counter == fileUrl.length) { 
+	                            //existing.length of the array "true, false,,true" (i.e. with one undefined value) would deliver "4". 
+	                            //therefore we have to check for the number of set variables in the string rather than the strings length. 
+	                            //we use a counter for that purpose. everything after this point is only executed when the last file has been checked! 
+	                        if (existing.indexOf(true) == -1) {
+	                            //none of the files to be uploaded are already on server
+								var filenamee=document.getElementById("attach3").value;
+								var extension=filenamee.split('.').pop();
+								if ((extension=="pdf" ) || (extension=="png") || (extension=="jpg") ||(extension=="jpeg") ||(extension=="gif"))
+								{
+									return true;
+								}
+								else
+								{
+									/*alert("Invalid File extension Only (pdf,gif,jpeg,png) are allowed");
+									document.getElementById("saleagreement").value="";
+									return false;*/
+									$('.myalignbuild').html('ERR : Invalid File Extension, Only (pdf, gif, jpg, png) Are Allowed');
+									$('#errormsgbuild').css('display','block');
+									setTimeout(function() {
+										//$('#errormsgbuild').hide();
+									},5000);
+									$("#attach3").focus();
+									$("#attach3").val('');
+								}
+								//return true; 
+	                        }
+	                        else {
+	                            //list filenames and/or upload field numbers of the files that already exist on server
+	                            //   ->> inform user... 
+								/*alert("The file name already exits");
+								document.getElementById("saleagreement").value="";
+	                            return false;*/
+
+								/*$('.myalignbuild').html('ERR : This Filename Already Exits');
+								$('#errormsgbuild').css('display','block');
+								setTimeout(function() {
+									$('#errormsgbuild').hide();
+								},5000);
+								$("#req_picture").focus();
+								$("#req_picture").val('');*/
+	                        }
+	                    }
+	                }
+	            }
+	            checkFile[index].open('HEAD', fileUrl[index], true);
+	            checkFile[index].send();
+	        }
+	    })(i);
+	}
+	      return false;
+	   });
 	   
 	//alert(12121);
 	$("#request_type").focus();
 	//alert(8989);
 
-	$("#city_id").change(function(event) {
-		var selvalue=document.getElementById("city_id").value;
-		if (selvalue != 0) {
-			$('#display_state').load('ajax_requestor.php?selvalue='+selvalue);
+	$("#est_cost").on('blur',function() {
+		var mcost=$(this).val();
+		var numericExpression = /^[+]?[0-9,]+(\.[0-9,]+)?$/;
+		if(!mcost.match(numericExpression)) {
+		$('.myalignbuild').html('ERR : Only Numbers! ');
+		$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$(this).val("");
+			$(this).focus();
+			return false;
 		}
-		else {
-			document.getElementById("state_name").value = "";			
+		var x		=	$(this).val();
+		var x		=	(x.toString().replace(/,/g,""));
+		var x		=	(Math.round(x * 100) / 100);
+		$(this).val(x.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+	});
+
+	$("#actual_cost").on('blur',function() {
+		var mcost=$(this).val();
+		var numericExpression = /^[+]?[0-9,]+(\.[0-9,]+)?$/;
+		if(!mcost.match(numericExpression)) {
+		$('.myalignbuild').html('ERR : Only Numbers! ');
+		$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$(this).val("");
+			$(this).focus();
+			return false;
 		}
+		var x		=	$(this).val();
+		var x		=	(x.toString().replace(/,/g,""));
+		var x		=	(Math.round(x * 100) / 100);
+		$(this).val(x.toString().replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 	});
 	
-	$("#off_buil_id").change(function(event){
-		var selvalue_off_buil_id=document.getElementById("off_buil_id").value;
-		if (selvalue_off_buil_id != 0) {			 
-	          $('#display_off_buil_code').load('ajax_requestor.php?selvalue_off_buil_id='+selvalue_off_buil_id);
-		} else {
-			document.getElementById("off_buil_code").value = "";		
-		}
-	 });
-
-	$("#res_buil_id").change(function(event){
-		var selvalue_res_buil_id=document.getElementById("res_buil_id").value;
-		if (selvalue_res_buil_id != 0) {			 
-	          $('#display_res_buil_code').load('ajax_requestor.php?selvalue_res_buil_id='+selvalue_res_buil_id);
-		} else {
-			document.getElementById("res_buil_code").value = "";		
-		}
-	 });
-
+	
 	$("#request_type").live('change',function(event){
 		var selvalue_request_type=$(this).val();
 		if (selvalue_request_type != 0) {
-	          $('#display_request_type').load('ajax_requestor.php?selvalue_request_type='+selvalue_request_type);
+	          $('#display_request_type').load('ajax_request.php?selvalue_request_type='+selvalue_request_type);
 		}
 	});		
 	$("#guest_request_id").live('change',function(event){
 		var selvalue_bought_by=document.getElementById("guest_request_id").value;
 		if (selvalue_bought_by != 0) {
-	          $('#display_request_id').load('ajax_requestor.php?guest_request_id='+selvalue_bought_by);
+	          $('#display_request_id').load('ajax_request.php?guest_request_id='+selvalue_bought_by);
 		}
 	});
 	$("#emp_request_id").live('change',function(event){
 		var selvalue_bought_by=document.getElementById("emp_request_id").value;
 		if (selvalue_bought_by != 0) {
-	          $('#display_request_id').load('ajax_requestor.php?emp_request_id='+selvalue_bought_by);
+	          $('#display_request_id').load('ajax_request.php?emp_request_id='+selvalue_bought_by);
+		}
+	});
+	$("#request_takenby").live('change',function(event){
+		var selvalue_takenby=document.getElementById("request_takenby").value;
+		if (selvalue_takenby != 0) {
+	          $('#display_empname').load('ajax_request.php?request_takenby='+selvalue_takenby);
 		}
 	});
 	
@@ -337,20 +559,29 @@ $('#req_picture').change(function() {
 	$("#part_save").on("click", function() {
 		//alert("232");
 		var request_type		=	$("#request_type").val();
-		var comp_id				=	$("#comp_id").val();
-		var division_id			=	$("#division_id").val();
-		var city_id				=	$("#city_id").val();
-		var off_loc				=	$("#off_loc").val();
-		var off_buil			=	$("#off_buil").val();
-		var off_buil_id			=	$("#off_buil_id").val();
-		var off_floor			=	$("#off_floor").val();
-		var office_val			=	$("#office_val").val();
-		var res_buil_id			=	$("#res_buil_id").val();
-		var unit_num			=	$("#unit_num").val();
-		var email_id			=	$("#email_id").val();
-		var mobile_no			=	$("#mobile_no").val();
-		var alt_num				=	$("#alt_num").val();
-		var req_picture			=	$("#req_picture").val();
+		var req_date			=	$("#req_date").val();
+		var request_jobtype		=	$("#request_jobtype").val();
+		var req_desc			=	$("#req_desc").val();
+		var request_through		=	$("#request_through").val();
+		var request_takenby		=	$("#request_takenby").val();
+		var additional_det		=	$("#additional_det").val();
+		var expected_date		=	$("#expected_date").val();
+		var estimated_date		=	$("#estimated_date").val();
+		var est_cost			=	$("#est_cost").val();
+		var actual_cost			=	$("#actual_cost").val();
+		var completion_date		=	$("#completion_date").val();
+
+		var	currentdate					=	new Date();
+
+		var req_dateval 				=	new Date(req_date.substring(6,10)+"/"+req_date.substring(3,5)+"/"+req_date.substring(0,2)).getTime();
+
+		var expected_dateval			=	new Date(expected_date.substring(6,10)+"/"+expected_date.substring(3,5)+"/"+expected_date.substring(0,2)).getTime();
+
+		var estimated_dateval			=	new Date(estimated_date.substring(6,10)+"/"+estimated_date.substring(3,5)+"/"+estimated_date.substring(0,2)).getTime();
+
+		var completion_dateval			=	new Date(completion_date.substring(6,10)+"/"+completion_date.substring(3,5)+"/"+completion_date.substring(0,2)).getTime();
+		
+		var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
 
 		if(request_type == '0') {
 			$('.myalignbuild').html('ERR : Select Requestor Type');
@@ -363,7 +594,7 @@ $('#req_picture').change(function() {
 		} 
 		if(request_type == '1') {
 			if($('#emp_request_id').val() == '0') {
-				$('.myalignbuild').html('ERR : Select Employee Name');
+				$('.myalignbuild').html('ERR : Select Requestor Name');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
 					$('#errormsgbuild').hide();
@@ -373,7 +604,7 @@ $('#req_picture').change(function() {
 			}
 		} if(request_type == '2') {
 			if($('#guest_request_id').val() == '0') {
-				$('.myalignbuild').html('ERR : Select Guest Name');
+				$('.myalignbuild').html('ERR : Select Requestor Name');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
 					$('#errormsgbuild').hide();
@@ -383,72 +614,106 @@ $('#req_picture').change(function() {
 			}
 		} 
 
-		if(comp_id == '0') {
-			$('.myalignbuild').html('ERR : Select Company');
+		if (req_dateval == ''){
+			$('.myalignbuild').html('ERR : Select Date');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#comp_id").focus();
+			$("#req_date").focus();
 			return false;
-		} else if(division_id == '0') {
-			$('.myalignbuild').html('ERR : Select Division');
+		} 
+		if (req_dateval > currentdatevalue){
+			$('.myalignbuild').html('ERR : Date Greater Than Today!');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#division_id").focus();
+			$("#req_date").focus();
 			return false;
-		}  else if(city_id == '0') {
-			$('.myalignbuild').html('ERR : Select City');
+		} 
+		
+		if(request_jobtype == '0') {
+			$('.myalignbuild').html('ERR : Select Job Type');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#city_id").focus();
+			$("#request_jobtype").focus();
 			return false;
-		} else if(off_buil_id == '0') {
-			$('.myalignbuild').html('ERR : Select Office Building Name');
+		} else if(request_through == '0') {
+			$('.myalignbuild').html('ERR : Select Request Through');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#off_buil_id").focus();
+			$("#request_through").focus();
 			return false;
-		} else if(res_buil_id == '0') {
-			$('.myalignbuild').html('ERR : Select Residence Building Name');
+		} else if(request_takenby == '0') {
+			$('.myalignbuild').html('ERR : Select Request Taken By');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#res_buil_id").focus();
-			return false;
-		} else if(email_id == '') {
-			$('.myalignbuild').html('ERR : Enter Email');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#email_id").focus();
+			$("#request_takenby").focus();
 			return false;
 		} 
 
-		if(email_id != '') {
-
-			var reg				=	/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-
-			var email_to_lower	=	$("#emailid").val();
-			var email_address	=	email_id.toLowerCase();
-			if(reg.test(email_address) == false) {
-				$('.myalignbuild').html('ERR : Invalid Email Address');
-				$('#errormsgbuild').css('display','block');
-				setTimeout(function() {
-					$('#errormsgbuild').hide();
-				},5000);
-				$("#email_id").focus();
-				return false;							
-			}			
+		if (expected_dateval == ''){
+			$('.myalignbuild').html('ERR : Select Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#expected_date").focus();
+			return false;
 		} 
+		if (expected_dateval < currentdatevalue){
+			$('.myalignbuild').html('ERR : Date Less Than Today!');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#expected_date").focus();
+			return false;
+		} 
+
+		if (estimated_dateval == ''){
+			$('.myalignbuild').html('ERR : Select Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#estimated_date").focus();
+			return false;
+		} 
+		if (estimated_dateval < currentdatevalue){
+			$('.myalignbuild').html('ERR : Date Less Than Today!');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#estimated_date").focus();
+			return false;
+		} if (completion_dateval == ''){
+			$('.myalignbuild').html('ERR : Select Date');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#completion_date").focus();
+			return false;
+		} 
+		if (completion_dateval < currentdatevalue){
+			$('.myalignbuild').html('ERR : Date Less Than Today!');
+			$('#errormsgbuild').css('display','block');
+			setTimeout(function() {
+				$('#errormsgbuild').hide();
+			},5000);
+			$("#completion_date").focus();
+			return false;
+		} 
+		
 		$("#formsaveval").val('800');
 		$("#diesel_save").submit();
 	});
@@ -456,7 +721,7 @@ $('#req_picture').change(function() {
 </script>
 <div id="mainareabuild">
 <div class="mcf"></div>
-<div align="center" class="headingsgr">REQUESTOR</div>
+<div align="center" class="headingsgr">REQUEST</div>
 <div id="mytableformbuild" align="center">
 <form id='diesel_save' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 <div class="scroll_box">
@@ -466,7 +731,7 @@ $('#req_picture').change(function() {
  <tr>
   <td>
 <fieldset align="left" class="alignment2">
-  <legend ><strong>Requestor</strong></legend>
+  <legend ><strong>Request</strong></legend>
 <table width="50%" align="left">
  <tr>
   <td>

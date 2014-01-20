@@ -95,8 +95,8 @@ error_reporting(E_ALL & ~E_NOTICE);
                   	<li><a href="#"><span style="padding-left:70px;">TRANSACTION</span></a>
 					
 				<ul>
-				<li><a href="diesel.php">Diesel</a></li>
-			<li><a href="nepa.php">Nepa</a></li>
+				<li><a href="request.php">Request</a></li>
+			<!-- <li><a href="nepa.php">Nepa</a></li>-->
          <!--	  <li><a href="#">Value Sets </a>
           <ul>
         <li><a href="allocation_type.php">Allocation Type</a></li>
