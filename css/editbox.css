@@ -606,7 +606,8 @@ margin:0 auto;
   border:none;
   background:url(../images/close_button_blue.png) no-repeat;
   color:transparent;
-  }
+  min-height:100%;
+}
   
 
  /* Container */

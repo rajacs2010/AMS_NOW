@@ -1395,7 +1395,7 @@ $(document).ready(function() {
 			},5000);
 			$("#vdate").focus();
 			return false;
-		}  else if(comp_id == '0') {
+		} else if(comp_id == '0') {
 			$('.myalignbuild').html('ERR : Select Regd. Company');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
