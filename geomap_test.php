@@ -22,6 +22,8 @@ if ($map_status == 'OK') {
 	//$lat = "13.051908321556306";
 	//$long = "80.24925827980042";
 	//echo $lat."=====".$long;
+	$lat = "13.04583735";
+	$long = "80.2552475";
 	//exit;
 } else {
 	echo "<script type='text/javascript'>alert('Google Map Lookup Failed');</script>";

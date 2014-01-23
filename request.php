@@ -749,12 +749,12 @@ $('#attach3').change(function() {
 			$cusid					=	"SELECT req_number FROM request ORDER BY id DESC";			
 			$cusold					=	mysql_query($cusid) or die(mysql_error());
 			$cuscnt					=	mysql_num_rows($cusold);
-			//$cuscnt					=	0; // comment if live
+			//$cuscnt				=	0; // comment if live
 			if($cuscnt > 0) {
-				$row_cus					  =	 mysql_fetch_array($cusold);
+				$row_cus			=	 mysql_fetch_array($cusold);
 				$cusnumber	  =	$row_cus['req_number'];
 
-				$getcusno						=	abs(str_replace("RNUM",'',strstr($cusnumber,"RNUM")));
+				$getcusno			=	abs(str_replace("RNUM",'',strstr($cusnumber,"RNUM")));
 				$getcusno++;
 				if($getcusno < 10) {
 					$createdcode	=	"00".$getcusno;
@@ -764,9 +764,9 @@ $('#attach3').change(function() {
 					$createdcode	=	$getcusno;
 				}
 
-				$customer_code				=	"RNUM".$createdcode;
+				$customer_code		=	"RNUM".$createdcode;
 			} else {
-				$customer_code				=	"RNUM001";
+				$customer_code		=	"RNUM001";
 			}
 		}
 	?>
@@ -784,7 +784,7 @@ $('#attach3').change(function() {
 	 </td>
 	</tr>
 	
-	 <tr height="30">
+	<tr height="30">
      <td width="120">Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input name='req_date' id='req_date' tabindex="4" size="10" value="<?php echo date("d-m-Y")?>" class="datepicker"></td>
@@ -890,6 +890,7 @@ $('#attach3').change(function() {
   </td>
 </tr>
 </table>
+
 
 <table width="100%" align="left">
  <tr>

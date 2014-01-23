@@ -96,6 +96,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 					
 				<ul>
 				<li><a href="request.php">Request</a></li>
+				<li><a href="requestjobs.php">Request-Jobs</a></li>
 			<!-- <li><a href="nepa.php">Nepa</a></li>-->
          <!--	  <li><a href="#">Value Sets </a>
           <ul>

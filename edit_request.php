@@ -26,7 +26,7 @@ if ($fgmembersite->usertype() == 1)	{
 	$header_file='./layout/admin_header_ams.php';
 }
 
-$query_edit				=	"SELECT id,req_number,request_type, emp_request_id,guest_request_id,req_date,request_jobtype,req_desc,request_through,request_takenby,additional_det,expected_date,estimated_date,est_cost,actual_cost,completion_date,attach1,attach2,attach3 FROM requestor WHERE id = '$id'";			
+$query_edit				=	"SELECT id,req_number,request_type, emp_request_id,guest_request_id,req_date,request_jobtype,req_desc,request_through,request_takenby,additional_det,expected_date,estimated_date,est_cost,actual_cost,completion_date,attach1,attach2,attach3 FROM request WHERE id = '$id'";			
 $res_edit				=	mysql_query($query_edit) or die(mysql_error());
 $row_edit				=	mysql_fetch_array($res_edit);
 
@@ -76,7 +76,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 					$current_timestamp		=	time();				
 					$cur_file_name			=	$current_timestamp."_".$temp[0].".".$temp[1];
 				} else {					
-					$cur_file_name			=	$attach1_old;
+					$cur_file_name			=	$attach2_old;
 				}
 				
 				$attach2=$cur_file_name;
@@ -84,7 +84,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 				//echo "Stored in: " . "uploads/" . $_FILES["saleagreement"]["name"];
 			}
 		} else {
-			$attach2=$attach1_old;
+			$attach2=$attach2_old;
 		}
 	}
 	
@@ -146,7 +146,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	
 	$user_id		=	$_SESSION['user_id'];
 		
-	if(!mysql_query('UPDATE INTO request SET req_number="'.$req_number.'",request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",req_date="'.$req_date.'",request_jobtype="'.$request_jobtype.'",req_desc="'.$req_desc.'",request_through="'.$request_through.'",request_takenby="'.$request_takenby.'",additional_det="'.$additional_det.'",expected_date="'.$expected_date.'",estimated_date="'.$estimated_date.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",completion_date="'.$completion_date.'",attach1="'.$attach1.'",attach2="'.$attach2.'",attach3="'.$attach3.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
+	if(!mysql_query('UPDATE request SET req_number="'.$req_number.'",request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",req_date="'.$req_date.'",request_jobtype="'.$request_jobtype.'",req_desc="'.$req_desc.'",request_through="'.$request_through.'",request_takenby="'.$request_takenby.'",additional_det="'.$additional_det.'",expected_date="'.$expected_date.'",estimated_date="'.$estimated_date.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",completion_date="'.$completion_date.'",attach1="'.$attach1.'",attach2="'.$attach2.'",attach3="'.$attach3.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
 			die('Error: ' . mysql_error());
 		}
 		$fgmembersite->RedirectToURL("view_request.php?success=update");
@@ -738,14 +738,14 @@ $('#attach3').change(function() {
   <table>
   
   <tr height="30">
-     <td width="120">Requestor Code</td>
+     <td width="120">Request Number</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
-   <input type='text' name='req_code' id='req_code' tabindex="1" style="width:60px;" class="textbox" value="<?php echo $row_edit[req_code];?>" readonly="true"/></td>
+   <input type='text' name='req_number' id='req_number' tabindex="1" size="10" class="textbox" value="<?php echo $row_edit[req_number];?>" readonly="true"/></td>
   </tr>
 	
     <tr height="30">
-     <td width="120">Employee/Guest*</td>
+     <td width="120">Requestor Name*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type='hidden' name='edit_id' id='edit_id' value="<?php echo $row_edit['id']; ?>" />
      <?php $selvalue=$row_edit["request_type"]; ?>
@@ -754,6 +754,43 @@ $('#attach3').change(function() {
 			<option value="1" <?php if($selvalue == 1) { echo "selected"; } ?> >Employee</option>
 			<option value="2" <?php if($selvalue == 2) { echo "selected"; } ?> >Guest</option>
 		</select>
+	 </td>
+	</tr>
+	
+	<tr height="30">
+     <td width="120">Date</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input name='req_date' id='req_date' tabindex="4" size="10" value="<?php echo $row_edit[req_date]; ?>" class="datepicker"></td>
+	</tr>
+	
+	 <tr height="30">
+     <td width="120">Request Desc.</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input name='req_desc' id='req_desc' tabindex="6" size="42" value="<?php echo $row_edit[req_desc]; ?>" class="textbox"></td>
+	</tr>
+	
+	<tr height="30">
+     <td width="120">Req. Taken By*</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><?php
+		$fgmembersite->DBLogin();
+		$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
+		or die("Opps some thing went wrong");
+		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
+		$result_emp_id=mysql_query("SELECT * FROM pim_emp_info  ORDER BY first_name",$bd);
+		echo '<select name="request_takenby" id="request_takenby" class="selectbox" tabindex="8">';
+		echo '<option value="0">--Employee--</option>';
+		while($row=mysql_fetch_array($result_emp_id)) {
+			if($row['emp_code'] == $row_edit['request_takenby']){
+				$isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag	
+				$request_takenbycode	=	$row['emp_code'];
+			 } else {
+				  $isSelected = ''; // else we remove any tag
+			 }
+				echo "<option value='".$row['emp_code']."'".$isSelected.">".$fgmembersite->upperstate($row['first_name'])."</option>";
+		}
+		echo '</select>';
+		?>&nbsp;
 	 </td>
 	</tr>
     
@@ -776,7 +813,7 @@ $('#attach3').change(function() {
 	</tr>
 	
    <tr height="30">
-		 <td width="120" nowrap="nowrap">Employee/Guest*</td>
+		 <td width="120" nowrap="nowrap">Requestor Code*</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td><div id="display_request_type">
 		 	<?php
@@ -800,6 +837,7 @@ $('#attach3').change(function() {
 				echo '</select>&nbsp;<span id="display_request_id"><input type="text" name="emp_codeval" id="emp_codeval" size="6" class="textbox" value="'.$first_name.'" readonly="true" /></span>';
 			}
 			if($selvalue==2) {
+				$fgmembersite->DBLogin();
 				$result_state=mysql_query("select id,name,guest_code from guest");
 				echo '<select name="guest_request_id" id="guest_request_id" tabindex="14" style="width:100px;" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
@@ -820,208 +858,49 @@ $('#attach3').change(function() {
 			</div>
 		 </td>
 	</tr>
-   </table>
-  </td>
- </tr>
-</table>
-
-<!----------------------------------------------- Right Table End -------------------------------------->
-
-</fieldset>
-  </td>
-</tr>
-</table>
-
-
-<table width="100%" align="left">
- <tr>
-  <td>
-<fieldset align="left" class="alignment2">
-  <legend ><strong>Company & Office Details</strong></legend>
-<table width="50%" align="left">
- <tr>
-  <td>
-  <table>
-    <tr height="30">
-     <td width="120">Company*</td>
+	
+	<tr height="30">
+     <td width="120">Job Type*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
-		$fgmembersite->DBLogin();
-		$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
-		or die("Opps some thing went wrong");
-		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-		$result_emp_id=mysql_query("select comp_id,comp_name from master_companies  order by comp_name",$bd);
-		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
-		echo '<option value="0">--Select--</option>';
-		while($row=mysql_fetch_array($result_emp_id)) {
-			if($row['comp_id'] == $row_edit['comp_id']){
-				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
-			 } else {
-				  $isSelected = ''; // else we remove any tag
-			 }
-			 echo "<option value='".$row['comp_id']."'".$isSelected.">".$fgmembersite->upperstate($row['comp_name'])."</option>";
-		}
-		echo '</select>';
-		?>&nbsp;
-	 </td>
-	</tr>
-    
-    <tr height="30">
-    <td width="120" nowrap="nowrap">City*</td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><?php
     	$fgmembersite->DBLogin();
-		$result_state=mysql_query("select id,name from city");
-		echo '<select name="city_id" id="city_id" tabindex="5">';
+		$result_state=mysql_query("SELECT id,name FROM jobtype");
+		echo '<select name="request_jobtype" id="request_jobtype" tabindex="5">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
-			if($row['id'] == $row_edit['city_id']){
-				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+			if($row['id'] == $row_edit['request_jobtype']){
+				$isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag		
 			 } else {
 				  $isSelected = ''; // else we remove any tag
 			 }
-			 echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
+			echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 		}
 		echo '</select>';
 	?>
 	</td>
-    </tr>
-    
-	<tr height="30">
-     <td width="120">Office Location</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='off_loc' id='off_loc' tabindex="7" value="<?php echo $row_edit['off_loc']; ?>" class="textbox"/></td>
 	</tr>
-
-	<tr height="30">
-		<td width="120" nowrap="nowrap">Office Bldg. Name*</td>
-		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><?php
-			$fgmembersite->DBLogin();
-			$result_state=mysql_query("SELECT id,building_code,building_name FROM building WHERE building_type = '1'");
-			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" >';
-			echo '<option value="0">--Select--</option>';
-			while($row=mysql_fetch_array($result_state)) {
-				if($row['id'] == $row_edit['off_buil_id']){
-					$isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag		
-					$buil_off_code	=	$row['building_code'];
-				 } else {
-					  $isSelected = ''; // else we remove any tag
-				 }							
-				echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
-			}
-			echo '</select>';
-		?></td>
-	</tr>
-
-	<tr height="30">
-     <td width="120">Office Floor</td>
+	
+	 <tr height="30">
+     <td width="120">Request Through*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='off_floor' id='off_floor' tabindex="11" value="<?php echo $row_edit['off_floor']; ?>" class="textbox"/></td>
+     <td><select name='request_through' id='request_through' tabindex="7" >
+			<option value="0">--Select--</option>
+			<option value="1" <?php if($row_edit[request_through] == 1) { echo "selected"; } ?> >System</option>
+		  	<option value="2" <?php if($row_edit[request_through] == 2) { echo "selected"; } ?> >E-mail</option>
+		  	<option value="3" <?php if($row_edit[request_through] == 3) { echo "selected"; } ?> >Call</option>
+		  	<option value="4" <?php if($row_edit[request_through] == 4) { echo "selected"; } ?> >Verbal</option>
+		</select>
+	 </td>
 	</tr>
 	
 	<tr height="30">
-		<td width="120" >Res. Bldg. Name*</td>
-		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><?php
-			$fgmembersite->DBLogin();
-			$result_state=mysql_query("SELECT id,building_code,building_name FROM building WHERE building_type = '2'");
-			echo '<select name="res_buil_id" id="res_buil_id" tabindex="13" >';
-			echo '<option value="0">--Select--</option>';
-			while($row=mysql_fetch_array($result_state)) {
-				if($row['id'] == $row_edit['res_buil_id']){
-				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
-				  $buil_res_code	=	$row['building_code'];
-				 } else {
-					  $isSelected = ''; // else we remove any tag
-				 }							
-				echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
-			}
-			echo '</select>';
-		?></td>
-	</tr>
-	
-	<tr height="30">
-     <td width="120">Unit Number</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='unit_num' id='unit_num' tabindex="15" value="<?php echo $row_edit['unit_num']; ?>" class="textbox"/></td>
-	</tr>
-   </table>
-   </td>
- </tr>
-</table>
-
-<!----------------------------------------------- Left Table End -------------------------------------->
-
-<table width="50%" align="left">
- <tr>
-  <td>
-   <table>
-   
-   <tr height="30">
-		 <td width="120" nowrap="nowrap">Division*</td>
+		 <td width="120" nowrap="nowrap">Req. Taken By Code</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><?php
-				$result_state=mysql_query("select id,name from department");
-				echo '<select name="division_id" id="division_id" tabindex="4">';
-				echo '<option value="0">--Select--</option>';
-				while($row=mysql_fetch_array($result_state))
-				{
-					if($row['id'] == $row_edit['division_id']){
-					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
-					 } else {
-						  $isSelected = ''; // else we remove any tag
-					 }							
-					echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
-				}
-				echo '</select>';
-			?>
+		 <td>
+		 	<div id="display_empname"><input type='text' name='emp_codetakenby' id='emp_codetakenby' value="<?php echo $request_takenbycode; ?>" tabindex="9" readonly class="textbox"/></div>
 		 </td>
 	</tr>
 	
-   <tr height="30">
-     <td width="120">State</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td>
-     <div id="display_state">
-    <?php $result_state=mysql_query("SELECT st.name AS ST_NAME FROM city ci LEFT JOIN state st ON ci.state_id = st.id WHERE ci.id = '$row_edit[city_id]' "); 
-    $row_state	=	mysql_fetch_array($result_state);
-    ?>
-     <input type='text' name='state_name' id='state_name' tabindex="6" readonly value="<?php echo $fgmembersite->upperstate($row_state[ST_NAME]); ?>" /></div>
-     </td>
-	</tr>
-   
-   
-	<tr height="30">
-		 <td width="120" nowrap="nowrap">Office Bldg.</td>
-		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='off_buil' id='off_buil' tabindex="8" value="<?php echo $row_edit['off_buil']; ?>" class="textbox"/></td>
-	</tr>
-     
-	<tr height="30">
-		<td width="120">Office Bldg. Code</td>
-		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><div id="display_off_buil_code">
-			<input type='text' name='off_buil_code' id='off_buil_code' value="<?php echo $buil_off_code; ?>" tabindex="10" size="6" readonly autocomplete="off" class="textbox" />
-			</div>
-		</td>
-    </tr>
-
-	<tr height="30">
-		 <td width="120" nowrap="nowrap">Office</td>
-		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_val' id='office_val' value="<?php echo $row_edit[office_val]; ?>" class="textbox" tabindex="12" autocomplete="off" /></td>
-	</tr>
-	
-	<tr height="30">
-		 <td width="120">Res. Bldg. Code</td>
-		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><div id="display_res_buil_code">
-			<input type='text' name='res_buil_code' id='res_buil_code' value="<?php echo $buil_res_code; ?>" tabindex="14" size="6" readonly autocomplete="off" class="textbox" />
-			</div>
-		</td>
-	</tr>	
-
    </table>
   </td>
  </tr>
@@ -1039,21 +918,109 @@ $('#attach3').change(function() {
  <tr>
   <td>
 <fieldset align="left" class="alignment2">
-  <legend ><strong>Contact Details</strong></legend>
+  <legend ><strong>Duration & Cost Details</strong></legend>
 <table width="50%" align="left">
  <tr>
   <td>
   <table>
     <tr height="30">
-     <td width="120">Email ID*</td>
+     <td width="120">Additional Details</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='email_id' id='email_id' value="<?php echo $row_edit[email_id]; ?>" tabindex="16" autocomplete="off" class="textbox" /></td>
+     <td><input type="text" id="additional_det" name="additional_det" value="<?php echo $row_edit[additional_det]; ?>" tabindex="10" size="39" /></td>
 	</tr>
     
     <tr height="30">
-    <td width="120" nowrap="nowrap">Alternate No.</td>
+    <td width="120" nowrap="nowrap">Exp. Compl. Date*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='alt_num' id='alt_num' value="<?php echo $row_edit[alt_num]; ?>" tabindex="18" autocomplete="off" class="textbox" /></td>
+    <td><input name='expected_date' id='expected_date' tabindex="11" size="10" value="<?php echo $row_edit[expected_date]; ?>" class="datepicker" /></td>
+    </tr>
+    
+	<tr height="30">
+     <td width="120">Estimated Cost</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input type='text' name='est_cost' id='est_cost' value="<?php echo $row_edit[est_cost]; ?>" tabindex="13" style="text-align:right;" value="" class="textbox"/></td>
+	</tr>
+
+	<tr height="30">
+		<td width="120" nowrap="nowrap">Revised Compl. Date</td>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><input name='completion_date' id='completion_date' tabindex="15" size="10" value="<?php echo $row_edit[completion_date]; ?>" class="datepicker"></td>
+	</tr>
+	
+   </table>
+   </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Left Table End -------------------------------------->
+
+<table width="50%" align="left">
+ <tr>
+  <td>
+   <table>
+   
+   <tr height="30">
+		 <td width="120" nowrap="nowrap"></td>
+		 <td></td>
+	</tr>
+	
+   <tr height="30">
+     <td width="120" nowrap="nowrap">Esti. Compl. Date*</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><input name='estimated_date' id='estimated_date' value="<?php echo $row_edit[estimated_date]; ?>" tabindex="12" size="10" class="datepicker" /></td>
+	</tr>
+   
+   
+	<tr height="30">
+		 <td width="120" nowrap="nowrap">Actual Cost</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td><input type='text' name='actual_cost' id='actual_cost' value="<?php echo $row_edit[actual_cost]; ?>" style="text-align:right;" tabindex="14" value="" class="textbox"/></td>
+	</tr>
+     
+	<tr height="30">
+		<td width="120"></td>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td></td>
+    </tr>
+    	
+   </table>
+  </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Right Table End -------------------------------------->
+
+</fieldset>
+  </td>
+</tr>
+</table>
+
+
+<table width="100%" align="left">
+ <tr>
+  <td>
+<fieldset align="left" class="alignment2">
+  <legend ><strong>Attached Documents</strong></legend>
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table>
+    <tr height="30">
+     <td width="120">Attachment 1</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><?php echo $row_edit['attach1']; ?>
+     <input type='file' name='attach1' id='attach1' tabindex="16" autocomplete="off" class="textbox" />
+     <input type='hidden' value="<?php echo $row_edit['attach1']; ?>" name='attach1_old' id='attach1_old' />
+     </td>
+	</tr>
+    
+    <tr height="30">
+    <td width="120" nowrap="nowrap">Attachment 3</td>
+	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td><?php echo $row_edit['attach3']; ?>
+    <input type='file' name='attach3' id='attach3' tabindex="18" autocomplete="off" class="textbox" />
+    <input type='hidden' value="<?php echo $row_edit['attach3']; ?>" name='attach3_old' id='attach3_old' />
+    </td>
     </tr>
    </table>
    </td>
@@ -1068,18 +1035,19 @@ $('#attach3').change(function() {
    <table>
    
    <tr height="30">
-		 <td width="120" nowrap="nowrap">Mobile No.</td>
+		 <td width="120" nowrap="nowrap">Attachment 2</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" name="mobile_no" id="mobile_no" value="<?php echo $row_edit[mobile_no]; ?>" tabindex="17" autocomplete="off" class="textbox" /></td>
+		 <td>
+		 <?php echo $row_edit['attach2']; ?>
+		 <input type='file' name='attach2' id='attach2' tabindex="17" autocomplete="off" class="textbox" />
+		  <input type='hidden' value="<?php echo $row_edit['attach2']; ?>" name='attach2_old' id='attach2_old' />
+		 </td>
 	</tr>
 	
    <tr height="30">
-     <td width="120">Picture</td>
+     <td width="120"></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><?php echo $row_edit['req_picture']; ?>
-     	<input type='file' name='req_picture' id='req_picture' tabindex="19" value="" autocomplete="off" class="textbox" />
-     	<input type='hidden' value="<?php echo $row_edit['req_picture']; ?>" name='req_picture_old' id='req_picture_old' />
-     </td>
+     <td></td>
 	</tr>
 
    </table>
@@ -1107,7 +1075,7 @@ $('#attach3').change(function() {
 	 <input type="hidden" name="formsaveval" id="formsaveval" /> <!-- This will give the value when form is submitted, otherwise it will empty -->
      <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
      <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=2'"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_requestor.php'"/></td>
+	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_request.php'"/></td>
 	 </td>
      </tr>
   </table>
