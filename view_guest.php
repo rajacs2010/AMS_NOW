@@ -8,7 +8,7 @@ if(!$fgmembersite->CheckLogin()) {
     exit;
 }
 if ($fgmembersite->usertype() == 1) {
-	$header_file='./layout/admin_header_ams.php';
+	$header_file='./layout/admin_header_fms.php';
 }
 if(file_exists($header_file)) {
 	include_once($header_file);
@@ -45,16 +45,13 @@ if(file_exists($header_file)) {
 }
 </style>
 <script>
-
-</script>
-<script>
 function colviewajax(page,params){   // For pagination and sorting of the Collection Deposited view page
 	var splitparam		=	params.split("&");
 	var searchname	=	splitparam[0];
 	var sortorder		=	splitparam[1];
 	var ordercol		=	splitparam[2];
 	$.ajax({
-		url : "ajax_viewuser.php",
+		url : "ajax_viewguest.php",
 		type: "get",
 		dataType: "text",
 		data : { "searchname" : searchname, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
@@ -69,11 +66,10 @@ function searchcolviewajax(page){  // For pagination and sorting of the Collecti
 	var searchname	=	$("input[name='searchname']").val();
 	//alert(Product_name);
 	$.ajax({
-		url : "ajax_viewuser.php",
+		url : "ajax_viewguest.php",
 		type: "get",
 		dataType: "text",
-		data : { "searchname" : searchname, "page" : page
-		},
+		data : { "searchname" : searchname, "page" : page },
 		success : function(dataval) {
 			var trimval		=	$.trim(dataval);
 			//alert(trimval);
@@ -89,71 +85,30 @@ function show_confirm(name) {
 		return false;
 	}
 }
-function show_confirm1(name) {
-	var r=confirm("Are You Sure You Want to Deactivate : "+name);
-	if(r==true) {
-		return true;
-	} else {
-		return false;
-	}
-}
-function show_confirm2(name) {
-	var r=confirm("Are You Sure You Want to Activate : "+name);
-	if(r==true) {
-		return true;
-	} else {
-		return false;
-	}
-}
 </script>
 <?php
 if(isset($_GET['delete_id']) && intval($_GET['delete_id'])) {
 	if ($_GET['delete'] ==1) {
 		$id=$_GET['delete_id'];
-		$query = "SELECT * FROM users where user_id=$id"; 
+		$query = "SELECT * FROM guest where id=$id"; 
 		$result = mysql_query($query);
 		if($result === FALSE) {
 			die(mysql_error()); // TODO: better error handling
 		}
-	if(!mysql_query("delete FROM users where user_id=$id")) {
+	if(!mysql_query("delete FROM guest where id=$id")) {
 		die('Error: ' . mysql_error());
 	}
-	$fgmembersite->RedirectToURL("view_user.php?success=delete");
+	$fgmembersite->RedirectToURL("view_guest.php?success=delete");
 	// 
 	//echo "hi";
 	}
 }
-
-if(isset($_GET['active_id']) && intval($_GET['active_id'])) {
-	if ($_GET['active'] ==1) {
-	
-		$id=$_GET['active_id'];
-		if ($_GET['act'] ==2)
-		{
-			if(!mysql_query("update users set confirmcode='n' where user_id=$id")) {
-				die('Error: ' . mysql_error());
-			}
-			$fgmembersite->RedirectToURL("view_user.php?success=deactivate");
-		}
-		if ($_GET['act'] ==1)
-		{
-			if(!mysql_query("update users set confirmcode='y' where user_id=$id")) {
-				die('Error: ' . mysql_error());
-			}
-			$fgmembersite->RedirectToURL("view_user.php?success=activate");
-		}
-	
-	// 
-	//echo "hi";
-	}
-}
-
 if($_REQUEST['searchname']!='') {
 	$var = @$_REQUEST['searchname'] ;
 	$trimmed = trim($var);	
-	$qry="SELECT * FROM users where username like '%".$trimmed."%'";
+	$qry="SELECT * FROM guest where name like '%".$trimmed."%'";
 } else { 
-	$qry="SELECT * FROM users"; 
+	$qry="SELECT * FROM guest"; 
 }
 $results=mysql_query($qry);
 $num_rows= mysql_num_rows($results);			
@@ -192,7 +147,7 @@ else {
 	$Num_Pages = (int)$Num_Pages;
 }
 if($sortorder == "") {
-	$orderby	=	"ORDER BY user_id DESC";
+	$orderby	=	"ORDER BY id DESC";
 } else {
 	$orderby	=	"ORDER BY $ordercol $sortorder";
 }
@@ -206,16 +161,16 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 
 <div id="mainareadaily">
 <div class="mcf"></div>
-<div><h2 align="center">User</h2></div> 
+<div><h2 align="center">guest</h2></div> 
 
 <div id="containerprforcd">
 
-<span style="float:left;"><input type="button" name="kdproduct" value="Add User" class="buttonsbig1" onclick="window.location='register.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=1'"></span>
+<span style="float:left;"><input type="button" name="kdproduct" value="Add guest" class="buttonsbig1" onclick="window.location='guest.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=1'"></span>
 
 <div class="clearfix"></div>
 
 <div id="search">
-        <input type="text" name="searchname" id="searchname" value="<?php echo $_REQUEST['searchname']; ?>" autocomplete='off' placeholder='Search By User Name'/>
+        <input type="text" name="searchname" id="searchname" value="<?php echo $_REQUEST['searchname']; ?>" autocomplete='off' placeholder='Search By Name'/>
         <input type="button" class="buttonsg" onclick="searchcolviewajax('<?php echo $Page; ?>');" value="GO"/>
  </div>
   <div class="clearfix"></div>
@@ -233,10 +188,12 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 				} else {
 					$sortorderby = 'ASC';
 				}
-				$paramsval	=	$searchname."&".$sortorderby."&username"; ?>
-				<th nowrap="nowrap" class="rounded" onClick="colviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">User Name<img src="images/sort.png" width="13" height="13" /></th>
-				<th nowrap="nowrap" >Email</th>
-				<th nowrap="nowrap" >Activate/Deactivate</th>
+				$paramsval	=	$searchname."&".$sortorderby."&guest_code"; ?>
+				<th nowrap="nowrap" class="rounded" onClick="colviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">guest Code<img src="images/sort.png" width="13" height="13" /></th>
+				<th nowrap="nowrap" >Name</th>
+				<th nowrap="nowrap" >Company</th>
+				<th nowrap="nowrap" >Contact Number</th>
+				<th nowrap="nowrap" >Edit</th>
 				<th nowrap="nowrap" >Delete</th>
 			</tr>
 			</thead>
@@ -247,30 +204,22 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 			$c=0;$cc=1;
 			while($fetch = mysql_fetch_array($results_dsr)) {
 			if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
-			$id= $fetch['user_id'];
+			$id= $fetch['id'];
 			?>
 			<tr>				
-				<td><?php echo $fgmembersite->upperstate($fetch['username']);?></td>
-				<td><?php echo  $fetch['email']; ?></td>
-				<td>
-				<?php if($fetch['confirmcode']=="y"){?>
-				<a href="view_user.php?active_id=<?php echo $fetch['user_id'];?>&active=1&act=2"><img src="images/activate.png" alt="" title="" width="15" height="15" onclick="return show_confirm1('<?php echo $fetch['username']; ?>');"/></a>
-				<?php 
-					}
-				else
-				{
-				?>
-				<a href="view_user.php?active_id=<?php echo $fetch['user_id'];?>&active=1&act=1"><img src="images/delete.png" alt="" title="" width="15" height="15" onclick="return show_confirm2('<?php echo $fetch['username']; ?>');"/></a>
-				<?php
-				}
-				?>
+				<td><?php echo $fetch['guest_code'];?></td>
+				<td><?php echo $fgmembersite->upperstate($fetch['name']); ?></td>
+				<td><?php echo $fgmembersite->upperstate($fetch['company_name']); ?></td>
+				<td><?php echo $fetch['contact_number'];?></td>
+				<td >
+				<a href="edit_guest.php?id=<?php echo $fetch['id'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>
 				</td>
 				<td>
-				<a href="view_user.php?delete_id=<?php echo $fetch['user_id'];?>&delete=1"><img src="images/trash.png" alt="" title="" width="11" height="11" onclick="return show_confirm('<?php echo $fetch['username']; ?>');"/></a>
+				<a href="view_guest.php?delete_id=<?php echo $fetch['id'];?>&delete=1"><img src="images/trash.png" alt="" title="" width="11" height="11" onclick="return show_confirm('<?php echo $fetch['guest_code']; ?>');"/></a>
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 
-			}else{  echo "<tr><td align='center' colspan='4'><b>No records found</b></td></tr>";}  ?>
+			}else{  echo "<tr><td align='center' colspan='5'><b>No records found</b></td></tr>";}  ?>
 			</tbody>
 			</table>
 			 </div>   
@@ -300,12 +249,6 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 <div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 
 ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
 <?php }?>
-<?php if($_GET['success']=="deactivate") { ?>
-	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "User Deactivated Successfully"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
-<?php } ?>
-<?php if($_GET['success']=="activate") { ?>
-	<div id="errormsg" class="mydiv"><h3 align="center" class="myalign"><?php echo "User Activated Successfully"; ?> </h3><button id="closebutton" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-text">Close</span></button></div>
-<?php } ?>
 </div>
 </div>
 </div>
