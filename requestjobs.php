@@ -40,8 +40,8 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	$fgmembersite->DBLogin();
 	$request_number			=	$_POST['request_number'];
 	$job_id					=	$_POST['job_id'];		
-	$req_date				=	$_POST['admin_res_name'];
-	$request_jobtype		=	$_POST['job_assigned_name'];
+	$admin_res_name			=	$_POST['admin_res_name'];
+	$job_assigned_name		=	$_POST['job_assigned_name'];
 	$start_date				=	$_POST['start_date'];
 	$expected_date			=	$_POST['expected_date'];
 	$completion_date		=	$_POST['completion_date'];

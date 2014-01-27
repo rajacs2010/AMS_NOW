@@ -15,7 +15,8 @@ print_r($_FILES);
 echo "</pre>";*/
 //exit;
 
-if(!$fgmembersite->CheckLogin()) {
+if(!$fgmembersite->CheckLogin())
+{
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
@@ -25,7 +26,11 @@ if ($fgmembersite->usertype() == 1)	{
 	$header_file='./layout/admin_header_ams.php';
 }
 
-if(file_exists($header_file)) {
+$query_edit				=	"SELECT id,responsibility_id,lead_code,lead_name,company_id,division_id,city_id,office_location,office_buil,office_building_id,office_floor,office,email_id,mobile_number,alt_number,alt_lead_code,alt_lead_name,picture FROM admin_responsibility WHERE id = '$id'";			
+$res_edit				=	mysql_query($query_edit) or die(mysql_error());
+$row_edit				=	mysql_fetch_array($res_edit);
+
+if(file_exists($header_file))	{
 	include_once($header_file);
 } else {
 	$fgmembersite->RedirectToURL("index.php");
@@ -33,35 +38,30 @@ if(file_exists($header_file)) {
 }
 if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	
-	//$fgmembersite->pre($_POST);
-	//$fgmembersite->pre($_FILES);
-	//exit;
-	
 	if(isset($_FILES["picture"]["name"])) {
 		$allowedExts = array("gif", "jpeg", "jpg", "png","pdf");
 		$temp = explode(".", $_FILES["picture"]["name"]);
-		//$fgmembersite->pre($temp);
 		$extension = end($temp);
 		if (in_array($extension, $allowedExts)) {
 			if ($_FILES["picture"]["error"] > 0) {
 				echo "Return Code: " . $_FILES["picture"]["error"] . "<br>";
 			} else {
-				//echo "user_picture/" . $_FILES["req_picture"]["name"];
-				//exit;
-				//$fgmembersite->pre($temp);
-				$current_timestamp		=	time();				
-				$cur_file_name			=	$current_timestamp."_".$temp[0].".".$temp[1];
-				//$fgmembersite->pre($temp);
-				//echo $cur_file_name;
-				//exit;
+				
+				if($picture_old == '') {
+					$current_timestamp		=	time();				
+					$cur_file_name			=	$current_timestamp."_".$temp[0].".".$temp[1];
+				} else {					
+					$cur_file_name			=	$picture_old;
+				}
+				
 				$picture=$cur_file_name;
 				move_uploaded_file($_FILES["picture"]["tmp_name"],"admin_resp/" . $cur_file_name);
 				//echo "Stored in: " . "uploads/" . $_FILES["saleagreement"]["name"];
 			}
 		} else {
-			$picture="";
+			$picture=$picture_old;
 		}
-	}	
+	}
 	
 	$responsibility_id		=	$_POST['responsibility_id'];
 	$incharge_empcode		=   $_POST['incharge_empcode'];	
@@ -85,24 +85,30 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	$email_id				=	$_POST['email_id'];
 	$mobile_no				=	$_POST['mobile_no'];
 	$alt_num				=	$_POST['alt_num'];
-	$picture			=	$picture;
+	$picture				=	$picture;
 	$incharge_empcode_alt	=   $_POST['incharge_empcode_alt'];	
 	$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) or die("Opps some thing went wrong");
 	mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 	$result_emp_id=mysql_query("SELECT first_name FROM pim_emp_info WHERE emp_code='$incharge_empcode_alt' ORDER BY emp_id",$bd);
 	while($row=mysql_fetch_array($result_emp_id)) {
 		$alt_leader_name=$row['first_name'];
-	}	
-	$user_id					=	$_SESSION['user_id'];
-	//echo 'INSERT INTO admin_responsibility SET responsibility_id="'.$responsibility_id.'",lead_code="'.$incharge_empcode.'",lead_name="'.$leader_name.'",company_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'", office_location="'.$off_loc.'",office_buil="'.$office_buil.'",office_building_id="'.$off_buil_id.'",office_floor="'.$off_floor.'",office="'.$office_val.'",email_id="'.$email_id.'",mobile_number="'.$mobile_no.'",alt_number="'.$alt_num.'",alt_lead_code="'.$incharge_empcode_alt.'",alt_lead_name="'.$alt_leader_name.'",picture="'.$req_picture.'",created_by="'.$user_id.'" '; 
+	}
+		
+		//echo 'UPDATE admin_responsibility SET responsibility_id="'.$responsibility_id.'",lead_code="'.$incharge_empcode.'",lead_name="'.$leader_name.'",company_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'", office_location="'.$off_loc.'",office_buil="'.$office_buil.'",office_building_id="'.$off_buil_id.'",office_floor="'.$off_floor.'",office="'.$office_val.'",email_id="'.$email_id.'",mobile_number="'.$mobile_no.'",alt_number="'.$alt_num.'",alt_lead_code="'.$incharge_empcode_alt.'",alt_lead_name="'.$alt_leader_name.'",picture="'.$picture.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"';
+	
+	//echo $sql;
 	//exit;
+	
+	$user_id		=	$_SESSION['user_id'];
 	$fgmembersite->DBLogin();
-	if(!mysql_query('INSERT INTO admin_responsibility SET responsibility_id="'.$responsibility_id.'",lead_code="'.$incharge_empcode.'",lead_name="'.$leader_name.'",company_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'", office_location="'.$off_loc.'",office_buil="'.$office_buil.'",office_building_id="'.$off_buil_id.'",office_floor="'.$off_floor.'",office="'.$office_val.'",email_id="'.$email_id.'",mobile_number="'.$mobile_no.'",alt_number="'.$alt_num.'",alt_lead_code="'.$incharge_empcode_alt.'",alt_lead_name="'.$alt_leader_name.'",picture="'.$picture.'",created_by="'.$user_id.'" ')) {
-	die('Error: ' . mysql_error());
-}
-	echo'<script> window.location="view_admin_resp.php?success=create"; </script> ';
+	if(!mysql_query('UPDATE admin_responsibility SET responsibility_id="'.$responsibility_id.'",lead_code="'.$incharge_empcode.'",lead_name="'.$leader_name.'",company_id="'.$comp_id.'",division_id="'.$division_id.'",city_id="'.$city_id.'", office_location="'.$off_loc.'",office_buil="'.$office_buil.'",office_building_id="'.$off_buil_id.'",office_floor="'.$off_floor.'",office="'.$office_val.'",email_id="'.$email_id.'",mobile_number="'.$mobile_no.'",alt_number="'.$alt_num.'",alt_lead_code="'.$incharge_empcode_alt.'",alt_lead_name="'.$alt_leader_name.'",picture="'.$picture.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
+			die('Error: ' . mysql_error());
+		}
+		$fgmembersite->RedirectToURL("view_admin_resp.php?success=update");
+		echo "&nbsp;";
 }
 ?>
+<link href="css/popup.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 .confirmMAp {
 	margin:0 auto;
@@ -149,7 +155,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
     margin-right: auto;
     width: 95%;
 }
-#errormsgbuild {
+#errormsgbuild{
 	width:45%;
 	height:30px;
 	background:#c1c1c1;
@@ -188,33 +194,12 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
     width: 90%;
 }
 </style>
-<script>
-$(document).ready(function() {
-	$("div").each(function(index,value) {
-		//console.log(value);
-	});
-	$("#incharge_empcode").change(function(event) {
-		var selvalue_incharge_empcode=document.getElementById("incharge_empcode").value;
-		if (selvalue_incharge_empcode != 0) {
-			$('#leadername').val(selvalue_incharge_empcode);
-			//$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
-		}
-		else {
-			document.getElementById("leadername").value = "";
-		}
-    });
-	$("#incharge_empcode_alt").change(function(event) {
-		var selvalue_incharge_empcode=document.getElementById("incharge_empcode_alt").value;
-		if (selvalue_incharge_empcode != 0) {
-			$('#alt_leader').val(selvalue_incharge_empcode);
-			//$('#display_inchargename').load('ajax_building.php?selvalue_incharge_empcode='+selvalue_incharge_empcode);
-		}
-		else {
-			document.getElementById("alt_leader").value = "";
-		}
-    });
+<script type="text/javascript" language="javascript">
 
-	$('#picture').change(function() {	
+$(document).ready(function() {
+
+$('#picture').change(function() {
+		
 		var existing = new Array();
 		var checkFile = new Array();
 		var file = new Array();
@@ -244,10 +229,12 @@ $(document).ready(function() {
 		                            //none of the files to be uploaded are already on server
 									var filenamee=document.getElementById("picture").value;
 									var extension=filenamee.split('.').pop();
-									if ((extension=="pdf" ) || (extension=="png") || (extension=="jpg") ||(extension=="jpeg") ||(extension=="gif")) {
+									if ((extension=="pdf" ) || (extension=="png") || (extension=="jpg") ||(extension=="jpeg") ||(extension=="gif"))
+									{
 										return true;
 									}
-									else {
+									else
+									{
 										/*alert("Invalid File extension Only (pdf,gif,jpeg,png) are allowed");
 										document.getElementById("saleagreement").value="";
 										return false;*/
@@ -291,6 +278,25 @@ $(document).ready(function() {
 	$("#responsibility_id").focus();
 	//alert(8989);
 
+	$("#incharge_empcode").change(function(event) {
+		var selvalue_incharge_empcode=document.getElementById("incharge_empcode").value;
+		if (selvalue_incharge_empcode != 0) {
+			$('#leadername').val(selvalue_incharge_empcode);
+		}
+		else {
+			document.getElementById("leadername").value = "";
+		}
+    });
+	$("#incharge_empcode_alt").change(function(event) {
+		var selvalue_incharge_empcode=document.getElementById("incharge_empcode_alt").value;
+		if (selvalue_incharge_empcode != 0) {
+			$('#alt_leader').val(selvalue_incharge_empcode);
+		}
+		else {
+			document.getElementById("alt_leader").value = "";
+		}
+    });
+	
 	$("#city_id").change(function(event) {
 		var selvalue=document.getElementById("city_id").value;
 		if (selvalue != 0) {
@@ -309,7 +315,7 @@ $(document).ready(function() {
 			document.getElementById("off_buil_code").value = "";		
 		}
 	 });
-
+	
 	$(function () {
 		/*$('#closebutton').button({
 			icons: {
@@ -323,7 +329,7 @@ $(document).ready(function() {
 			$('#errormsgbuild').hide();
 			return false;
 		});		
-	});
+	});	
 	
 	$("#part_save").on("click", function() {
 		//alert("232");
@@ -428,8 +434,7 @@ $(document).ready(function() {
 			},5000);
 			$("#incharge_empcode_alt").focus();
 			return false;
-		}		
-		//return false;
+		}
 		$("#formsaveval").val('800');
 		$("#diesel_save").submit();
 	});
@@ -455,14 +460,19 @@ $(document).ready(function() {
     <tr height="30">
      <td width="123" >Responsibility Center</td>
      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td>
+     <td><input type="hidden" name="edit_id" id="edit_id" value="<?php echo $row_edit[id]; ?>" />
 	 <?php 
 		$fgmembersite->DBLogin();
 		$result_state=mysql_query("select id,name from responsibility");
 		echo '<select name="responsibility_id" id="responsibility_id" tabindex="1">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
-			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+			if($row['id'] == $row_edit['responsibility_id']){
+				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+			 } else {
+				  $isSelected = ''; // else we remove any tag
+			 }
+			 echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 		}
 		echo '</select>';
 		?>
@@ -489,17 +499,22 @@ $(document).ready(function() {
 			$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
+			$result_emp_id=mysql_query("SELECT emp_code,first_name FROM pim_emp_info ORDER BY emp_id",$bd);
 			echo '<select name="incharge_empcode" id="incharge_empcode" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:100px;" tabindex="2">';
 			echo '<option value="0">--Employee--</option>';
-			while($row=mysql_fetch_array($result_emp_id))
-			{
-				echo '<option value="'.$row['emp_code'].'">'.$row['first_name'].'</option>';
+			while($row=mysql_fetch_array($result_emp_id)) {
+				if($row['emp_code'] == $row_edit['lead_code']) {
+					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+					  $display_leader_code	=	$row['emp_code'];	
+				 } else {
+					  $isSelected = ''; // else we remove any tag
+				 }
+				echo "<option value='".$row['emp_code']."'".$isSelected.">".$row['first_name']."</option>";
 			}
 			echo '</select>';
 			?>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' size="5" readonly class="textbox"/></span>
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' value="<?php echo $display_leader_code; ?>" size="5" readonly class="textbox"/></span>
 		</td>
     </tr>
    </table>
@@ -532,11 +547,16 @@ $(document).ready(function() {
 		$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-		$result_emp_id=mysql_query("SELECT * FROM master_companies ORDER BY comp_name",$bd);
+		$result_emp_id=mysql_query("SELECT comp_id,comp_name FROM master_companies ORDER BY comp_name",$bd);
 		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
-			echo '<option value="'.$row['comp_id'].'">'.$fgmembersite->upperstate($row['comp_name']).'</option>';
+			if($row['comp_id'] == $row_edit['company_id']){
+				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+			 } else {
+				  $isSelected = ''; // else we remove any tag
+			 }
+			 echo "<option value='".$row['comp_id']."'".$isSelected.">".$fgmembersite->upperstate($row['comp_name'])."</option>";
 		}
 		echo '</select>';
 		?>&nbsp;
@@ -552,7 +572,12 @@ $(document).ready(function() {
 		echo '<select name="city_id" id="city_id" tabindex="5">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
-			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+			if($row['id'] == $row_edit['city_id']){
+				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+			 } else {
+				  $isSelected = ''; // else we remove any tag
+			 }
+			 echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 		}
 		echo '</select>';
 	?>
@@ -562,7 +587,7 @@ $(document).ready(function() {
 	<tr height="30">
      <td width="120">Office Location</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='off_loc' id='off_loc' tabindex="7" value="" class="textbox"/></td>
+     <td><input type='text' name='off_loc' id='off_loc' tabindex="7" value="<?php echo $row_edit['office_location']; ?>" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
@@ -574,7 +599,13 @@ $(document).ready(function() {
 			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" >';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['building_name']).'</option>';
+				if($row['id'] == $row_edit['office_building_id']){
+					$isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag		
+					$buil_off_code	=	$row['building_code'];
+				 } else {
+					  $isSelected = ''; // else we remove any tag
+				 }							
+				echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['building_name'])."</option>";
 			}
 			echo '</select>';
 		?></td>
@@ -583,7 +614,7 @@ $(document).ready(function() {
 	<tr height="30">
      <td width="120">Office Floor</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='off_floor' id='off_floor' tabindex="11" value="" class="textbox"/></td>
+     <td><input type='text' name='off_floor' id='off_floor' tabindex="11" value="<?php echo $row_edit['office_floor']; ?>" class="textbox"/></td>
 	</tr>
 	
    </table>
@@ -607,7 +638,12 @@ $(document).ready(function() {
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{
-					echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+					if($row['id'] == $row_edit['division_id']){
+					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }							
+					echo "<option value='".$row['id']."'".$isSelected.">".$fgmembersite->upperstate($row['name'])."</option>";
 				}
 				echo '</select>';
 			?>
@@ -618,7 +654,11 @@ $(document).ready(function() {
      <td width="120">State</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
-     <div id="display_state"><input type='text' name='state_name' id='state_name' tabindex="6" readonly="true"/ ></div>
+     <div id="display_state">
+    <?php $result_state=mysql_query("SELECT st.name AS ST_NAME FROM city ci LEFT JOIN state st ON ci.state_id = st.id WHERE ci.id = '$row_edit[city_id]' "); 
+    $row_state	=	mysql_fetch_array($result_state);
+    ?>
+     <input type='text' name='state_name' id='state_name' tabindex="6" readonly value="<?php echo $fgmembersite->upperstate($row_state[ST_NAME]); ?>" /></div>
      </td>
 	</tr>
    
@@ -626,14 +666,14 @@ $(document).ready(function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Office Bldg.</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_buil' id='office_buil' tabindex="8" value="" autocomplete="off" class="textbox"/></td>
+		 <td><input type='text' name='office_buil' id='office_buil' tabindex="8" value="<?php echo $row_edit['office_buil']; ?>" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
 		<td width="120">Office Bldg. Code</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><div id="display_off_buil_code">
-			<input type='text' name='off_buil_code' id='off_buil_code' size="6" tabindex="10" readonly autocomplete="off" class="textbox" />
+			<input type='text' name='off_buil_code' id='off_buil_code' value="<?php echo $buil_off_code; ?>" tabindex="10" size="6" readonly autocomplete="off" class="textbox" />
 			</div>
 		</td>
     </tr>
@@ -641,9 +681,9 @@ $(document).ready(function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Office</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_val' id='office_val' class="textbox" tabindex="12" autocomplete="off" /></td>
+		 <td><input type='text' name='office_val' id='office_val' value="<?php echo $row_edit[office]; ?>" class="textbox" tabindex="12" autocomplete="off" /></td>
 	</tr>
-	
+
    </table>
   </td>
  </tr>
@@ -669,13 +709,13 @@ $(document).ready(function() {
     <tr height="30">
      <td width="120">Email ID*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='email_id' id='email_id' tabindex="13" autocomplete="off" class="textbox" /></td>
+     <td><input type='text' name='email_id' id='email_id' value="<?php echo $row_edit[email_id]; ?>" tabindex="13" autocomplete="off" class="textbox" /></td>
 	</tr>
     
     <tr height="30">
     <td width="120" nowrap="nowrap">Alternate No.</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='alt_num' id='alt_num' tabindex="15" autocomplete="off" /></td>
+    <td><input type='text' name='alt_num' id='alt_num' value="<?php echo $row_edit[alt_number]; ?>" tabindex="15" autocomplete="off" /></td>
     </tr>
    </table>
    </td>
@@ -692,13 +732,16 @@ $(document).ready(function() {
    <tr height="30">
 		 <td width="120" nowrap="nowrap">Mobile No.</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" name="mobile_no" id="mobile_no" tabindex="14" autocomplete="off"  /></td>
+		 <td><input type="text" name="mobile_no" id="mobile_no" value="<?php echo $row_edit[mobile_number]; ?>" tabindex="14" autocomplete="off"  /></td>
 	</tr>
 	
    <tr height="30">
      <td width="120">Picture</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='file' name='picture' id='picture' tabindex="16" value="" autocomplete="off"  /></td>
+     <td><?php echo $row_edit[picture]; ?>     
+     <input type='file' name='picture' id='picture' tabindex="16" value="" />
+     <input type='hidden' name='picture_old' id='picture_old' value="<?php echo $row_edit[picture]; ?>" />     
+     </td>
 	</tr>
 
    </table>
@@ -732,11 +775,17 @@ $(document).ready(function() {
 			$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
+			$result_emp_id=mysql_query("SELECT emp_code,first_name FROM pim_emp_info ORDER BY emp_id",$bd);
 			echo '<select name="incharge_empcode_alt" id="incharge_empcode_alt" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:100px;" tabindex="17" class="selectbox">';
 			echo '<option value="0">--Employee--</option>';
-			while($row=mysql_fetch_array($result_emp_id))
-			{
+			while($row=mysql_fetch_array($result_emp_id)) {
+				if($row['emp_code'] == $row_edit['alt_lead_code']){
+					  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag	
+					  $display_lead_alt_code	=	$row['emp_code'];
+					 } else {
+						  $isSelected = ''; // else we remove any tag
+					 }							
+					echo "<option value='".$row['emp_code']."'".$isSelected.">".$row['first_name']."</option>";
 				echo '<option value="'.$row['emp_code'].'">'.$row['first_name'].'</option>';
 			}
 			echo '</select>';
@@ -757,7 +806,7 @@ $(document).ready(function() {
      <td width="120" nowrap="nowrap">Employee Code</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
-	<span id="display_inchargename_alt"><input type='text' name='alt_leader' id='alt_leader' tabindex="18" size="5" readonly class="textbox"/></span>
+	<span id="display_inchargename_alt"><input type='text' name='alt_leader' id='alt_leader' value="<?php echo $display_lead_alt_code; ?>" tabindex="18" size="5" readonly class="textbox"/></span>
 	 </td>
 	</tr>
     
@@ -780,8 +829,7 @@ $(document).ready(function() {
       <tr align="center" height="35px;">
       <td nowrap="nowrap">	  
 	  <input type="submit" name="part_save" id="part_save" class="buttons" value="Save" />&nbsp;&nbsp;&nbsp;&nbsp;
-	 <input type="hidden" name="formsaveval" id="formsaveval" /> <!-- This will give the value when form is submitted, otherwise it will empty -->
-	 <input type="hidden" name="edit_id" id="edit_id" /> <!-- This is the partial saved id of the building table when partial save is completed, it will get the id from the db (ajax) -->
+	 <input type="hidden" name="formsaveval" id="formsaveval" /> <!-- This will give the value when form is submitted, otherwise it will be empty -->
      <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
      <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=1'"/>&nbsp;&nbsp;&nbsp;&nbsp;
 	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_admin_resp.php'"/></td>
@@ -792,6 +840,7 @@ $(document).ready(function() {
 </form>
 <!-- </div> -->
 </div>
+
 <div id="backgroundChatPopup"></div>
 <?php
 $footerfile='./layout/footer.php';

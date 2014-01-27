@@ -15,8 +15,7 @@ print_r($_FILES);
 echo "</pre>";*/
 //exit;
 
-if(!$fgmembersite->CheckLogin())
-{
+if(!$fgmembersite->CheckLogin()) {
     $fgmembersite->RedirectToURL("index.php");
     exit;
 }
@@ -39,42 +38,28 @@ if(file_exists($header_file))	{
 if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 		
 	$fgmembersite->DBLogin();
-	$req_number				=	$_POST['request_number'];
-	$request_type			=	$_POST['request_type'];
-		
-	if($request_type == 1) {		
-		$emp_request_id		=	$_POST[emp_request_id];
-		$guest_request_id	=	'';
-	} else if($request_type == 2) {		
-		$emp_request_id		=	'';
-		$guest_request_id	=	$_POST[guest_request_id];
-	} 
-	$req_date				=	$_POST['req_date'];
-	$request_jobtype		=	$_POST['request_jobtype'];
-	$req_desc				=	$_POST['req_desc'];
-	$request_through		=	$_POST['request_through'];
-	$request_takenby		=	$_POST['request_takenby'];
-	$additional_det			=	$_POST['additional_det'];
+	$request_number			=	$_POST['request_number'];
+	$job_id					=	$_POST['job_id'];		
+	$admin_res_name			=	$_POST['admin_res_name'];
+	$job_assigned_name		=	$_POST['job_assigned_name'];
+	$start_date				=	$_POST['start_date'];
 	$expected_date			=	$_POST['expected_date'];
-	$estimated_date			=	$_POST['estimated_date'];
+	$completion_date		=	$_POST['completion_date'];
+	$no_revision			=	$_POST['no_revision'];
 	$est_cost				=	$_POST['est_cost'];
 	$actual_cost			=	$_POST['actual_cost'];
-	$completion_date		=	$_POST['completion_date'];
-	$attach1				=	$attach1;
-	$attach2				=	$attach2;
-	$attach3				=	$attach3;
 		
-		//echo 'UPDATE INTO request SET req_number="'.$req_number.'",request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",req_date="'.$req_date.'",request_jobtype="'.$request_jobtype.'",req_desc="'.$req_desc.'",request_through="'.$request_through.'",request_takenby="'.$request_takenby.'",additional_det="'.$additional_det.'",expected_date="'.$expected_date.'",estimated_date="'.$estimated_date.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",completion_date="'.$completion_date.'",attach1="'.$attach1.'",attach2="'.$attach2.'",attach3="'.$attach3.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"';
+		//echo 'UPDATE requestjobs SET request_number="'.$request_number.'",job_id="'.$job_id.'",admin_res_name="'.$admin_res_name.'",job_assigned_name="'.$job_assigned_name.'",start_date="'.$start_date.'",expected_date="'.$expected_date.'",completion_date="'.$completion_date.'",no_revision="'.$no_revision.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"';
 	
 	//echo $sql;
 	//exit;
 	
 	$user_id		=	$_SESSION['user_id'];
 		
-	if(!mysql_query('UPDATE request SET req_number="'.$req_number.'",request_type="'.$request_type.'",emp_request_id="'.$emp_request_id.'",guest_request_id="'.$guest_request_id.'",req_date="'.$req_date.'",request_jobtype="'.$request_jobtype.'",req_desc="'.$req_desc.'",request_through="'.$request_through.'",request_takenby="'.$request_takenby.'",additional_det="'.$additional_det.'",expected_date="'.$expected_date.'",estimated_date="'.$estimated_date.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",completion_date="'.$completion_date.'",attach1="'.$attach1.'",attach2="'.$attach2.'",attach3="'.$attach3.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
+	if(!mysql_query('UPDATE requestjobs SET request_number="'.$request_number.'",job_id="'.$job_id.'",admin_res_name="'.$admin_res_name.'",job_assigned_name="'.$job_assigned_name.'",start_date="'.$start_date.'",expected_date="'.$expected_date.'",completion_date="'.$completion_date.'",no_revision="'.$no_revision.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",updated_by="'.$user_id.'",updated_at=NOW() WHERE id = "'.$edit_id.'"')) {
 			die('Error: ' . mysql_error());
 		}
-		$fgmembersite->RedirectToURL("view_request.php?success=update");
+		$fgmembersite->RedirectToURL("view_requestjobs.php?success=update");
 		echo "&nbsp;";
 }
 ?>

@@ -27,18 +27,19 @@ document.all ? k = e.keyCode : k = e.which;
 return ((k != 48)&&(k != 49)&&(k != 50)&&(k != 51)&&(k != 52)&&(k != 53)&&(k != 54)&&(k != 55)&&(k != 56)&&(k != 57));
 }
 </script>
- <link rel="stylesheet" href="style/superfish.css" media="screen">
-      <script type='text/javascript' src='scripts/gen_validatorv31.js'></script>
-   <script type = "text/javascript" >
+<link rel="stylesheet" href="style/superfish.css" media="screen">
+<script type='text/javascript' src='scripts/gen_validatorv31.js'></script>
+<script type = "text/javascript" >
 
-function disableBackButton()
-{
-window.history.forward();
+$(document).ready(function () {
+	$("#username").focus();
+});
+
+function disableBackButton() {
+	window.history.forward();
 }
 setTimeout("disableBackButton()", 0);
 
-</script> 
-<script type="text/javascript"> 
 function display_c(){
 var refresh=1000; // Refresh rate in milli seconds
 mytime=setTimeout('display_ct()',refresh)
@@ -89,26 +90,21 @@ tt=display_c();
  }
 </script>
 </head>
- <?PHP
+<?php
 require_once("./include/membersite_config.php");
 
-if(isset($_POST['submitted']))
-{
+if(isset($_POST['submitted'])) {
    if($fgmembersite->Login())
    {
      if ($fgmembersite->usertype() == 1)
 	 {
 	  $fgmembersite->RedirectToURL("admin_temp.php");
 	 }
-	 else
-	 {
-	 $fgmembersite->RedirectToURL("user_temp.php");
+	 else {
+		 $fgmembersite->RedirectToURL("user_temp.php");
 	 }
-  
-       
    }
 }
-
 ?>
    
 <body onLoad="display_ct();">

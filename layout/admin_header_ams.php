@@ -67,11 +67,10 @@ error_reporting(E_ALL & ~E_NOTICE);
   
  <li><a href="#"><span style="padding-left:10px;">MASTER DATA</span></a>
     <ul>
-           <li><a href="requestor.php">Requestor</a></li>
-		   <li><a href="guest.php">Guest</a></li>
-            <li><a href="generator.php">Generator</a></li>
-            <li><a href="generator_maintain.php">Generator Maintenance</a></li>        
-         </ul>
+      	<li><a href="requestor.php">Requestor</a></li>
+		<li><a href="guest.php">Guest</a></li>
+        <li><a href="admin_responsibility.php">Admin Responsibilities</a></li>
+    </ul>
 		   
   </li>
       <!--  <li><a href="state.php">State</a></li>
