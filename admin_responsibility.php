@@ -2,6 +2,12 @@
 require_once("./include/membersite_config.php");
 $fgmembersite->DBLogin();
 
+/*$curl	=	curl_init();
+curl_setopt($curl,CURLOPT_URL, "http://maassmatrimony.com");
+curl_setopt($curl,CURLOPT_RETURNTRANSFER, true);
+var_dump(curl_exec($curl));
+curl_close($curl);*/
+
 ini_set("display_errors",true);
 error_reporting(E_ALL & ~E_NOTICE);
 
