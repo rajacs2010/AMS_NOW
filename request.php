@@ -742,7 +742,7 @@ $('#attach3').change(function() {
   <td>
   <table>
     <tr height="30">
-     <td width="120">Request Number</td>
+     <td width="120" style="white-space:nowrap;">Request Number</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
 		 if(!isset($_GET[id]) && $_GET[id] == '') {
@@ -793,11 +793,11 @@ $('#attach3').change(function() {
 	 <tr height="30">
      <td width="120">Request Desc.</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input name='req_desc' id='req_desc' tabindex="6" size="42" value="" class="textbox"></td>
+     <td><input name='req_desc' id='req_desc' tabindex="6" size="41" value="" class="textbox"></td>
 	</tr>
 	
 	<tr height="30">
-     <td width="120">Req. Taken By*</td>
+     <td width="120" style="white-space:nowrap;">Req. Taken By*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
 		$fgmembersite->DBLogin();
@@ -805,7 +805,7 @@ $('#attach3').change(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("SELECT * FROM pim_emp_info  ORDER BY first_name",$bd);
-		echo '<select name="request_takenby" id="request_takenby" class="selectbox" tabindex="8">';
+		echo '<select name="request_takenby" id="request_takenby" class="selectbox" tabindex="8" style="width:268px;">';
 		echo '<option value="0">--Employee--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			echo '<option value="'.$row['emp_code'].'">'.$fgmembersite->upperstate($row['first_name']).'</option>';
@@ -872,10 +872,10 @@ $('#attach3').change(function() {
 	</tr>
 	
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Req. Taken By Code</td>
+		 <td width="120" style="white-space:nowrap;">Req. Taken By Code</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td>
-		 	<div id="display_empname"><input type='text' name='emp_codetakenby' id='emp_codetakenby' tabindex="9" readonly class="textbox"/></div>
+		 	<div id="display_empname"><input type='text' name='emp_codetakenby' id='emp_codetakenby' size="6" tabindex="9" readonly class="textbox"/></div>
 		 </td>
 	</tr>
    
@@ -904,7 +904,7 @@ $('#attach3').change(function() {
     <tr height="30">
      <td width="120">Additional Details</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="additional_det" name="additional_det" tabindex="10" size="39" /></td>
+     <td><input type="text" id="additional_det" name="additional_det" tabindex="10" size="41" /></td>
 	</tr>
     
     <tr height="30">

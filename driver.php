@@ -280,7 +280,7 @@ die('Error: ' . mysql_error());
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="1" class="selectbox" style="width:100px;">';
+			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="1" class="selectbox" style="width:202px;">';
 			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
@@ -289,8 +289,8 @@ die('Error: ' . mysql_error());
 			}
 			echo '</select>';
 			?>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" size="10"/></span>
+			&nbsp;
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' size="5" readonly class="textbox" /></span>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -304,7 +304,7 @@ die('Error: ' . mysql_error());
   <td>
   <table>
     <tr height="30">
-    <td width="111" >Address Line 1*</td>
+    <td width="125" >Address Line 1*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" class="areatext" /></td>
     </tr>
@@ -363,7 +363,7 @@ die('Error: ' . mysql_error());
 		
   <tr height="30">
     <td width="148">Contact Number*</td>
-    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" /></td>
+    <td><input type='text' name='contact_number' id='contact_number' size="35" tabindex="6" /></td>
     </tr>
 	
 </table><!-- end--->
@@ -372,7 +372,7 @@ die('Error: ' . mysql_error());
 		
 <tr height="30">
      <td width="148" nowrap="nowrap">Alternate Contact No.</td>
-     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="7"/></td>
+     <td><input type='text' name='alt_contact_number' id='alt_contact_number' size="35" tabindex="7"/></td>
 	</tr>
 	
 	
@@ -385,12 +385,12 @@ die('Error: ' . mysql_error());
 		
   <tr height="30">
     <td width="148">Driving License No.*</td>
-    <td><input type='text' name='licence_number' id='licence_number' tabindex="8" /></td>
+    <td><input type='text' name='licence_number' id='licence_number' size="35" tabindex="8" /></td>
     </tr>
 			
 <tr height="30">
 <td width="148" nowrap="nowrap">Renewal Date</td>
-     <td><input type='text' name='renewal_date' id='renewal_date' tabindex="10" class="datepicker" value="<?php echo date('d-m-Y'); ?>"/>
+     <td><input type='text' name='renewal_date' id='renewal_date' tabindex="10" size="10" class="datepicker" value="<?php ""; ?>"/>
 	 <input type='hidden' name='hide_date' id='hide_date' tabindex="10" value="<?php echo date('d-m-Y'); ?>"/></td>
 	 </td>
 	 
@@ -402,7 +402,7 @@ die('Error: ' . mysql_error());
 		
 <tr height="30">
       <td width="148" nowrap="nowrap">License Date</td>
-     <td><input type='text' name='license_date' id='license_date' tabindex="9" class="datepicker" value="<?php echo date('d-m-Y'); ?>"/></td>
+     <td><input type='text' name='license_date' id='license_date' size="10" tabindex="9" class="datepicker" value="<?php echo date('d-m-Y'); ?>"/></td>
 	</tr>
 	
 </table><!-- end--->			

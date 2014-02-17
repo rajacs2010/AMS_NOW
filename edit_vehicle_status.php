@@ -133,7 +133,7 @@ while($row = mysql_fetch_array($result))
 					}
 					
 					?>
-					<input type='text' name='vehicle_reg_id' id='vehicle_reg_id'  maxlength="50" autocomplete='off' value="<?php echo $reg_no; ?>" readonly="true"/>
+					<input type='text' name='vehicle_reg_id' id='vehicle_reg_id'  maxlength="50" size="42" autocomplete='off' value="<?php echo $reg_no; ?>" readonly="true"/>
 			</td>
 			</tr>
 					

@@ -417,7 +417,7 @@ $(document).live('ready',function() {
      <td><?php
     	$fgmembersite->DBLogin();
 		$result_state=mysql_query("SELECT id,job_desc FROM jobs");
-		echo '<select name="job_id" id="job_id" style="width:150px;" tabindex="2">';
+		echo '<select name="job_id" id="job_id" style="width:300px;" tabindex="2">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
 			echo '<option value="'.$row['id'].'">'.$row['job_desc'].'</option>';
@@ -479,7 +479,7 @@ $(document).live('ready',function() {
      <td><?php
     	$fgmembersite->DBLogin();
 		$result_state=mysql_query("SELECT id,lead_name FROM admin_responsibility");
-		echo '<select name="admin_res_name" id="admin_res_name" tabindex="4">';
+		echo '<select name="admin_res_name" id="admin_res_name" tabindex="4" style="width:300px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
 			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['lead_name']).'</option>';
@@ -539,7 +539,7 @@ $(document).live('ready',function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("SELECT * FROM pim_emp_info  ORDER BY first_name",$bd);
-		echo '<select name="job_assigned_name" id="job_assigned_name" class="selectbox" tabindex="6">';
+		echo '<select name="job_assigned_name" id="job_assigned_name" class="selectbox" tabindex="6" style="width:300px;">';
 		echo '<option value="0">--Employee--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			echo '<option value="'.$row['emp_code'].'">'.$fgmembersite->upperstate($row['first_name']).'</option>';

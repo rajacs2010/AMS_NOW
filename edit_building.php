@@ -1124,7 +1124,6 @@ if(isset($_GET['success']))
     width: 90%;
 }
 </style>
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> <!-- THIS IS FOR GOOGLE MAP LOCATION SHOWING GOOGLE API -->
 <script type="text/javascript" language="javascript">
 
 function closeMapEnquiry() {
@@ -2051,7 +2050,7 @@ $(document).ready(function() {
 			}
 			
 		} else if($("#building_status:checked").val() == 2) {
-			var Dateval			=	$("#datelease").val();
+			//var Dateval			=	$("#datelease").val();
 			var per_from		=	$("#periodfrom").val();
 			var rent			=	$("#rent").val();
 			var curval			=	$("#rentcurrency").val();
@@ -2067,7 +2066,7 @@ $(document).ready(function() {
 			
 			var	currentdate		=	new Date();
 
-			var Datevalval 		=	new Date(Dateval.substring(6,10)+"/"+Dateval.substring(3,5)+"/"+Dateval.substring(0,2)).getTime();
+			//var Datevalval 		=	new Date(Dateval.substring(6,10)+"/"+Dateval.substring(3,5)+"/"+Dateval.substring(0,2)).getTime();
 
 			var currentdatevalue			=	new Date(currentdate.getFullYear()+"/"+(parseInt(currentdate.getMonth())+1)+"/"+currentdate.getDate()).getTime();
 
@@ -2207,7 +2206,7 @@ $(document).ready(function() {
 				return false;
 			}
 			
-			if (Datevalval > currentdatevalue){
+			/*if (Datevalval > currentdatevalue){
 				$('.myalignbuild').html('ERR : Date greater than today!');
 				$('#errormsgbuild').css('display','block');
 				setTimeout(function() {
@@ -2215,7 +2214,7 @@ $(document).ready(function() {
 				},5000);
 				$("#datelease").focus();
 				return false;
-			}
+			}*/
 
 			if(per_from == '0') {
 				$('.myalignbuild').html('ERR : Select Period');
@@ -2403,7 +2402,7 @@ $(document).ready(function() {
    <table>
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Name*</td>
-		 <td><input type='text' name='buildingname' id='buildingname' value="<?php echo $fgmembersite->upperstate($row_edit['building_name']); ?>" autocomplete="off" maxlength="35" size="40" tabindex="2" class="textbox"/></td>
+		 <td><input type='text' name='buildingname' id='buildingname' value="<?php echo $fgmembersite->upperstate($row_edit['building_name']); ?>" autocomplete="off" maxlength="35" size="46" tabindex="2" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
@@ -2414,7 +2413,7 @@ $(document).ready(function() {
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" style="width:100px;" tabindex="4" class="selectbox">';
+			echo '<select name="incharge_empcode" id="incharge_empcode" style="width:241px;" tabindex="4" class="selectbox">';
 			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
@@ -2427,8 +2426,8 @@ $(document).ready(function() {
 			}
 			echo '</select>';
 			?>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' value="<?php echo $row_edit['incharge_empname']; ?>" readonly class="textbox"/></span>
+			&nbsp;
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' size="4" value="<?php echo $row_edit['incharge_empname']; ?>" readonly class="textbox"/></span>
 		</td>
     </tr>
    </table>
@@ -2603,7 +2602,7 @@ $(document).ready(function() {
      <td width="65">Effective*</td>
      <td><input type="text" name="effectivedate" id="effectivedate" size="10" value="<?php if($row_edit['effectivedate'] == '') { echo date('d-m-Y'); } else { echo $row_edit['effectivedate'];  } ?>" tabindex="18" autocomplete='off' maxlength="10" class="datepicker"/></td>
 	<td width="130" nowrap="nowrap" >&nbsp;&nbsp;&nbsp;&nbsp;Renewal Date*</td>
-	<td><input type='text' name='renewaldate' id='renewaldate' size="10" value="<?php if($row_edit['leaserenewaldate'] == '') { echo date('d-m-Y'); } else { echo $row_edit['leaserenewaldate'];  } ?>" tabindex="19" autocomplete='off' maxlength="10" class="datepicker textbox"/></td>
+	<td><input type='text' name='renewaldate' id='renewaldate' size="10" value="<?php if($row_edit['leaserenewaldate'] == '') { echo ""; } else { echo $row_edit['leaserenewaldate'];  } ?>" tabindex="19" autocomplete='off' maxlength="10" class="datepicker textbox"/></td>
      </tr>
    </table>
  </fieldset>
@@ -2634,7 +2633,7 @@ $(document).ready(function() {
      <td>
      <?php
 		$result_state=mysql_query("select id,name,vendor_code from vendor_bms");
-		echo '<select name="purchasefrom" id="purchasefrom" tabindex="1" style="width:100px;">';
+		echo '<select name="purchasefrom" id="purchasefrom" tabindex="1" style="width:291px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{
@@ -2668,7 +2667,7 @@ $(document).ready(function() {
 		<td><input type='text' name='purcurrency' id='purcurrency' tabindex="3" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 	<tr height="30">
-     <td width="120">Sale Deed/Agreement</td>
+     <td width="120">Sale Deed Agmt.</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php echo $row_edit['building_saleagreement']; ?>
 		<input type='file' name='saleagreement' id='saleagreement' style="width:250px;" tabindex="5" class="textbox"/>
@@ -2746,7 +2745,7 @@ $(document).ready(function() {
 	
 	<tr height="32">
      <td width="120" nowrap="nowrap">Renewal Date</td>
-     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' size="10" value="<?php if($row_edit['renewal_due'] == '') { echo date('d-m-Y'); } else { echo $row_edit['renewal_due'];  } ?>" tabindex="9" class="datepicker textbox"/></td>
+     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' size="10" value="<?php if($row_edit['renewal_due'] == '') { echo ""; } else { echo $row_edit['renewal_due'];  } ?>" tabindex="9" class="datepicker textbox"/></td>
 	</tr>
     </table>
    </td>
@@ -2773,11 +2772,15 @@ $(document).ready(function() {
  <tr>
   <td>
   <table>
+    
     <tr height="30">
-    <td width="120">Agreement Date*</td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='datelease' id='datelease' size="10" value="<?php if($row_edit['datelease'] == '') { echo date('d-m-Y'); } else { echo $row_edit['datelease'];  } ?>" tabindex="1" class="datepicker textbox"/></td>
-    </tr>
+     <td width="120">Agreement</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><?php echo $row_edit['leasedead']; ?>
+		<input type='file' name='leasedeed' id='leasedeed' style="width:230px;" tabindex="1" class="textbox"/>
+		<input type='hidden' name='lea_agr_file' id='lea_agr_file' value="<?php echo $row_edit['leasedead']; ?>" />
+	 </td>
+	</tr>
     
 	<tr height="30">
 		<?php
@@ -2799,14 +2802,7 @@ $(document).ready(function() {
 
 	
 
-	<tr height="30">
-     <td width="120">Agreement</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><?php echo $row_edit['leasedead']; ?>
-		<input type='file' name='leasedeed' id='leasedeed' style="width:230px;" tabindex="5" class="textbox"/>
-		<input type='hidden' name='lea_agr_file' id='lea_agr_file' value="<?php echo $row_edit['leasedead']; ?>" />
-	 </td>
-	</tr>
+	
    </table>
    </td>
  </tr>
@@ -2816,9 +2812,10 @@ $(document).ready(function() {
  <tr>
   <td>
   <table>
-
+	
 	<tr height="30">
-     <td width="120" nowrap="nowrap">Period*</td>
+     <td width="167" nowrap="nowrap">Period*</td>
+     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><select name="periodfrom" id="periodfrom" tabindex="2" class="selectbox">
 			<option value="0">--Select--</option>
 			<option value="1" <?php if($row_edit['building_period'] == 1) { echo "selected"; } ?> >Monthly</option>
@@ -2829,7 +2826,8 @@ $(document).ready(function() {
 	</tr>
     
 	<tr height="30">
-     <td width="120">Rent*</td>
+     <td width="167">Rent*</td>
+     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type='text' name='rent' id='rent' value="<?php echo $row_edit['building_rent']; ?>" style="text-align:right;" tabindex="4" class="textbox"/></td>
 	</tr>
 
@@ -2857,7 +2855,7 @@ $(document).ready(function() {
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
 			$result_state=mysql_query("select id,name,vendor_code from vendor_bms");
-			echo '<select name="landlord" id="landlord" tabindex="6" style="width:100px;">';
+			echo '<select name="landlord" id="landlord" tabindex="5" style="width:100px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				if($row['id'] == $row_edit['building_landlord']){
@@ -2877,26 +2875,26 @@ $(document).ready(function() {
 	<tr height="30">
 		<td width="120">Address Line 1</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type="text" id="land_add1" name="land_add1" readonly value="<?php echo $row_edit['landlod_address1']; ?>" size="35" autocomplete="off" tabindex="7" class="areatext" /></td>
+		<td><input type="text" id="land_add1" name="land_add1" readonly value="<?php echo $row_edit['landlod_address1']; ?>" size="43" autocomplete="off" tabindex="6" class="areatext" /></td>
     </tr>
 
 	<tr height="30">
 		 <td width="100"><span style="padding-left:55px;">Line 2</span></td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" id="land_add2" name="land_add2" readonly value="<?php echo $row_edit['landlod_address2']; ?>" size="35" autocomplete="off" tabindex="8" class="areatext" /></td>
+		 <td><input type="text" id="land_add2" name="land_add2" readonly value="<?php echo $row_edit['landlod_address2']; ?>" size="43" autocomplete="off" tabindex="7" class="areatext" /></td>
 	</tr>
 
 	<tr height="30">
 		<td width="100"><span style="padding-left:55px;">Line 3</span></td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type="text" id="land_add3" name="land_add3" readonly value="<?php echo $row_edit['landlod_address3']; ?>" size="35" autocomplete="off" tabindex="9" class="areatext" /></td>
+		<td><input type="text" id="land_add3" name="land_add3" readonly value="<?php echo $row_edit['landlod_address3']; ?>" size="43" autocomplete="off" tabindex="8" class="areatext" /></td>
     </tr>
 	
 	<tr height="30">
      <td width="120">City</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
-     <input type='text' name='city_landlord' id='city_landlord' value="<?php echo $fgmembersite->getdbval($row_edit['landlord_city'], 'name', 'id', 'city'); ?>" tabindex="10" readonly class="textbox" />
+     <input type='text' name='city_landlord' id='city_landlord' value="<?php echo $fgmembersite->getdbval($row_edit['landlord_city'], 'name', 'id', 'city'); ?>" tabindex="9" readonly class="textbox" />
 	    <?php
 		/*$result_state=mysql_query("SELECT a.id  as id ,a.name,b.name as state_name FROM city a, state b where a.state_id=b.id");
 		echo '<select name="city_landlord" id="city_landlord" tabindex="9" >';
@@ -2917,7 +2915,7 @@ $(document).ready(function() {
 	<tr height="30">
 		<td width="120">State</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><div id="display_state_landlord"><input type='text' name='state_landlord' id='state_landlord' tabindex="11" value="<?php echo $row_edit['landlord_state']; ?>" readonly class="textbox" /></div></td>
+		<td><div id="display_state_landlord"><input type='text' name='state_landlord' id='state_landlord' tabindex="10" value="<?php echo $row_edit['landlord_state']; ?>" readonly class="textbox" /></div></td>
     </tr>
 
    </table>
@@ -2934,37 +2932,37 @@ $(document).ready(function() {
 	<tr height="30">
 		<td width="120">Contact Person*</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='contactperson' id='contactperson' value="<?php echo $row_edit['landlord_contactperson']; ?>" tabindex="12" class="textbox"/></td>
+		<td><input type='text' name='contactperson' id='contactperson' value="<?php echo $row_edit['landlord_contactperson']; ?>" size="35" tabindex="11" class="textbox"/></td>
     </tr>
 
 	<tr height="30">
      <td width="120">Contact Number</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='contactnumber' id='contactnumber' readonly value="<?php echo $row_edit['landlord_contactno']; ?>" tabindex="13" class="textbox"/></td>
+     <td><input type='text' name='contactnumber' id='contactnumber' readonly value="<?php echo $row_edit['landlord_contactno']; ?>" size="35" tabindex="12" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
 		<td width="120">Alternate Number</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='alternatenumber' id='alternatenumber' readonly value="<?php echo $row_edit['landlord_alternateno']; ?>" tabindex="14" class="textbox"/></td>
+		<td><input type='text' name='alternatenumber' id='alternatenumber' readonly value="<?php echo $row_edit['landlord_alternateno']; ?>" size="35" tabindex="13" class="textbox"/></td>
     </tr>
 
 	<tr height="30">
      <td width="120">Email ID</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='emailid' id='emailid' value="<?php echo $row_edit['landlord_email']; ?>" tabindex="15" class="textbox"/></td>
+     <td><input type='text' name='emailid' id='emailid' size="35" value="<?php echo $row_edit['landlord_email']; ?>" tabindex="14" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Alternate Person</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='altperson' id='altperson' value="<?php echo $row_edit['landlord_altperson']; ?>" tabindex="16" class="textbox"/></td>
+     <td><input type='text' name='altperson' id='altperson' size="35" value="<?php echo $row_edit['landlord_altperson']; ?>" tabindex="15" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
-		<td width="120" nowrap="nowrap">Alternate Person Number</td>
+		<td width="120" nowrap="nowrap" style="white-space:nowrap;">Alternate Person Number</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='altpersonnumber' id='altpersonnumber' value="<?php echo $row_edit['landlord_altpersonno']; ?>" tabindex="17" class="textbox"/></td>
+		<td><input type='text' name='altpersonnumber' id='altpersonnumber' size="35" value="<?php echo $row_edit['landlord_altpersonno']; ?>" tabindex="16" class="textbox"/></td>
     </tr>
 
 	<!--<tr height="30">
@@ -3002,12 +3000,13 @@ $(document).ready(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-		echo '<select name="emp_code" id="emp_code" tabindex="18" class="selectbox">';
+		echo '<select name="emp_code" id="emp_code" tabindex="17" class="selectbox">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id))
 		{
 			if($row['emp_code'] == $row_edit['companyliason_empcode']){
 				  $isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag
+				  $liason_emp_code	=	$row['emp_code'];
 			} else {
 				  $isSelected = ''; // else we remove any tag
 			}							
@@ -3029,8 +3028,9 @@ $(document).ready(function() {
   <td>
    <table>
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Employee Code</td>
-		 <td><div id="display_empname"><input type='text' name='empname' id='empname' tabindex="19" readonly class="textbox"/></div></td>
+		 <td width="167" nowrap="nowrap">Employee Code</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td><div id="display_empname"><input type='text' name='empname' id='empname' size="3" value="<?php echo $liason_emp_code; ?>" tabindex="18" readonly class="textbox"/></div></td>
 	</tr>     
    </table>
   </td>
@@ -3094,6 +3094,7 @@ $(document).ready(function() {
 
 <div id="backgroundChatPopup"></div>
 <!-- <div id="map-canvas" style="width: 500px; height: 300px"></div> -->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> <!-- THIS IS FOR GOOGLE MAP LOCATION SHOWING GOOGLE API -->
 <?php
 $footerfile='./layout/footer.php';
 if(file_exists($footerfile)) {

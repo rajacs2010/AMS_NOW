@@ -434,11 +434,11 @@ $(document).live('ready',function() {
   <td>
   <table>
     <tr height="30">
-    <td width="120" nowrap="nowrap">Vehicle Regn. No.*</td>
+    <td width="120" style="white-space:nowrap;">Vehicle Regn. No.*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><?php
 		$result_state=mysql_query("select * from vehicle");
-		echo '<select name="vehicle_reg_id" id="vehicle_reg_id" tabindex="1">';
+		echo '<select name="vehicle_reg_id" id="vehicle_reg_id" tabindex="1" style="width:270px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{
@@ -476,12 +476,12 @@ $(document).live('ready',function() {
 	</tr>
 	
 	<tr height="30">
-		<td width="120" >Vendor Code*</td>
+		<td width="120" >Vendor Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><input type='hidden' name='edit_id' id='edit_id' value="<?php echo $row_edit['id']; ?>" />
 		<?php
 				$result_state=mysql_query("select * from vendor");
-				echo '<select name="vendor_id" id="vendor_id" tabindex="5">';
+				echo '<select name="vendor_id" id="vendor_id" tabindex="5" style="width:270px;">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{	
@@ -573,10 +573,10 @@ $(document).live('ready',function() {
 	</tr>
      
     <tr height="30">
-		<td width="120">Vendor Name</td>
+		<td width="120">Vendor Code</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><div id="display_vendor_id">
-			<input type='text' name='vendor_name' id='vendor_name' value="<?php echo $fgmembersite->getdbval($row_edit[vendor_id], 'vendor_code', 'id', 'vendor'); ?>" tabindex="6" readonly autocomplete="off" class="textbox" />
+			<input type='text' name='vendor_name' id='vendor_name' size="10" value="<?php echo $fgmembersite->getdbval($row_edit[vendor_id], 'vendor_code', 'id', 'vendor'); ?>" tabindex="6" readonly autocomplete="off" class="textbox" />
 			</div>
 		</td>
     </tr>
@@ -612,7 +612,7 @@ $(document).live('ready',function() {
 				or die("Opps some thing went wrong");
 				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info order by emp_id",$bd);
-				echo '<select name="emp_bought_id" id="emp_bought_id" style="width:100px;" tabindex="14" class="selectbox">';
+				echo '<select name="emp_bought_id" id="emp_bought_id" style="width:172px;" tabindex="14" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_emp_id)) {
 					if($row['emp_code'] == $row_edit['emp_code']){
@@ -627,7 +627,7 @@ $(document).live('ready',function() {
 			}
 			if($selvalue==2) {
 				$result_state=mysql_query("select * from driver");
-				echo '<select name="driver_bought_id" id="driver_bought_id" tabindex="14" style="width:100px;" class="selectbox">';
+				echo '<select name="driver_bought_id" id="driver_bought_id" tabindex="14" style="width:172px;" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{	

@@ -459,7 +459,7 @@ $(document).ready(function() {
   <td>
   <table>
     <tr height="30">
-     <td width="123" >Responsibility Center</td>
+     <td width="123" style="white-space:nowrap;">Responsibility Ctr</td>
      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
 	 <?php 
@@ -496,7 +496,7 @@ $(document).ready(function() {
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:100px;" tabindex="2">';
+			echo '<select name="incharge_empcode" id="incharge_empcode" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:200px;" tabindex="2">';
 			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
@@ -539,7 +539,7 @@ $(document).ready(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("SELECT * FROM master_companies ORDER BY comp_name",$bd);
-		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
+		echo '<select name="comp_id" id="comp_id" class="selectbox" style="width:286px;" tabindex="3">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			echo '<option value="'.$row['comp_id'].'">'.$fgmembersite->upperstate($row['comp_name']).'</option>';
@@ -572,12 +572,12 @@ $(document).ready(function() {
 	</tr>
 
 	<tr height="30">
-		<td width="120" nowrap="nowrap">Office Bldg. Name*</td>
+		<td width="120" style="white-space:nowrap;">Office Bldg. Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("SELECT id,building_code,building_name FROM building WHERE building_type = '1'");
-			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" >';
+			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" style="width:286px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['building_name']).'</option>';
@@ -589,7 +589,7 @@ $(document).ready(function() {
 	<tr height="30">
      <td width="120">Office Floor</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='off_floor' id='off_floor' tabindex="11" value="" class="textbox"/></td>
+     <td><input type='text' name='off_floor' id='off_floor' size="42" tabindex="11" value="" class="textbox"/></td>
 	</tr>
 	
    </table>
@@ -609,7 +609,7 @@ $(document).ready(function() {
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td><?php
 				$result_state=mysql_query("select id,name from department");
-				echo '<select name="division_id" id="division_id" tabindex="4">';
+				echo '<select name="division_id" id="division_id" tabindex="4" style="width:270px;">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{
@@ -630,9 +630,12 @@ $(document).ready(function() {
    
    
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Office Bldg.</td>
+		 <td width="120" nowrap="nowrap">
+		 <!-- Office Bldg.--></td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_buil' id='office_buil' tabindex="8" value="" autocomplete="off" class="textbox"/></td>
+		 <td>
+		 	<!-- <input type='text' name='office_buil' id='office_buil' tabindex="8" value="" autocomplete="off" class="textbox"/>-->
+		 </td>
 	</tr>
      
 	<tr height="30">
@@ -647,7 +650,7 @@ $(document).ready(function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Office</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_val' id='office_val' class="textbox" tabindex="12" autocomplete="off" /></td>
+		 <td><input type='text' name='office_val' id='office_val' size="42" class="textbox" tabindex="12" autocomplete="off" /></td>
 	</tr>
 	
    </table>
@@ -675,13 +678,13 @@ $(document).ready(function() {
     <tr height="30">
      <td width="120">Email ID*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='email_id' id='email_id' tabindex="13" autocomplete="off" class="textbox" /></td>
+     <td><input type='text' name='email_id' id='email_id' size="42" tabindex="13" autocomplete="off" class="textbox" /></td>
 	</tr>
     
     <tr height="30">
     <td width="120" nowrap="nowrap">Alternate No.</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='alt_num' id='alt_num' tabindex="15" autocomplete="off" /></td>
+    <td><input type='text' name='alt_num' id='alt_num' size="42" tabindex="15" autocomplete="off" /></td>
     </tr>
    </table>
    </td>
@@ -698,7 +701,7 @@ $(document).ready(function() {
    <tr height="30">
 		 <td width="120" nowrap="nowrap">Mobile No.</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" name="mobile_no" id="mobile_no" tabindex="14" autocomplete="off"  /></td>
+		 <td><input type="text" name="mobile_no" id="mobile_no" size="42" tabindex="14" autocomplete="off"  /></td>
 	</tr>
 	
    <tr height="30">
@@ -739,7 +742,7 @@ $(document).ready(function() {
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode_alt" id="incharge_empcode_alt" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:100px;" tabindex="17" class="selectbox">';
+			echo '<select name="incharge_empcode_alt" id="incharge_empcode_alt" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:273px;" tabindex="17" class="selectbox">';
 			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{

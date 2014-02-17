@@ -54,7 +54,7 @@ exit;
 }
 </style>
 <div id="mainarea">
-<div  style="padding-top:20%;" class="mydiv">
+<div style="padding-top:20%;display:none;" class="mydiv">
 <h3 align="center" class="sucmsg1">
 <?php 
 $id=$_GET['id'];
@@ -70,8 +70,7 @@ if ($id ==1)
 	{
 	$value='Fleet Management';
 	}
-?>
-Welcome <?php echo $value;?>
+echo "Welcome".  $value; ?>
 </h3>
 </div>
 </div>

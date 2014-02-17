@@ -418,10 +418,10 @@ $(document).ready(function() {
      <td><?php
     	$fgmembersite->DBLogin();
 		$result_state=mysql_query("SELECT id,job_desc,job_code FROM jobs");
-		echo '<select name="job_id" id="job_id" style="width:150px;" tabindex="2">';
+		echo '<select name="job_id" id="job_id" style="width:150px;" tabindex="2" style="width:300px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
-			if($row['id'] == $row_edit['job_id']){
+			if($row['id'] == $row_edit['job_id']) {
 				$isSelected = ' selected="selected"'; // if the option submited in form is as same as this row we add the selected tag	
 				$display_job_code		=	$row['job_code'];
 			} else {
@@ -486,7 +486,7 @@ $(document).ready(function() {
      <td><?php
     	$fgmembersite->DBLogin();
 		$result_state=mysql_query("SELECT id,lead_name,lead_code FROM admin_responsibility");
-		echo '<select name="admin_res_name" id="admin_res_name" tabindex="4">';
+		echo '<select name="admin_res_name" id="admin_res_name" tabindex="4" style="width:300px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
 			if($row['id'] == $row_edit['admin_res_name']){
@@ -553,7 +553,7 @@ $(document).ready(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("SELECT * FROM pim_emp_info  ORDER BY first_name",$bd);
-		echo '<select name="job_assigned_name" id="job_assigned_name" class="selectbox" tabindex="6">';
+		echo '<select name="job_assigned_name" id="job_assigned_name" class="selectbox" tabindex="6" style="width:300px;">';
 		echo '<option value="0">--Employee--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			if($row['emp_code'] == $row_edit['job_assigned_name']){

@@ -2035,7 +2035,7 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Regn. No.*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='vregno' id='vregno' size="20" autocomplete="off" tabindex="1" class="textbox"/></td>
+    <td><input type='text' name='vregno' id='vregno' size="42" autocomplete="off" tabindex="1" class="textbox"/></td>
     </tr>
     
 	<tr height="30">
@@ -2047,7 +2047,7 @@ $(document).ready(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("select * from master_companies  order by comp_name",$bd);
-		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
+		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3" style="width:278px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			echo '<option value="'.$row['comp_id'].'">'.$fgmembersite->upperstate($row['comp_name']).'</option>';
@@ -2060,7 +2060,7 @@ $(document).ready(function() {
 	 <tr height="30">
     <td width="120">Make</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='make' id='make' size="47" autocomplete="off" tabindex="5" class="textbox"/></td>
+    <td><input type='text' name='make' id='make' size="42" autocomplete="off" tabindex="5" class="textbox"/></td>
     </tr>
     
     <tr height="30">
@@ -2175,7 +2175,7 @@ $(document).ready(function() {
      <td width="120" nowrap="nowrap">Company*</td>
      <td><?php
 			$result_state=mysql_query("select id,name,vendor_code from vendor");
-			echo '<select name="insurance_company" id="insurance_company" tabindex="10" style="width:100px;">';
+			echo '<select name="insurance_company" id="insurance_company" tabindex="10" style="width:310px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
@@ -2192,7 +2192,7 @@ $(document).ready(function() {
     </tr>    	
     <tr height="30">
     <td width="120">Renewal Date</td>
-    <td><input type='text' name='insurance_duedate' id='insurance_duedate' tabindex="14" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" class="datepicker textbox"/></td>
+    <td><input type='text' name='insurance_duedate' id='insurance_duedate' tabindex="14" value="<?php echo ""; ?>" size="10" autocomplete="off" class="datepicker textbox"/></td>
     </tr>
       </table>
        </td>
@@ -2261,7 +2261,7 @@ $(document).ready(function() {
     </tr>    	
     <tr height="30">
     <td width="120">Renewal Date</td>
-    <td><input type='text' name='tax_renewal_date' id='tax_renewal_date' value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="20" class="datepicker textbox"/></td>
+    <td><input type='text' name='tax_renewal_date' id='tax_renewal_date' value="<?php echo ""; ?>" size="10" autocomplete="off" tabindex="20" class="datepicker textbox"/></td>
     </tr>
       </table>
        </td>
@@ -2306,9 +2306,9 @@ $(document).ready(function() {
 	</tr>
 
 	<tr height="30">
-     <td width="120">Next Inspection Date</td>
+     <td width="120">Next Insp. Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="next_inspection_date" name="next_inspection_date" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="5" class="datepicker areatext" /></td>
+     <td><input type="text" id="next_inspection_date" name="next_inspection_date" value="<?php echo ""; ?>" size="10" autocomplete="off" tabindex="5" class="datepicker areatext" /></td>
 	</tr>
    </table>
    </td>
@@ -2370,9 +2370,9 @@ $(document).ready(function() {
 	</tr>
 
 	<tr height="30">
-     <td width="120">Next Inspection Date</td>
+     <td width="120">Next Insp. Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="pollution_inspection_date" name="pollution_inspection_date" value="<?php echo date('d-m-Y'); ?>" size="10" autocomplete="off" tabindex="10" class="datepicker areatext" /></td>
+     <td><input type="text" id="pollution_inspection_date" name="pollution_inspection_date" value="<?php echo ""; ?>" size="10" autocomplete="off" tabindex="10" class="datepicker areatext" /></td>
 	</tr>
    </table>
    </td>

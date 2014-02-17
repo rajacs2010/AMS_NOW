@@ -62,6 +62,15 @@ $(function () {
     right: -220px;
     top: -35px;
 }
+.scroll_box {
+   height: 379px;
+   overflow: auto;
+}
+#mainarea {
+    background: none repeat scroll 0 0 #EBEBEB;
+    height: 510px;
+    width: 100%;
+}
 </style>
 <script>
 function validateForm() {
@@ -485,7 +494,7 @@ if(isset($_POST['save'])) {
 				
 				<?php
 									$result_state=mysql_query("SELECT id,building_name from building");
-									echo '<select name="building_code" id="building_code" tabindex="3"  >';
+									echo '<select name="building_code" id="building_code" tabindex="3"  style="width:230px;">';
 									echo '<option value="0">--Select--</option>';
 									while($row=mysql_fetch_array($result_state))
 									{
@@ -520,7 +529,7 @@ if(isset($_POST['save'])) {
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				
 				<td>
-				<input type="text" name="desc" id="desc" size="30" autocomplete='off' tabindex="2" />	
+				<input type="text" name="desc" id="desc" size="42" autocomplete='off' tabindex="2" />	
 				</td>
 				</tr>
 				
@@ -554,7 +563,7 @@ if(isset($_POST['save'])) {
   <legend><strong>Ownership</strong></legend>
   <table width="100%">
   <tr height="30">
-  <td width="142">Owned/Landlord's/Rented*</td>
+  <td width="142" nowrap="nowrap">Owned/Landlord's/Rented*&nbsp;&nbsp;&nbsp;</td>
   <td>
   <select name="genrator_status" id="genrator_status" tabindex="7">
 	<option value="0">--Select--</option>
@@ -570,7 +579,7 @@ if(isset($_POST['save'])) {
   <legend><strong>Owned</strong></legend>
   <table width="100%">
   <tr>
-  <td width="50%">
+  <td width="45%">
 		<table align="left">
 		 <tr>
 		  <td>
@@ -591,7 +600,7 @@ if(isset($_POST['save'])) {
 			  </td>
 			</tr>						
 			<tr height="30">
-			<td width="120">Date Of Purchase*</td>
+			<td width="120">Purchase Date*</td>
 			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td>			
 				<input type='text' name='datepurchase' id='datepurchase' value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="10" tabindex="10" autocomplete="off"/>	
@@ -603,7 +612,7 @@ if(isset($_POST['save'])) {
 			 <td>				
 				<?php
 					$result_state=mysql_query("SELECT id,name from vendor_bms");
-					echo '<select name="vendor_code" id="vendor_code" tabindex="12" >';
+					echo '<select name="vendor_code" id="vendor_code" tabindex="12" style="width:230px;">';
 					echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state)) {
 						echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
@@ -628,10 +637,10 @@ if(isset($_POST['save'])) {
 			  </td>
 			</tr>			
 			<tr height="30">
-			 <td width="120">Contract Renewal Date*</td>
+			 <td width="120">Renewal Date*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
-				<input type="text" name="renewaldate" id="renewaldate" value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="10" autocomplete='off' tabindex="16" autocomplete="off"/>				
+				<input type="text" name="renewaldate" id="renewaldate" value="" class="datepicker" size="10" autocomplete='off' tabindex="16" autocomplete="off"/>				
 			  </td>
 			</tr>
 		   </table>
@@ -652,7 +661,7 @@ if(isset($_POST['save'])) {
 				</td>
 			</tr>
 			<tr height="30">
-			 <td width="120">Maintenance Contract No.*</td>
+			 <td width="120" style="white-space:nowrap;">Maint. Contract No.*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 			 <input type='text' name='contract_number' id='contract_number' size="15" tabindex="11" autocomplete="off"/>
@@ -672,7 +681,7 @@ if(isset($_POST['save'])) {
 			  </td>
 			</tr>
 			<tr height="30">
-				 <td width="120">Maintenance Cost*</td>
+				 <td width="120">Maint. Cost*</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
 					<input type='text' name='mcost' id='mcost' size="15" tabindex="14" style="text-align:right;" autocomplete="off"/>
@@ -699,7 +708,7 @@ if(isset($_POST['save'])) {
   <legend><strong>Landlord/Rented</strong></legend>
   <table width="100%">
   <tr>
-  <td width="50%">
+  <td width="36%">
 		<table align="left">
 		 <tr>
 		  <td>
@@ -712,7 +721,7 @@ if(isset($_POST['save'])) {
 			</td>
 			</tr>
 			<tr height="30">
-			 <td width="120">Maintenance Contract No.*</td>
+			 <td width="120" style="white-space:nowrap;">Maint. Contract No.*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				<input type='text' name='contract_number_landlord' id='contract_number_landlord' size="15" tabindex="10" autocomplete="off"/>
@@ -775,7 +784,7 @@ if(isset($_POST['save'])) {
 			 <td>				
 				<?php
 					$result_state=mysql_query("SELECT id,name from vendor_bms");
-					echo '<select name="vendor_code_landlord" id="vendor_code_landlord" tabindex="11" >';
+					echo '<select name="vendor_code_landlord" id="vendor_code_landlord" tabindex="11" style="width:260px;">';
 					echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state)) {
 						echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
@@ -785,14 +794,14 @@ if(isset($_POST['save'])) {
 			  </td>
 			</tr>
 			<tr height="30">
-			 <td width="120">Maintenance Cost*</td>
+			 <td width="120">Maint. Cost*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				<input type='text' name='mcost_landlord' id='mcost_landlord' size="15" tabindex="13"  style="text-align:right;" autocomplete="off"/>				
 			</td>
 			</tr>
 			<tr height="30">
-			 <td width="120">Contract Renewal Date*</td>
+			 <td width="120">Renewal Date*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
 				<input type="text" name="renewaldate_landlord" id="renewaldate_landlord"  value="<?php echo date('d-m-Y'); ?>" class="datepicker" size="10" autocomplete='off' tabindex="15"/>				

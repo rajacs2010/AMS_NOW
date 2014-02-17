@@ -8,7 +8,7 @@ if(!$fgmembersite->CheckLogin()) {
     exit;
 }
 if ($fgmembersite->usertype() == 1) {
-	$header_file='./layout/admin_header_fms.php';
+	$header_file='./layout/admin_header_ams.php';
 }
 if(file_exists($header_file)) {
 	include_once($header_file);
@@ -200,7 +200,7 @@ $email=$row['email'];
   <legend><strong>Guest</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="148">Guest Code</td>
+			<td width="132">Guest Code</td>
 			<td>
 	<input type='text' name='code' id='code'  value="<?php echo $guest_code;?>" readonly="true" size="7"/>
 			</td>
@@ -212,7 +212,7 @@ $email=$row['email'];
 		<td width="128">Guest Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;</td>
 		<td>
-		<input type='text' name='name' id='name' tabindex="1" value="<?php echo $name;?>"autocomplete="off"/>
+		<input type='text' name='name' id='name' tabindex="1" size="40" value="<?php echo $name;?>"autocomplete="off"/>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -226,16 +226,16 @@ $email=$row['email'];
   <td>
   <table> 
   <tr height="30">
-		<td width="146">Company Name*</td>
+		<td width="132">Company Name*</td>
 			
 		<td>
-		<input type='text' name='office_name' id='office_name' tabindex="2" value="<?php echo $office_name;?>" autocomplete="off"/>
+		<input type='text' name='office_name' id='office_name' tabindex="2" size="42" value="<?php echo $office_name;?>" autocomplete="off"/>
 		</td>
     </tr>
   <tr height="30">
      <td width="120" nowrap="nowrap">Phone</td>
      <td>
-	<input type='text' name='office_phone' id='office_phone' tabindex="3" value="<?php echo $office_phone;?>" autocomplete="off"/>
+	<input type='text' name='office_phone' id='office_phone' size="35" tabindex="3" value="<?php echo $office_phone;?>" autocomplete="off"/>
 	 </td>
 	</tr>
       </table>
@@ -247,21 +247,21 @@ $email=$row['email'];
   <td>
   <table>
     <tr height="30">
-    <td width="111" >Address Line 1*</td>
+    <td width="122" >Address Line 1*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="4" value="<?php echo $address1;?>" /></td>
+    <td><input type="text" id="address1" name="address1" size="40" autocomplete="off" maxlength="20" tabindex="4" value="<?php echo $address1;?>" /></td>
     </tr>
     
 	<tr height="30">
      <td width="111" ><span style="padding-left:55px;">Line 2</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="5" value="<?php echo $address2;?>"  /></td>
+     <td><input type="text" id="address2" name="address2" size="40" autocomplete="off" tabindex="5" value="<?php echo $address2;?>"  /></td>
 	</tr>
 
 	<tr height="30">
      <td width="111" ><span style="padding-left:55px;">Line 3</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="6" value="<?php echo $address3;?>"  /></td>
+     <td><input type="text" id="address3" name="address3" size="40" autocomplete="off" tabindex="6" value="<?php echo $address3;?>"  /></td>
 	</tr>
 </table>
    </td>
@@ -278,12 +278,12 @@ $email=$row['email'];
 <table width="50%" align="left"><!-- start--->
 		
   <tr height="30">
-    <td width="148">Contact Number*</td>
-    <td><input type='text' name='contact_number' id='contact_number' tabindex="7" value="<?php echo $contact_number;?>" autocomplete="off"/></td>
+    <td width="132">Contact Number*</td>
+    <td><input type='text' name='contact_number' id='contact_number' size="35" tabindex="7" value="<?php echo $contact_number;?>" autocomplete="off"/></td>
     </tr>
 	<tr height="30">
-    <td width="148">Email</td>
-    <td><input type='text' name='email' id='email' tabindex="9" value="<?php echo $email;?>" autocomplete="off"/></td>
+    <td width="132">Email</td>
+    <td><input type='text' name='email' id='email' size="35" tabindex="9" value="<?php echo $email;?>" autocomplete="off"/></td>
     </tr>
 	
 </table><!-- end--->
@@ -292,7 +292,7 @@ $email=$row['email'];
 		
 <tr height="30">
      <td width="148" nowrap="nowrap">Alternate Contact No.</td>
-     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="8" value="<?php echo $alt_contact_number;?>" autocomplete="off"/></td>
+     <td><input type='text' name='alt_contact_number' id='alt_contact_number' size="35" tabindex="8" value="<?php echo $alt_contact_number;?>" autocomplete="off"/></td>
 	</tr>
 	
 	

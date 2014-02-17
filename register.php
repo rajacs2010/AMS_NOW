@@ -221,7 +221,7 @@ mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 <td>
 <?php
 $result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-echo '<select name="select_name" id="select_name" tabindex="1" style="width:120px;">';
+echo '<select name="select_name" id="select_name" tabindex="1" style="width:300px;">';
 echo '<option value="0">--Employee--</option>';
 while($row=mysql_fetch_array($result_emp_id))
 {
@@ -234,7 +234,7 @@ echo '</select>';
 <tr height="30">
 <td width="148">Email</td>
 <td>
-<input type='text' name='email' id='email'  value="" size="20" tabindex="3" autocomplete="off"/>
+<input type='text' name='email' id='email'  value="" size="46" tabindex="3" autocomplete="off"/>
 </td>
 </tr>
 </table>
@@ -248,13 +248,13 @@ echo '</select>';
 <tr height="30">
 <td width="148">Password*</td>
 <td>
-<input type='password' name='password' id='password'  value="" size="20"tabindex="4" autocomplete="off"/>
+<input type='password' name='password' id='password' value="" size="20" tabindex="4" autocomplete="off"/>
 </td>
 </tr>
 </table>
 <table width="50%" align="left">
 <tr height="30">
-<td width="148">Usertype*</td>
+<td width="120">Usertype*</td>
 <td>
 <select name="usertype" id="usertype">
 <option value="0">--Select--</option>

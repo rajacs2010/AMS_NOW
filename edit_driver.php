@@ -285,7 +285,7 @@ $state_name=$row['state_name'];
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="1" class="selectbox" style="width:100px;">';
+			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="1" class="selectbox" style="width:202px;">';
 			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
@@ -298,8 +298,8 @@ $state_name=$row['state_name'];
 			}
 			echo '</select>';
 			?>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' readonly class="textbox" size="10" value="<?php echo $emp_code;?>"/></span>
+			&nbsp;
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' size="5" readonly class="textbox" value="<?php echo $emp_code;?>"/></span>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -313,7 +313,7 @@ $state_name=$row['state_name'];
   <td>
   <table>
     <tr height="30">
-    <td width="111" >Address Line 1*</td>
+    <td width="125" >Address Line 1*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" value="<?php echo $address1;?>" /></td>
     </tr>
@@ -377,7 +377,7 @@ $state_name=$row['state_name'];
 		
   <tr height="30">
     <td width="148">Contact Number*</td>
-    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" value="<?php echo $contact_number;?>"/></td>
+    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" size="35" value="<?php echo $contact_number;?>"/></td>
     </tr>
 	
 </table><!-- end--->
@@ -386,7 +386,7 @@ $state_name=$row['state_name'];
 		
 <tr height="30">
      <td width="148" nowrap="nowrap">Alternate Contact No.</td>
-     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="7" value="<?php echo $alt_contact_number;?>"/></td>
+     <td><input type='text' name='alt_contact_number' id='alt_contact_number' size="35" tabindex="7" value="<?php echo $alt_contact_number;?>"/></td>
 	</tr>
 	
 	
@@ -399,12 +399,12 @@ $state_name=$row['state_name'];
 		
   <tr height="30">
     <td width="148">Driving License No.*</td>
-    <td><input type='text' name='licence_number' id='licence_number' tabindex="8" value="<?php echo $license_number;?>"/></td>
+    <td><input type='text' name='licence_number' id='licence_number' size="35" tabindex="8" value="<?php echo $license_number;?>"/></td>
     </tr>
 			
 <tr height="30">
 <td width="148" nowrap="nowrap">Renewal Date</td>
-     <td><input type='text' name='renewal_date' id='renewal_date' tabindex="10" class="datepicker" value="<?php echo $renewal_date;?>"/>
+     <td><input type='text' name='renewal_date' id='renewal_date' tabindex="10" size="10" class="datepicker" value="<?php echo $renewal_date;?>"/>
 	 <input type='hidden' name='hide_date' id='hide_date' tabindex="10" value="<?php echo date('d-m-Y'); ?>"/></td>
 	 </td>
 	 
@@ -416,7 +416,7 @@ $state_name=$row['state_name'];
 		
 <tr height="30">
       <td width="148" nowrap="nowrap">License Date</td>
-     <td><input type='text' name='license_date' id='license_date' tabindex="9" class="datepicker" value="<?php echo $license_date;?>"/></td>
+     <td><input type='text' name='license_date' id='license_date' tabindex="9" size="10" class="datepicker" value="<?php echo $license_date;?>"/></td>
 	</tr>
 	
 </table><!-- end--->			

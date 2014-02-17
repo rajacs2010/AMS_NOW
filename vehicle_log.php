@@ -443,7 +443,7 @@ $(document).live('ready',function() {
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><?php
 		$result_state=mysql_query("select id,vehicle_regno from vehicle");
-		echo '<select name="vehicle_reg_no" id="vehicle_reg_no" tabindex="1">';
+		echo '<select name="vehicle_reg_no" id="vehicle_reg_no" tabindex="1" style="width:270px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
 			echo '<option value="'.$row['id'].'">'.$row['vehicle_regno'].'</option>';
@@ -458,7 +458,7 @@ $(document).live('ready',function() {
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
 			$result_state=mysql_query("SELECT id,emp_name FROM driver");
-			echo '<select name="driver_code" id="driver_code" tabindex="3">';
+			echo '<select name="driver_code" id="driver_code" tabindex="3" style="width:270px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['emp_name']).'</option>';

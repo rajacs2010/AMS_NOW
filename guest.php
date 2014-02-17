@@ -140,7 +140,7 @@ die('Error: ' . mysql_error());
   <legend><strong>Guest</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="148">Guest Code</td>
+			<td width="132">Guest Code</td>
 			<td>
 			<?php
 		 if(!isset($_GET[id]) && $_GET[id] == '') {
@@ -176,8 +176,8 @@ die('Error: ' . mysql_error());
 	 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
 		<td width="128">Guest Name*</td>
-		<td>&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='name' id='name' tabindex="1" autocomplete="off"/>
+		<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td><input type='text' name='name' id='name' size="40" tabindex="1" autocomplete="off"/>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -191,16 +191,16 @@ die('Error: ' . mysql_error());
   <td>
   <table> 
   <tr height="30">
-		<td width="146">Company Name*</td>
+		<td width="132">Company Name*</td>
 			
 		<td>
-		<input type='text' name='office_name' id='office_name' tabindex="2" autocomplete="off"/>
+		<input type='text' name='office_name' id='office_name' size="42" tabindex="2" autocomplete="off"/>
 		</td>
     </tr>
   <tr height="30">
      <td width="120" nowrap="nowrap">Phone</td>
      <td>
-	<input type='text' name='office_phone' id='office_phone' tabindex="3" autocomplete="off"/>
+	<input type='text' name='office_phone' id='office_phone' size="35" tabindex="3" autocomplete="off"/>
 	 </td>
 	</tr>
       </table>
@@ -212,21 +212,21 @@ die('Error: ' . mysql_error());
   <td>
   <table>
     <tr height="30">
-    <td width="111" >Address Line 1*</td>
+    <td width="122" >Address Line 1*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="4" class="areatext" /></td>
+    <td><input type="text" id="address1" name="address1" size="40" autocomplete="off" maxlength="20" tabindex="4" class="areatext" /></td>
     </tr>
     
 	<tr height="30">
      <td width="111" ><span style="padding-left:55px;">Line 2</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="5" class="areatext" /></td>
+     <td><input type="text" id="address2" name="address2" size="40" autocomplete="off" tabindex="5" class="areatext" /></td>
 	</tr>
 
 	<tr height="30">
      <td width="111" ><span style="padding-left:55px;">Line 3</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="6" class="areatext" /></td>
+     <td><input type="text" id="address3" name="address3" size="40" autocomplete="off" tabindex="6" class="areatext" /></td>
 	</tr>
 </table>
    </td>
@@ -243,12 +243,12 @@ die('Error: ' . mysql_error());
 <table width="50%" align="left"><!-- start--->
 		
   <tr height="30">
-    <td width="148">Contact Number*</td>
-    <td><input type='text' name='contact_number' id='contact_number' tabindex="7" autocomplete="off" /></td>
+    <td width="132">Contact Number*</td>
+    <td><input type='text' name='contact_number' id='contact_number' size="35" tabindex="7" autocomplete="off" /></td>
     </tr>
 	<tr height="30">
-    <td width="148">Email</td>
-    <td><input type='text' name='email' id='email' tabindex="9" autocomplete="off"/></td>
+    <td width="132">Email</td>
+    <td><input type='text' name='email' id='email' size="35" tabindex="9" autocomplete="off"/></td>
     </tr>
 	
 </table><!-- end--->
@@ -257,7 +257,7 @@ die('Error: ' . mysql_error());
 		
 <tr height="30">
      <td width="148" nowrap="nowrap">Alternate Contact No.</td>
-     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="8" autocomplete="off"/></td>
+     <td><input type='text' name='alt_contact_number' id='alt_contact_number' size="35" tabindex="8" autocomplete="off"/></td>
 	</tr>
 	
 	

@@ -2092,7 +2092,7 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Regn. No.*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='vregno' id='vregno' value="<?php echo $vehicle_regno;?>" size="20" autocomplete="off" tabindex="1" class="textbox"/></td>
+    <td><input type='text' name='vregno' id='vregno' value="<?php echo $vehicle_regno;?>" size="42" autocomplete="off" tabindex="1" class="textbox"/></td>
     </tr>
     
 	<tr height="30">
@@ -2104,7 +2104,7 @@ $(document).ready(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("select * from master_companies  order by comp_name",$bd);
-		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
+		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3" style="width:278px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			if($row['comp_id'] == $vehicle_comp_id){
@@ -2123,7 +2123,7 @@ $(document).ready(function() {
 	 <tr height="30">
     <td width="120">Make</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='make' id='make' value="<?php echo $make; ?>" size="20" autocomplete="off" tabindex="5" class="textbox"/></td>
+    <td><input type='text' name='make' id='make' value="<?php echo $make; ?>" size="42" autocomplete="off" tabindex="5" class="textbox"/></td>
     </tr>
     
     <tr height="30">
@@ -2246,7 +2246,7 @@ $(document).ready(function() {
      <td>
      <?php
 			$result_state=mysql_query("select id,name,vendor_code from vendor");
-			echo '<select name="insurance_company" id="insurance_company" tabindex="10" style="width:100px;">';
+			echo '<select name="insurance_company" id="insurance_company" tabindex="10" style="width:310px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				if($row['id'] == $insurance_company){
@@ -2382,7 +2382,7 @@ $(document).ready(function() {
 	</tr>
 
 	<tr height="30">
-     <td width="120">Next Inspection Date</td>
+     <td width="120">Next Insp. Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type="text" id="next_inspection_date" name="next_inspection_date" value="<?php echo $next_inspection_date;?>" size="10" autocomplete="off" tabindex="5" class="datepicker areatext" /></td>
 	</tr>
@@ -2446,7 +2446,7 @@ $(document).ready(function() {
 	</tr>
 
 	<tr height="30">
-     <td width="120">Next Inspection Date</td>
+     <td width="120">Next Insp. Date</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type="text" id="pollution_inspection_date" name="pollution_inspection_date" value="<?php echo $pollution_inspection_date;?>" size="10" autocomplete="off" tabindex="10" class="datepicker areatext" /></td>
 	</tr>
@@ -2496,7 +2496,7 @@ $(document).ready(function() {
     <tr height="30">
     <td width="120">Registration</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>	
-    <td><?php echo $car_reg_attach; ?>
+    <td><?php echo $car_reg_attach."<br>"; ?>
     <input type='hidden' name='car_doc_attach' id='car_doc_attach' value="<?php echo $car_reg_attach; ?>" />
     <input type='file' name='car_reg_attach' id='car_reg_attach' tabindex="11" class="textbox"/></td>
     </tr>
@@ -2506,7 +2506,7 @@ $(document).ready(function() {
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<!-- <td><img width="15px" height="15px" src="images/currency.gif"></td> -->
 		<td>
-		<?php echo $tax_attach; ?>
+		<?php echo $tax_attach."<br>"; ?>
    	 <input type='hidden' name='tax_doc_attach' id='tax_doc_attach' value="<?php echo $tax_attach; ?>" />
     	<input type='file' name='tax_attach' id='tax_attach' tabindex="13" class="textbox"/></td>
 	</tr>
@@ -2514,7 +2514,7 @@ $(document).ready(function() {
 	<tr height="30">
      <td width="120">Fitness</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><?php echo $fitness_attach; ?>
+     <td><?php echo $fitness_attach."<br>"; ?>
    	 <input type='hidden' name='fit_doc_attach' id='fit_doc_attach' value="<?php echo $fitness_attach; ?>" />
      <input type='file' name='fitness_attach' id='fitness_attach' tabindex="15" class="textbox"/></td>
 	</tr>
@@ -2531,21 +2531,21 @@ $(document).ready(function() {
   <table>
 	<tr height="30">
      <td width="120" nowrap="nowrap">Insurance</td>
-     <td><?php echo $insurance_attach; ?>
+     <td><?php echo $insurance_attach."<br>"; ?>
    	 <input type='hidden' name='ins_doc_attach' id='ins_doc_attach' value="<?php echo $insurance_attach; ?>" />
      <input type='file' name='insurance_attach' id='insurance_attach' tabindex="12" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
     <td width="120">Pollution</td>
-    <td><?php echo $pollution_attach; ?>
+    <td><?php echo $pollution_attach."<br>"; ?>
    	 <input type='hidden' name='pol_doc_attach' id='pol_doc_attach' value="<?php echo $pollution_attach; ?>" />
     <input type='file' name='pollution_attach' id='pollution_attach' tabindex="14" class="textbox"/></td>
     </tr>
     
     <tr height="30">
     <td width="120">Others</td>
-    <td><?php echo $others_attach; ?>
+    <td><?php echo $others_attach."<br>"; ?>
     <input type='hidden' name='others_doc_attach' id='others_doc_attach' value="<?php echo $others_attach; ?>" />
     <input type='file' name='others_attach' id='others_attach' tabindex="16" class="textbox"/></td>
     </tr>

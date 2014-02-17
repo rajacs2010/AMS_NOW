@@ -234,13 +234,13 @@ if(isset($_POST['save'])) {
   <legend><strong>Generator Details</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			 <td width="120">Building Name*</td>
+			 <td width="149">Building Name*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				
 				<?php
 									$result_state=mysql_query("SELECT id,building_name from building");
-									echo '<select name="building_code" id="building_code" tabindex="1"  >';
+									echo '<select name="building_code" id="building_code" tabindex="1"  style="width:220px;">';
 									echo '<option value="0">--Select--</option>';
 									while($row=mysql_fetch_array($result_state))
 									{
@@ -293,7 +293,7 @@ if(isset($_POST['save'])) {
 			</td>
 			</tr>
 			<tr height="30">
-				<td width="120">Maintenance Due Date*</td>
+				<td width="120">Maint. Due Date*</td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
 				<td>
 				<input type="text" name="mduedate" id="mduedate" value="<?php echo $due_date;?>" size="10" autocomplete='off' tabindex="2" class="datepicker"/>	
@@ -306,8 +306,8 @@ if(isset($_POST['save'])) {
   <legend><strong>Maintenance Details</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="120">Maintenance Done Date*</td>
-				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td width="135" style="white-space:nowrap;">Maint. Done Date*</td>
+				 <td>&nbsp;&nbsp;&nbsp;</td>
 				 <td>
 					<input type='text' name='donedate' id='donedate' value="<?php echo $done_date;?>" size="10" tabindex="5" autocomplete="off" class="datepicker"/>
 				  </td>
@@ -317,12 +317,12 @@ if(isset($_POST['save'])) {
 
 	 <table width="50%" align="left"><!-- start--->
 		<tr height="30">
-			 <td width="120">Vendor Name*</td>
+			 <td width="155">Vendor Name*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>				
 				<?php
 					$result_state=mysql_query("SELECT id,name from vendor_bms");
-					echo '<select name="vendor_code" id="vendor_code" tabindex="11" >';
+					echo '<select name="vendor_code" id="vendor_code" tabindex="11" style="width:240px;">';
 					echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state)) {
 					
@@ -342,7 +342,7 @@ if(isset($_POST['save'])) {
 
 <table width="100%" align="left"><!-- start--->
 			<tr height="30">
-				 <td width="142">Description</td>
+				 <td width="137">Description</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>					
 					<input type='text' name='desc' id='desc' size="70" tabindex="4" autocomplete="off" value="<?php echo $description;?>"/>					
@@ -361,13 +361,13 @@ if(isset($_POST['save'])) {
 						$symbol=$row['symbol'];
 					}							
 				?>
-			 <td width="50" align="right"><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
+			 <td width="10" ><img width="15px" height="15px" src="images/<?php echo $symbol;?>" style="vertical-align:middle;"></img></td>
 			 <td><input type='text' name='add_currency' id='add_currency' value="<?php echo $currency_name;?>" size="4"  readonly="true" tabindex="7" autocomplete="off"/>
 			 </td>
 			</tr>
 					<tr height="30">
-				 <td width="120">Next Maintenance Due Date*</td>
-			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				 <td width="120" style="white-space:nowrap;">Next Maint. Due Date*</td>
+			 <td width="10"></td>
 			 <td>				
 				<input type="text" name="nextduedate" id="nextduedate" value="<?php echo $next_due_date;?>" size="10" autocomplete='off' tabindex="6" class="datepicker" />
 				<input type='hidden' name='hide_date' id='hide_date' tabindex="10" value="<?php echo date('d-m-Y'); ?>"/>

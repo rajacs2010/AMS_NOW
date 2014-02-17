@@ -32,12 +32,12 @@ if(file_exists($header_file)) {
 if($_REQUEST['job_name']!='') {
 	$var = @$_REQUEST['job_name'] ;
 	$trimmed = trim($var);	
-	$qry="SELECT rej.id AS REJID,re.req_number AS REQ_NUM, jobs.job_desc AS jobdesc,request_number,ar.lead_name AS admin_lead_name, job_assigned_name,start_date,rej.expected_date AS EXP_DATE,rej.completion_date AS COM_DATE,rej.est_cost EST_COST,rej.actual_cost AS ACT_COST,no_revision FROM `requestjobs` rej LEFT JOIN jobs ON rej.job_id = jobs.id LEFT JOIN admin_responsibility AS ar ON rej.admin_res_name = ar.id LEFT JOIN request re ON rej.request_number = re.id WHERE jobs.job_desc LIKE '%".$trimmed."%'";
+	$qry="SELECT rjc.id AS RJCID,re.req_number AS REQ_NUM, jobs.job_desc AS jobdesc,request_number,CONCAT(UCASE(LEFT(ce.name, 1)),LCASE(SUBSTRING(ce.name, 2))) AS CENAME,rjc.est_cost EST_COST,rjc.actual_cost AS ACT_COST FROM `requestjobcost` rjc, jobs, costtypeelement cte, costelement ce, request re WHERE rjc.job_id = jobs.id AND rjc.request_number = re.id AND rjc.cost_element = cte.cost_elementid AND cte.cost_elementid = ce.id AND jobs.job_desc LIKE '%".$trimmed."%'";
 } else { 
-	$qry="SELECT rej.id AS REJID,re.req_number AS REQ_NUM, jobs.job_desc AS jobdesc,request_number,ar.lead_name AS admin_lead_name, job_assigned_name,start_date,rej.expected_date AS EXP_DATE,rej.completion_date AS COM_DATE,rej.est_cost EST_COST,rej.actual_cost AS ACT_COST,no_revision FROM `requestjobs` rej LEFT JOIN jobs ON rej.job_id = jobs.id LEFT JOIN admin_responsibility AS ar ON rej.admin_res_name = ar.id LEFT JOIN request re ON rej.request_number = re.id";
+	$qry="SELECT rjc.id AS RJCID,re.req_number AS REQ_NUM, jobs.job_desc AS jobdesc,request_number,CONCAT(UCASE(LEFT(ce.name, 1)),LCASE(SUBSTRING(ce.name, 2))) AS CENAME,rjc.est_cost EST_COST,rjc.actual_cost AS ACT_COST FROM `requestjobcost` rjc, jobs, costtypeelement cte, costelement ce, request re WHERE rjc.job_id = jobs.id AND rjc.request_number = re.id AND rjc.cost_element = cte.cost_elementid AND cte.cost_elementid = ce.id";
 }
 $results=mysql_query($qry);
-$num_rows= mysql_num_rows($results);	
+$num_rows= mysql_num_rows($results);
 
 $params			=	$job_name."&".$sortorder."&".$ordercol;
 
@@ -77,7 +77,7 @@ $Num_Pages = (int)$Num_Pages;
 }
 if($sortorder == "")
 {
-	$orderby	=	"ORDER BY rej.id DESC";
+	$orderby	=	"ORDER BY rjc.id DESC";
 } else {
 	$orderby	=	"ORDER BY $ordercol $sortorder";
 }
@@ -105,7 +105,7 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 function delcall(id,name) {
 	var confirmdata		=	confirm("Are You Sure You Want to Delete : "+name);
 	if(confirmdata) {
-		window.location = "view_requestjobs.php?id="+id+"&del=del";
+		window.location = "view_requestjobcost.php?id="+id+"&del=del";
 	}
 }
 function reqviewajax(page,params){   // For pagination and sorting of the Collection Deposited view page
@@ -114,7 +114,7 @@ function reqviewajax(page,params){   // For pagination and sorting of the Collec
 	var sortorder		=	splitparam[1];
 	var ordercol		=	splitparam[2];
 	$.ajax({
-		url : "ajax_viewrequestjobs.php",
+		url : "ajax_viewrequestjobcost.php",
 		type: "get",
 		dataType: "text",
 		data : { "job_name" : job_name, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
@@ -129,7 +129,7 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 	var job_name	=	$("input[name='job_name']").val();
 	//alert(building_name);
 	$.ajax({
-		url : "ajax_viewrequestjobs.php",
+		url : "ajax_viewrequestjobcost.php",
 		type: "get",
 		dataType: "text",
 		data : { "job_name" : job_name, "page" : page },
@@ -144,11 +144,11 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 
 <div id="mainareadaily">
 <div class="mcf"></div>
-<div><h2 align="center">REQUEST-JOBS</h2></div> 
+<div><h2 align="center">REQUEST-JOB-COST</h2></div> 
 
 <div id="containerprforcd">
 
-<span style="float:left;"><input type="button" name="kdproduct" value="Add Request-Jobs" class="buttonsbig" onclick="window.location='requestjobs.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=1'"></span>
+<span style="float:left;"><input type="button" name="kdproduct" value="Add Request-Job-Cost" class="buttonsbig" onclick="window.location='requestjobcost.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=1'"></span>
 
 <div class="clearfix"></div>
  <div id="search">
@@ -158,10 +158,10 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
  <div class="clearfix"></div>
         <?php
 		if($_GET['id']!='' && $_GET['del'] == 'del'){
-			$query = "DELETE FROM `requestjobs` WHERE id = $id";
+			$query = "DELETE FROM `requestjobcost` WHERE id = $id";
 			//Run the query
 			$result = mysql_query($query) or die(mysql_error());
-			header("location:view_requestjobs.php?success=del");
+			header("location:view_requestjobcost.php?success=del");
 		 }		
 		?>
 		<div id="colviewajaxid">
@@ -179,15 +179,10 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 				} else {
 					$sortorderby = 'ASC';
 				}
-				$paramsval	=	$job_name."&".$sortorderby."&admin_lead_name"; ?>
-				<th nowrap="nowrap" class="rounded" onClick="reqviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Admin Responsibility<img src="images/sort.png" width="13" height="13" /></th>				
-				<th>Job Assigned To</th>
-				<th>Start Date</th>
-				<th>Expected Date</th>
-				<th>Completion Date</th>
-				<th>No. of Revisions</th>
-				<th >Estimated Cost</th>
-				<th >Actual Cost</th>
+				$paramsval	=	$job_name."&".$sortorderby."&ce.name"; ?>
+				<th nowrap="nowrap" class="rounded" onClick="reqviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Element Name<img src="images/sort.png" width="13" height="13" /></th>				
+				<th>Estimated Cost</th>
+				<th>Actual Cost</th>
 				<th align="right">Edit/Del</th>
 			</tr>
 			</thead>
@@ -198,30 +193,17 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 				$c=0;$cc=1;
 				while($fetch = mysql_fetch_array($results_dsr)) {
 				if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
-				$id			=	$fetch['REJID'];
+				$id			=	$fetch['RJCID'];
 			?>
 			<tr>
 				<td><?php echo $fetch['REQ_NUM']; ?></td>
 				<td><?php echo $fetch['jobdesc']; ?></td>
-				<td><?php echo $fetch['admin_lead_name']; ?></td>
-				<td><?php  
-					$fgmembersite->DBLogin();
-					$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
-					or die("Opps some thing went wrong");
-					mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-					$result_emp_id=mysql_query("select first_name from pim_emp_info WHERE emp_code = '$fetch[job_assigned_name]' ",$bd) or die(mysql_error());
-					$row=mysql_fetch_array($result_emp_id);
-					echo $job_assigned_to	=	$fgmembersite->upperstate($row['first_name']);				
-				?></td>
-				<td><?php echo $fetch['start_date']; ?></td>
-				<td><?php echo $fetch['EXP_DATE']; ?></td>
-				<td><?php echo $fetch['COM_DATE']; ?></td>
-				<td><?php echo $fetch['no_revision']; ?></td>
+				<td><?php echo $fetch['CENAME']; ?></td>
 				<td><?php echo $fetch['EST_COST']; ?></td>
 				<td><?php echo $fetch['ACT_COST']; ?></td>
 				<td nowrap="nowrap">
-				<a href="edit_requestjobs.php?id=<?php echo $fetch['REJID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['REJID']; ?>','<?php echo $fetch['REQ_NUM']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
+				<a href="edit_requestjobcost.php?id=<?php echo $fetch['RJCID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['RJCID']; ?>','<?php echo $fetch['REQ_NUM']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 

@@ -38,19 +38,15 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	//exit;	
 	
 	$fgmembersite->DBLogin();
-	$request_number			=	$_POST['request_number'];
-	$job_id					=	$_POST['job_id'];	
-	$cost_element			=	$_POST['cost_element'];
-	$est_cost				=	$_POST['est_cost'];
-	$actual_cost			=	$_POST['actual_cost'];
-	
-	$user_id					=	$_SESSION['user_id'];
-	//echo 'INSERT INTO requestjobs SET request_number="'.$request_number.'",job_id="'.$job_id.'",admin_res_name="'.$admin_res_name.'",job_assigned_name="'.$job_assigned_name.'",start_date="'.$start_date.'",expected_date="'.$expected_date.'",completion_date="'.$completion_date.'",no_revision="'.$no_revision.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",created_by="'.$user_id.'" '; 
+	$job_code				=	$_POST['job_code'];
+	$admin_res_code			=	$_POST['admin_res_code'];
+	$user_id				=	$_SESSION['user_id'];
+	//echo 'INSERT INTO jobs SET job_code="'.$job_code.'",job_desc="'.$job_desc.'",job_type_id="'.$job_type_id.'",created_by="'.$user_id.'"  '; 
 	//exit;
-	if(!mysql_query('INSERT INTO requestjobcost SET request_number="'.$request_number.'",job_id="'.$job_id.'",cost_element="'.$cost_element.'",est_cost="'.$est_cost.'",actual_cost="'.$actual_cost.'",created_by="'.$user_id.'" ')) {
+	if(!mysql_query('INSERT INTO jobadmin SET job_code="'.$job_code.'",admin_res_code="'.$admin_res_code.'",created_by="'.$user_id.'" ')) {
 	die('Error: ' . mysql_error());
 }
-	echo'<script> window.location="view_requestjobcost.php?success=create"; </script> ';
+	echo'<script> window.location="view_jobadmin.php?success=create"; </script> ';
 }
 ?>
 <style type="text/css">
@@ -122,7 +118,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
   color:transparent;
 }
 .scroll_box {
-	height:207px;
+	height:145px;
 	overflow:auto;
 }
 .alignment2 {
@@ -152,42 +148,34 @@ $(document).live('ready',function() {
 	$.each(nameArr, function(i, el){
 	    if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
 	});
-
+	
 	console.log(uniqueNames);
 	   
 	//alert(12121);
-	$("#request_number").focus();
+	$("#job_desc").focus();
 	//alert(8989);	
-		
-	$("#cost_element").live('change',function(event) {
-		var selvalue_jobid=$(this).val();
-		console.log(selvalue_jobid);
-		if(selvalue_jobid!= 0) {
-			$('#display_cost_units').load('ajax_requestjobcost.php?costelementid='+selvalue_jobid);
+	
+	$("#job_desc").change(function(event) {
+		var selvalue=document.getElementById("job_desc").value;
+		if (selvalue != 0) {
+			$('#job_code').val(selvalue);
+		}
+		else {
+			document.getElementById("job_code").value = "";			
 		}
 	});
-		
-	$("#request_number").live('change',function(event){
-		var selvalue_request_number=document.getElementById("request_number").value;
-		if (selvalue_request_number != 0) {
-			$.ajax({
-				url			:	"ajax_requestjobcost.php",
-				type		:	"post",
-				dataType	:	"text",
-				data		:	{ "request_number" : selvalue_request_number },
-				cache		:	false,
-				success		:	function(dataval) {
-					var splitval	=	dataval.split("~");
-					$("#job_name").val(splitval[0]);
-					$("#job_code").val(splitval[1]);
-					$("#job_id").val(splitval[2]);
-					$("#est_cost").val(splitval[3]);
-					$("#actual_cost").val(splitval[4]);					
-				} 
-			});	          
+
+	$("#admin_res_code").change(function(event) {
+		var selvalue=document.getElementById("admin_res_code").value;
+		if (selvalue != 0) {
+			$('#lead_code').val(selvalue);
 		}
-	});	
+		else {
+			document.getElementById("lead_code").value = "";			
+		}
+	});
 	
+		
 	$(function () {
 		/*$('#closebutton').button({
 			icons: {
@@ -205,25 +193,26 @@ $(document).live('ready',function() {
 	
 	$("#part_save").on("click", function() {
 		//alert("232");
-		var request_number		=	$("#request_number").val();
-		var cost_element		=	$("#cost_element").val();
+		var job_code			=	$("#job_code").val();
+		var job_desc			=	$("#job_desc").val();
+		var admin_res_code		=	$("#admin_res_code").val();
 	
-		if(request_number == '0') {
-			$('.myalignbuild').html('ERR : Select Request Number');
+		if(job_desc == '0') {
+			$('.myalignbuild').html('ERR : Select Job Description');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#request_number").focus();
+			$("#job_desc").focus();
 			return false;
 		}
-		if(cost_element == '0') {
-			$('.myalignbuild').html('ERR : Select Cost Element');
+		if(admin_res_code == '0') {
+			$('.myalignbuild').html('ERR : Select Leader Name');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
-			$("#cost_element").focus();
+			$("#admin_res_code").focus();
 			return false;
 		}
 		//return false;
@@ -234,7 +223,7 @@ $(document).live('ready',function() {
 </script>
 <div id="mainareabuild">
 <div class="mcf"></div>
-<div align="center" class="headingsgr">REQUEST-JOB-COST</div>
+<div align="center" class="headingsgr">JOB-ADMIN RESPONSIBILITY</div>
 <div id="mytableformbuild" align="center">
 <form id='diesel_save' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 <div class="scroll_box">
@@ -244,35 +233,89 @@ $(document).live('ready',function() {
  <tr>
   <td>
 <fieldset align="left" class="alignment2">
-  <legend ><strong>Request-Job-Cost</strong></legend>
+  <legend ><strong>Job-Admin Responsibility</strong></legend>
 <table width="50%" align="left">
  <tr>
   <td>
   <table>
     <tr height="30">
-     <td width="120" class="nowrapcls">Request Number*</td>
+     <td width="120" class="nowrapcls">Job Description*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
     	$fgmembersite->DBLogin();
-		$result_state=mysql_query("SELECT rj.id AS REQID,r.req_number AS REQNUM FROM requestjobs rj,request r WHERE rj.request_number = r.id");
-		echo '<select name="request_number" id="request_number" tabindex="1">';
+		$result_state=mysql_query("SELECT id,job_code,job_desc FROM jobs");
+		echo '<select name="job_desc" id="job_desc" style="width:150px;" tabindex="3">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
-			echo '<option value="'.$row['REQID'].'">'.$row['REQNUM'].'</option>';
+			echo '<option value="'.$row['job_code'].'">'.$row['job_desc'].'</option>';
 		}
 		echo '</select>';
-	?>
+	 ?>
+     </td>
+	</tr>
+	
+    </table>
+   </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Left Table End -------------------------------------->
+
+<table width="50%" align="left">
+ <tr>
+  <td>
+   <table>
+      
+    <tr height="30">
+     <td width="75" style="white-space: nowrap; ">Job Code</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td>
+     	<div id="display_jobcode">
+     		<input type='text' name='job_code' id='job_code' size="52" tabindex="2" readonly class="textbox"/>
+     	</div>
+     </td>
+	</tr>
+   
+   </table>
+  </td>
+ </tr>
+</table>
+
+<!----------------------------------------------- Right Table End -------------------------------------->
+
+</fieldset>
+  </td>
+</tr>
+</table>
+
+
+<table width="100%" align="left">
+ <tr>
+  <td>
+<fieldset align="left" class="alignment2">
+  <legend ><strong>Admin Responsibility</strong></legend>
+<table width="50%" align="left">
+ <tr>
+  <td>
+  <table>  
+	
+	<tr height="30">
+     <td width="120" class="nowrapcls">Leader Name*</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td><?php
+    	$fgmembersite->DBLogin();
+		$result_state=mysql_query("SELECT id,lead_code,lead_name FROM admin_responsibility");
+		echo '<select name="admin_res_code" id="admin_res_code" style="width:150px;" tabindex="3">';
+		echo '<option value="0">--Select--</option>';
+		while($row=mysql_fetch_array($result_state)) {
+			echo '<option value="'.$row['lead_code'].'">'.$fgmembersite->upperstate($row['lead_name']).'</option>';
+		}
+		echo '</select>';
+	 ?>
    </td>
 	</tr>	
 	
-   <tr height="30">
-     <td width="120">Job Name*</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><div id="display_jobname"><input type='text' name='job_name' id='job_name' size="44" tabindex="2" readonly class="textbox"/>
-     <input type='hidden' name='job_id' id='job_id' size="44" tabindex="3" class="textbox"/>
-     
-     </div></td>
-	</tr>
+  
     
     </table>
    </td>
@@ -284,94 +327,18 @@ $(document).live('ready',function() {
 <table width="50%" align="left">
  <tr>
   <td>
-   <table>    
-   
-   <tr height="30">
-		 <td width="120" nowrap="nowrap"></td>
-		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td></td>
-	</tr>
-
-    <tr height="30">
-     <td width="120">Job Code</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><div id="display_jobcode"><input type='text' name='job_code' id='job_code' size="6" tabindex="3" readonly class="textbox"/></div></td>
-	</tr>
-   
-   </table>
-  </td>
- </tr>
-</table>
-
-<!----------------------------------------------- Right Table End -------------------------------------->
-
-</fieldset>
-  </td>
-</tr>
-</table>
-
-
-<table width="100%" align="left">
- <tr>
-  <td>
-<fieldset align="left" class="alignment2">
-  <legend ><strong>Cost Details</strong></legend>
-<table width="50%" align="left">
- <tr>
-  <td>
-  <table>
-    
-    <tr height="30">
-    <td width="120" nowrap="nowrap">Cost Element</td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><?php
-    	$fgmembersite->DBLogin();
-		$result_state=mysql_query("SELECT cte.cost_elementid AS CEID,ce.name CENAME FROM costtypeelement cte, costelement ce WHERE cte.cost_elementid = ce.id");
-		echo '<select name="cost_element" id="cost_element" style="width:150px;" tabindex="4">';
-		echo '<option value="0">--Select--</option>';
-		while($row=mysql_fetch_array($result_state)) {
-			echo '<option value="'.$row['CEID'].'">'.$fgmembersite->upperstate($row['CENAME']).'</option>';
-		}
-		echo '</select>';
-	 ?></td>
-    </tr>
-    
-	<tr height="30">
-     <td width="120">Estimated Cost</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='est_cost' id='est_cost' tabindex="6" style="text-align:right;" value="" readonly class="textbox"/></td>
-	</tr>
-
-	
-	
-   </table>
-   </td>
- </tr>
-</table>
-
-<!----------------------------------------------- Left Table End -------------------------------------->
-
-<table width="50%" align="left">
- <tr>
-  <td>
    <table>
-   
-   <tr height="30">
-		<td width="120">Units</td>
-		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td>
-			<div id="display_cost_units">
-				<input type='text' name='cost_units' id='cost_units' size="10" tabindex="5" value="" readonly class="textbox"/>
-			</div>
-			</td>
-    </tr>
-   
-	<tr height="30">
-		 <td width="120" nowrap="nowrap">Actual Cost</td>
-		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='actual_cost' id='actual_cost' style="text-align:right;" tabindex="7" value="" readonly class="textbox"/></td>
+      
+    <tr height="30">
+     <td width="75" style="white-space: nowrap; ">Leader Code</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td>
+     	<div id="display_leadcode">
+     		<input type='text' name='lead_code' id='lead_code' size="50" tabindex="2" readonly class="textbox"/>
+     	</div>
+     </td>
 	</tr>
-    	
+   
    </table>
   </td>
  </tr>
@@ -383,6 +350,11 @@ $(document).live('ready',function() {
   </td>
 </tr>
 </table>
+
+
+
+
+
 
 
 
@@ -399,7 +371,7 @@ $(document).live('ready',function() {
 	 <input type="hidden" name="edit_id" id="edit_id" /> <!-- This is the partial saved id of the building table when partial save is completed, it will get the id from the db (ajax) -->
      <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
      <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=1'"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_requestjobcost.php'"/></td>
+	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_jobadmin.php'"/></td>
 	 </td>
      </tr>
   </table>

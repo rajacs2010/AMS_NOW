@@ -430,11 +430,11 @@ $(document).live('ready',function() {
   <td>
   <table>
     <tr height="30">
-    <td width="120" nowrap="nowrap">Vehicle Regn. No.*</td>
+    <td width="120" style="white-space:nowrap;">Vehicle Regn. No.*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><?php
 		$result_state=mysql_query("select * from vehicle");
-		echo '<select name="vehicle_reg_id" id="vehicle_reg_id" tabindex="1">';
+		echo '<select name="vehicle_reg_id" id="vehicle_reg_id" tabindex="1" style="width:270px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{
@@ -466,7 +466,7 @@ $(document).live('ready',function() {
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><?php
 				$result_state=mysql_query("SELECT id,name FROM vendor");
-				echo '<select name="vendor_id" id="vendor_id" tabindex="5">';
+				echo '<select name="vendor_id" id="vendor_id" tabindex="5" style="width:270px;">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{
@@ -579,7 +579,7 @@ $(document).live('ready',function() {
 		<td width="120">Vendor Code</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><div id="display_vendor_id">
-			<input type='text' name='vendor_name' id='vendor_name' tabindex="6" readonly autocomplete="off" class="textbox" />
+			<input type='text' name='vendor_name' id='vendor_name' size="10" tabindex="6" readonly autocomplete="off" class="textbox" />
 			</div>
 		</td>
     </tr>

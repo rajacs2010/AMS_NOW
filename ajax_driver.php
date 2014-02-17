@@ -89,7 +89,7 @@ $result=mysql_query("SELECT vendor_code from vendor where id=$selvalue");
 								$vendor_code=$row['vendor_code'];
 							}
 ?>
-<input type='text' name='vendor_name' id='vendor_name' tabindex="6" class="textbox" value="<?php echo $vendor_code; ?>" readonly="true"/>
+<input type='text' name='vendor_name' id='vendor_name' size="10" tabindex="6" class="textbox" value="<?php echo $vendor_code; ?>" readonly="true"/>
 <?php
 }
 if($_GET["selvalue_bought_by"]) {
@@ -100,7 +100,7 @@ if($_GET["selvalue_bought_by"]) {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-		echo '<select name="emp_bought_id" id="emp_bought_id" style="width:100px;" tabindex="14" class="selectbox">';
+		echo '<select name="emp_bought_id" id="emp_bought_id" style="width:172px;" tabindex="14" class="selectbox">';
 		echo '<option value="0">--Employee--</option>';
 		while($row=mysql_fetch_array($result_emp_id))
 		{
@@ -111,7 +111,7 @@ if($_GET["selvalue_bought_by"]) {
 	if($selvalue==2)
 	{
 						$result_state=mysql_query("select id,emp_name from driver");
-						echo '<select name="driver_bought_id" id="driver_bought_id" tabindex="14" style="width:100px;" class="selectbox">';
+						echo '<select name="driver_bought_id" id="driver_bought_id" tabindex="14" style="width:172px;" class="selectbox">';
 						echo '<option value="0">--Driver--</option>';
 						while($row=mysql_fetch_array($result_state))
 						{

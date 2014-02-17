@@ -738,7 +738,7 @@ $('#attach3').change(function() {
   <table>
   
   <tr height="30">
-     <td width="120">Request Number</td>
+     <td width="120" style="white-space:nowrap;">Request Number</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
    <input type='text' name='req_number' id='req_number' tabindex="1" size="10" class="textbox" value="<?php echo $row_edit[req_number];?>" readonly="true"/></td>
@@ -766,11 +766,11 @@ $('#attach3').change(function() {
 	 <tr height="30">
      <td width="120">Request Desc.</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input name='req_desc' id='req_desc' tabindex="6" size="42" value="<?php echo $row_edit[req_desc]; ?>" class="textbox"></td>
+     <td><input name='req_desc' id='req_desc' tabindex="6" size="41" value="<?php echo $row_edit[req_desc]; ?>" class="textbox"></td>
 	</tr>
 	
 	<tr height="30">
-     <td width="120">Req. Taken By*</td>
+     <td width="120" style="white-space:nowrap;">Req. Taken By*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
 		$fgmembersite->DBLogin();
@@ -778,7 +778,7 @@ $('#attach3').change(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("SELECT * FROM pim_emp_info  ORDER BY first_name",$bd);
-		echo '<select name="request_takenby" id="request_takenby" class="selectbox" tabindex="8">';
+		echo '<select name="request_takenby" id="request_takenby" class="selectbox" tabindex="8" style="width:268px;">';
 		echo '<option value="0">--Employee--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			if($row['emp_code'] == $row_edit['request_takenby']){
@@ -823,7 +823,7 @@ $('#attach3').change(function() {
 				or die("Opps some thing went wrong");
 				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info order by emp_id",$bd);
-				echo '<select name="emp_request_id" id="emp_request_id" style="width:100px;" tabindex="14" class="selectbox">';
+				echo '<select name="emp_request_id" id="emp_request_id" style="width:206px;" tabindex="14" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_emp_id)) {
 					if($row['emp_code'] == $row_edit['emp_request_id']){
@@ -839,7 +839,7 @@ $('#attach3').change(function() {
 			if($selvalue==2) {
 				$fgmembersite->DBLogin();
 				$result_state=mysql_query("select id,name,guest_code from guest");
-				echo '<select name="guest_request_id" id="guest_request_id" tabindex="14" style="width:100px;" class="selectbox">';
+				echo '<select name="guest_request_id" id="guest_request_id" tabindex="14" style="width:206px;" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{	
@@ -894,10 +894,10 @@ $('#attach3').change(function() {
 	</tr>
 	
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Req. Taken By Code</td>
+		 <td width="120" style="white-space:nowrap;">Req. Taken By Code</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td>
-		 	<div id="display_empname"><input type='text' name='emp_codetakenby' id='emp_codetakenby' value="<?php echo $request_takenbycode; ?>" tabindex="9" readonly class="textbox"/></div>
+		 	<div id="display_empname"><input type='text' name='emp_codetakenby' id='emp_codetakenby' size="6" value="<?php echo $request_takenbycode; ?>" tabindex="9" readonly class="textbox"/></div>
 		 </td>
 	</tr>
 	
@@ -926,7 +926,7 @@ $('#attach3').change(function() {
     <tr height="30">
      <td width="120">Additional Details</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="additional_det" name="additional_det" value="<?php echo $row_edit[additional_det]; ?>" tabindex="10" size="39" /></td>
+     <td><input type="text" id="additional_det" name="additional_det" value="<?php echo $row_edit[additional_det]; ?>" tabindex="10" size="41" /></td>
 	</tr>
     
     <tr height="30">

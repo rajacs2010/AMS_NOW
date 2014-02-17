@@ -372,7 +372,7 @@ $(document).ready(function() {
 	 <td><?php
 		$fgmembersite->DBLogin();
 		$result_state=mysql_query("SELECT id,building_code,building_name from building");
-		echo '<select name="building_code" id="building_code" tabindex="1" >';
+		echo '<select name="building_code" id="building_code" tabindex="1" style="width:290px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{
@@ -446,7 +446,7 @@ $(document).ready(function() {
     <tr height="30">
 	 <td width="120" nowrap="nowrap">From Date*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-	 <td><input type='text' name='fromdate' id='fromdate' tabindex="4" readonly style="width:70px;" value="<?php echo date('d-m-Y'); ?>" class="datepicker textbox"/></td>
+	 <td><input type='text' name='fromdate' id='fromdate' tabindex="4" readonly style="width:70px;" value="<?php echo ""; ?>" class="datepicker textbox"/></td>
 	</tr>
     
     <tr height="30">	     
@@ -481,7 +481,7 @@ $(document).ready(function() {
    <table>
 	<tr height="30">
      <td width="120">To Date*</td>
-     <td><input type='text' name='todate' id='todate' tabindex="5" readonly style="width:70px;" value="<?php echo date('d-m-Y'); ?>" class="datepicker textbox"/></td>
+     <td><input type='text' name='todate' id='todate' tabindex="5" readonly style="width:70px;" value="<?php echo ""; ?>" class="datepicker textbox"/></td>
 	</tr>
 	
 	<tr height="30">

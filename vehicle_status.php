@@ -142,7 +142,7 @@ $result = mysql_query($query);
 			<td>
 	<?php
 					$result_state=mysql_query("select * from vehicle");
-					echo '<select name="vehicle_reg_id" id="vehicle_reg_id" tabindex="1">';
+					echo '<select name="vehicle_reg_id" id="vehicle_reg_id" tabindex="1" style="width:270px;">';
 					echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{

@@ -177,7 +177,7 @@ die('Error: ' . mysql_error());
 			
 		
 			<tr height="30">
-			 <td width="120">Employee Name*</td>
+			 <td width="120" style="white-space:nowrap;">Employee Name*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				<?php			 
@@ -186,7 +186,7 @@ die('Error: ' . mysql_error());
 				or die("Opps some thing went wrong");
 				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-				echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="3" style="width:100px;">';
+				echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="3" style="width:310px;">';
 				echo '<option value="0">--Employee--</option>';
 				while($row=mysql_fetch_array($result_emp_id))
 				{
@@ -214,7 +214,7 @@ die('Error: ' . mysql_error());
 				<?php		
 				$fgmembersite->DBLogin();				
 				$result_state=mysql_query("select * from department");
-				echo '<select name="department_id" id="department_id" tabindex="2">';
+				echo '<select name="department_id" id="department_id" tabindex="2" style="width:210px;">';
 				echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{

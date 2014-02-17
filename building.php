@@ -35,8 +35,8 @@ if(file_exists($header_file))	{
   $(document).ready(function(){
     $('#saleagreement').change(function() {
 	
-var existing = new Array();
-var checkFile = new Array();
+var existing 	=	new Array();
+var checkFile 	=	new Array();
 var file = new Array();
 var fileUrl = new Array();
 var counter = 0;
@@ -524,7 +524,7 @@ for (var i = 0; i < 1; i++) {
 							var extension=filenamee.split('.').pop();
 							if ((extension=="pdf" ) || (extension=="png") || (extension=="jpg") ||(extension=="jpeg") ||(extension=="gif"))
 							{
-							return true;
+								return true;
 							}
 							else
 							{
@@ -1044,7 +1044,7 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	//exit;
 	
 	if($edit_id == '') {
-		if(!mysql_query('INSERT INTO building (building_name,building_code,building_type,building_city,building_state,address1,address2,address3,building_status,building_purchase,datelease,building_currency,rentcurrency,building_cost,building_rent,building_period,building_purchasefrom,building_saleagreement,building_landlord,landlord_contactperson,landlod_address1,landlod_address2,landlod_address3,landlord_city,landlord_state,landlord_contactno,landlord_email,landlord_alternateno,landlord_altperson,landlord_altpersonno,leasedead,effectivedate,leaserenewaldate,companyliason_empcode,companyliason_empname,build_desc,attach4,attach5,attach6,attach7,attach8,incharge_empcode,incharge_empname,total_employess,insurance_number,insurance_date,attach9,renewal_due,marker_id,total_maintain_cost,total_currency,created_by)VALUES ("'.$buildingname.'","'.$building_code.'","'.$building_type.'","'.$city.'","'.$state.'","'.$address1.'","'.$address2.'","'.$address3.'","'.$building_status.'","'.$datepurchase.'","'.$datelease.'","'.$purcurrency.'","'.$rentcurrency.'","'.$cost.'","'.$rent.'","'.$periodfrom.'","'.$purchasefrom.'","'.$saleagreement.'","'.$landlord.'","'.$contactperson.'","'.$landlod_address1.'","'.$landlod_address2.'","'.$landlod_address3.'","'.$city_landlord.'","'.$state_landlord.'","'.$contactnumber.'","'.$emailid.'","'.$alternatenumber.'","'.$altperson.'","'.$altpersonnumber.'","'.$leasedeed.'","'.$effectivedate.'","'.$renewaldate.'","'.$emp_code.'","'.$empname.'","'.$buildingdesc.'","'.$attach4.'","'.$attach5.'","'.$attach6.'","'.$attach7.'","'.$attach8.'","'.$incharge_empcode.'","'.$leadername.'","'.$totalemployee.'","'.$insurancenumber.'","'.$insurancedate.'","'.$attach9.'","'.$insurancerenewaldue.'","'.$marker_id.'","'.$maintenancecost.'","'.$total_currency.'","'.$user_id.'")')) {
+		if(!mysql_query('INSERT INTO building (building_name,building_code,building_type,building_city,building_state,address1,address2,address3,building_status,building_purchase,datelease,building_currency,rentcurrency,building_cost,building_rent,building_period,building_purchasefrom,building_saleagreement,building_landlord,landlord_contactperson,landlod_address1,landlod_address2,landlod_address3,landlord_city,landlord_state,landlord_contactno,landlord_email,landlord_alternateno,landlord_altperson,landlord_altpersonno,leasedead,effectivedate,leaserenewaldate,companyliason_empcode,companyliason_empname,build_desc,attach4,attach5,attach6,attach7,attach8,incharge_empcode,incharge_empname,total_employess,insurance_number,insurance_date,attach9,renewal_due,marker_id,total_maintain_cost,total_currency,created_by) VALUES ("'.$buildingname.'","'.$building_code.'","'.$building_type.'","'.$city.'","'.$state.'","'.$address1.'","'.$address2.'","'.$address3.'","'.$building_status.'","'.$datepurchase.'","'.$datelease.'","'.$purcurrency.'","'.$rentcurrency.'","'.$cost.'","'.$rent.'","'.$periodfrom.'","'.$purchasefrom.'","'.$saleagreement.'","'.$landlord.'","'.$contactperson.'","'.$landlod_address1.'","'.$landlod_address2.'","'.$landlod_address3.'","'.$city_landlord.'","'.$state_landlord.'","'.$contactnumber.'","'.$emailid.'","'.$alternatenumber.'","'.$altperson.'","'.$altpersonnumber.'","'.$leasedeed.'","'.$effectivedate.'","'.$renewaldate.'","'.$emp_code.'","'.$empname.'","'.$buildingdesc.'","'.$attach4.'","'.$attach5.'","'.$attach6.'","'.$attach7.'","'.$attach8.'","'.$incharge_empcode.'","'.$leadername.'","'.$totalemployee.'","'.$insurancenumber.'","'.$insurancedate.'","'.$attach9.'","'.$insurancerenewaldue.'","'.$marker_id.'","'.$maintenancecost.'","'.$total_currency.'","'.$user_id.'")')) {
 			die('Error: ' . mysql_error());
 		}
 		$fgmembersite->RedirectToURL("view_building.php?success=create");
@@ -1150,7 +1150,6 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
     width: 90%;
 }
 </style>
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> <!-- THIS IS FOR GOOGLE MAP LOCATION SHOWING GOOGLE API -->
 <script type="text/javascript" language="javascript">
 
 function closeMapEnquiry() {
@@ -2396,7 +2395,7 @@ $(document).ready(function() {
    <table>
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Name*</td>
-		 <td><input type='text' name='buildingname' id='buildingname' autocomplete="off" maxlength="35" size="40" tabindex="2" class="textbox"/></td>
+		 <td><input type='text' name='buildingname' id='buildingname' autocomplete="off" maxlength="35" size="46" tabindex="2" class="textbox"/></td>
 	</tr>
      
 	<tr height="30">
@@ -2408,7 +2407,7 @@ $(document).ready(function() {
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:100px;" tabindex="4" class="selectbox">';
+			echo '<select name="incharge_empcode" id="incharge_empcode" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:244px;" tabindex="4" class="selectbox">';
 			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
@@ -2416,8 +2415,8 @@ $(document).ready(function() {
 			}
 			echo '</select>';
 			?>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' size="5" readonly class="textbox"/></span>
+			&nbsp;
+			<span id="display_inchargename"><input type='text' name='leadername' id='leadername' size="4" readonly class="textbox"/></span>
 		</td>
     </tr>
    </table>
@@ -2569,7 +2568,7 @@ $(document).ready(function() {
      <td width="65">Effective*</td>
      <td><input type="text" name="effectivedate" id="effectivedate" size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="18" autocomplete='off' maxlength="10" class="datepicker"/></td>
 	<td width="130" nowrap="nowrap" >&nbsp;&nbsp;&nbsp;&nbsp;Renewal Date*</td>
-	<td><input type='text' name='renewaldate' id='renewaldate' size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="19" autocomplete='off' maxlength="10" class="datepicker textbox"/></td>
+	<td><input type='text' name='renewaldate' id='renewaldate' size="10" value="" tabindex="19" autocomplete='off' maxlength="10" class="datepicker textbox"/></td>
      </tr>
    </table>
  </fieldset>
@@ -2599,11 +2598,11 @@ $(document).ready(function() {
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
 				$result_state=mysql_query("select id,name,vendor_code from vendor_bms");
-				echo '<select name="purchasefrom" id="purchasefrom" tabindex="1" style="width:100px;">';
+				echo '<select name="purchasefrom" id="purchasefrom" tabindex="1" style="width:291px;">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{
-					echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+					echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
 				}
 				echo '</select>';
 	      ?>         
@@ -2623,7 +2622,7 @@ $(document).ready(function() {
 		<td><input type='text' name='purcurrency' id='purcurrency' tabindex="3" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
     </tr>
 	<tr height="30">
-     <td width="120">Sale Deed/Agreement</td>
+     <td width="120">Sale Deed Agmt.</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type='file' name='saleagreement' id='saleagreement' style="width:250px;" tabindex="5" class="textbox"/></td>
 	</tr>
@@ -2694,7 +2693,7 @@ $(document).ready(function() {
 	
 	<tr height="32">
      <td width="120" nowrap="nowrap">Renewal Date</td>
-     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="9" class="datepicker textbox"/></td>
+     <td><input type='text' name='insurancerenewaldue' id='insurancerenewaldue' size="10" value="" tabindex="9" class="datepicker textbox"/></td>
 	</tr>
     </table>
    </td>
@@ -2711,7 +2710,6 @@ $(document).ready(function() {
 
 
 <div id="rentdiv">
-
  <table width="100%" align="right">
  <tr>
   <td>
@@ -2721,12 +2719,15 @@ $(document).ready(function() {
  <tr>
   <td>
   <table>
+        
     <tr height="30">
-    <td width="120">Agreement Date*</td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='datelease' id='datelease' size="10" value="<?php echo date('d-m-Y'); ?>" tabindex="1" class="datepicker textbox"/></td>
-    </tr>
-    
+     <td width="120">Agreement</td>
+	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+     <td>
+     	<input type='file' name='leasedeed' id='leasedeed' style="width:230px;" tabindex="1" class="textbox" />
+     </td>
+	</tr>
+	
 	<tr height="30">
 		<?php
 			$fgmembersite->DBLogin();
@@ -2734,18 +2735,14 @@ $(document).ready(function() {
 			$row=mysql_fetch_array($result_state);
 		?>
 		<td width="120">Currency</td>
-		<td><img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" /></td>
-		<td><input type='text' name='rentcurrency' id='rentcurrency' tabindex="3" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox"/></td>
+		<td>
+			<img width="15px" height="15px" style="vertical-align:bottom;" src="images/<?php echo $row['symbol']; ?>" />
+		</td>
+		<td>
+			<input type='text' name='rentcurrency' id='rentcurrency' tabindex="3" size="4" value="<?php echo $row['name']; ?>" readonly class="textbox" />
+		</td>
     </tr>
 
-
-	
-
-	<tr height="30">
-     <td width="120">Agreement</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='file' name='leasedeed' id='leasedeed' style="width:230px;" tabindex="5" class="textbox"/></td>
-	</tr>
    </table>
    </td>
  </tr>
@@ -2757,7 +2754,8 @@ $(document).ready(function() {
   <table>
 
 	<tr height="30">
-     <td width="120" nowrap="nowrap">Period*</td>
+     <td width="167" nowrap="nowrap">Period*</td>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><select name="periodfrom" id="periodfrom" tabindex="2" class="selectbox">
 			<option value="0">--Select--</option>
 			<option value="1">Monthly</option>
@@ -2768,7 +2766,8 @@ $(document).ready(function() {
 	</tr>
     
 	<tr height="30">
-     <td width="120">Rent*</td>
+     <td width="167">Rent*</td>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><input type='text' name='rent' id='rent' style="text-align:right;" tabindex="4" class="textbox"/></td>
 	</tr>
 
@@ -2796,10 +2795,10 @@ $(document).ready(function() {
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
 			$result_state=mysql_query("select id,name,vendor_code from vendor_bms");
-			echo '<select name="landlord" id="landlord" tabindex="6" style="width:100px;">';
+			echo '<select name="landlord" id="landlord" tabindex="5" style="width:291px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
-				echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
+				echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
 			}
 			echo '</select>';
 	    ?>
@@ -2810,26 +2809,26 @@ $(document).ready(function() {
 	<tr height="30">
 		<td width="120">Address Line 1</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type="text" id="land_add1" name="land_add1" size="35" readonly autocomplete="off" tabindex="7" class="areatext" /></td>
+		<td><input type="text" id="land_add1" name="land_add1" size="43" readonly autocomplete="off" tabindex="6" class="areatext" /></td>
     </tr>
 
 	<tr height="30">
 		 <td width="100"><span style="padding-left:55px;">Line 2</span></td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" id="land_add2" name="land_add2" size="35" readonly autocomplete="off" tabindex="8" class="areatext" /></td>
+		 <td><input type="text" id="land_add2" name="land_add2" size="43" readonly autocomplete="off" tabindex="7" class="areatext" /></td>
 	</tr>
 
 	<tr height="30">
 		<td width="100"><span style="padding-left:55px;">Line 3</span></td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type="text" id="land_add3" name="land_add3" size="35" readonly autocomplete="off" tabindex="9" class="areatext" /></td>
+		<td><input type="text" id="land_add3" name="land_add3" size="43" readonly autocomplete="off" tabindex="8" class="areatext" /></td>
     </tr>
 	
 	<tr height="30">
      <td width="120">City</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td>
-     	<input type='text' name='city_landlord' id='city_landlord' tabindex="10" readonly class="textbox" />
+     	<input type='text' name='city_landlord' id='city_landlord' tabindex="9" readonly class="textbox" />
 		<?php
 		/*$result_state=mysql_query("SELECT a.id  as id ,a.name,b.name as state_name FROM city a, state b where a.state_id=b.id");
 		echo '<select name="city_landlord" id="city_landlord" tabindex="9" >';
@@ -2845,7 +2844,7 @@ $(document).ready(function() {
 	<tr height="30">
 		<td width="120">State</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><div id="display_state_landlord"><input type='text' name='state_landlord' id='state_landlord' tabindex="11" readonly class="textbox" /></div></td>
+		<td><div id="display_state_landlord"><input type='text' name='state_landlord' id='state_landlord' tabindex="10" readonly class="textbox" /></div></td>
     </tr>
 
    </table>
@@ -2862,37 +2861,37 @@ $(document).ready(function() {
 	<tr height="30">
 		<td width="120">Contact Person*</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='contactperson' id='contactperson' tabindex="12" class="textbox"/></td>
+		<td><input type='text' name='contactperson' id='contactperson' size="35" tabindex="11" class="textbox"/></td>
     </tr>
 
 	<tr height="30">
      <td width="120">Contact Number</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='contactnumber' id='contactnumber' readonly tabindex="13" class="textbox"/></td>
+     <td><input type='text' name='contactnumber' id='contactnumber' size="35" readonly tabindex="12" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
 		<td width="120">Alternate Number</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='alternatenumber' id='alternatenumber' readonly tabindex="14" class="textbox"/></td>
+		<td><input type='text' name='alternatenumber' id='alternatenumber' size="35" readonly tabindex="13" class="textbox"/></td>
     </tr>
 
 	<tr height="30">
      <td width="120">Email ID</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='emailid' id='emailid' tabindex="15" class="textbox"/></td>
+     <td><input type='text' name='emailid' id='emailid' size="35" tabindex="14" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
      <td width="120">Alternate Person</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='altperson' id='altperson' tabindex="16" class="textbox"/></td>
+     <td><input type='text' name='altperson' id='altperson' size="35" tabindex="15" class="textbox"/></td>
 	</tr>
 
 	<tr height="30">
-		<td width="120" nowrap="nowrap">Alternate Person Number</td>
+		<td width="120" nowrap="nowrap" style="white-space:nowrap;" >Alternate Person Number</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='altpersonnumber' id='altpersonnumber' tabindex="17" class="textbox"/></td>
+		<td><input type='text' name='altpersonnumber' id='altpersonnumber' size="35" tabindex="16" class="textbox"/></td>
     </tr>
 
 	<!--<tr height="30">
@@ -2930,7 +2929,7 @@ $(document).ready(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-		echo '<select name="emp_code" id="emp_code" tabindex="18" class="selectbox">';
+		echo '<select name="emp_code" id="emp_code" tabindex="17" style="width:291px;" class="selectbox">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id))
 		{
@@ -2953,8 +2952,13 @@ $(document).ready(function() {
   <td>
    <table>
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Employee Code</td>
-		 <td><div id="display_empname"><input type='text' name='empname' id='empname' tabindex="19" readonly class="textbox"/></div></td>
+		 <td width="164" >Employee Code</td>
+		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		 <td>
+		 	<div id="display_empname">
+		 		<input type='text' name='empname' id='empname' tabindex="18" size="3" readonly class="textbox" />
+		 	</div>
+		 </td>
 	</tr>     
    </table>
   </td>
@@ -3018,6 +3022,7 @@ $(document).ready(function() {
 
 <div id="backgroundChatPopup"></div>
 <!-- <div id="map-canvas" style="width: 500px; height: 300px"></div> -->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> <!-- THIS IS FOR GOOGLE MAP LOCATION SHOWING GOOGLE API -->
 <?php
 $footerfile='./layout/footer.php';
 if(file_exists($footerfile)) {

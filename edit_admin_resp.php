@@ -500,7 +500,7 @@ $('#picture').change(function() {
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("SELECT emp_code,first_name FROM pim_emp_info ORDER BY emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:100px;" tabindex="2">';
+			echo '<select name="incharge_empcode" id="incharge_empcode" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:200px;" tabindex="2">';
 			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id)) {
 				if($row['emp_code'] == $row_edit['lead_code']) {
@@ -548,7 +548,7 @@ $('#picture').change(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("SELECT comp_id,comp_name FROM master_companies ORDER BY comp_name",$bd);
-		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
+		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3" style="width:286px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			if($row['comp_id'] == $row_edit['company_id']){
@@ -591,12 +591,12 @@ $('#picture').change(function() {
 	</tr>
 
 	<tr height="30">
-		<td width="120" nowrap="nowrap">Office Bldg. Name*</td>
+		<td width="120" style="white-space:nowrap;">Office Bldg. Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("SELECT id,building_code,building_name FROM building WHERE building_type = '1'");
-			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" >';
+			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" style="width:286px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				if($row['id'] == $row_edit['office_building_id']){
@@ -614,7 +614,7 @@ $('#picture').change(function() {
 	<tr height="30">
      <td width="120">Office Floor</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='off_floor' id='off_floor' tabindex="11" value="<?php echo $row_edit['office_floor']; ?>" class="textbox"/></td>
+     <td><input type='text' name='off_floor' id='off_floor' size="42" tabindex="11" value="<?php echo $row_edit['office_floor']; ?>" class="textbox"/></td>
 	</tr>
 	
    </table>
@@ -634,7 +634,7 @@ $('#picture').change(function() {
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td><?php
 				$result_state=mysql_query("select id,name from department");
-				echo '<select name="division_id" id="division_id" tabindex="4">';
+				echo '<select name="division_id" id="division_id" tabindex="4" style="width:270px;">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{
@@ -664,9 +664,12 @@ $('#picture').change(function() {
    
    
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Office Bldg.</td>
+		 <td width="120" nowrap="nowrap">
+		 <!-- Office Bldg.--></td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_buil' id='office_buil' tabindex="8" value="<?php echo $row_edit['office_buil']; ?>" class="textbox"/></td>
+		 <td>
+		 	<!-- <input type='text' name='office_buil' id='office_buil' tabindex="8" value="<?php echo $row_edit['office_buil']; ?>" class="textbox"/>-->
+		 </td>
 	</tr>
      
 	<tr height="30">
@@ -681,7 +684,7 @@ $('#picture').change(function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Office</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_val' id='office_val' value="<?php echo $row_edit[office]; ?>" class="textbox" tabindex="12" autocomplete="off" /></td>
+		 <td><input type='text' name='office_val' id='office_val' size="42" value="<?php echo $row_edit[office]; ?>" class="textbox" tabindex="12" autocomplete="off" /></td>
 	</tr>
 
    </table>
@@ -709,13 +712,13 @@ $('#picture').change(function() {
     <tr height="30">
      <td width="120">Email ID*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='email_id' id='email_id' value="<?php echo $row_edit[email_id]; ?>" tabindex="13" autocomplete="off" class="textbox" /></td>
+     <td><input type='text' name='email_id' id='email_id' size="42" value="<?php echo $row_edit[email_id]; ?>" tabindex="13" autocomplete="off" class="textbox" /></td>
 	</tr>
     
     <tr height="30">
     <td width="120" nowrap="nowrap">Alternate No.</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='alt_num' id='alt_num' value="<?php echo $row_edit[alt_number]; ?>" tabindex="15" autocomplete="off" /></td>
+    <td><input type='text' name='alt_num' id='alt_num' size="42" value="<?php echo $row_edit[alt_number]; ?>" tabindex="15" autocomplete="off" /></td>
     </tr>
    </table>
    </td>
@@ -732,7 +735,7 @@ $('#picture').change(function() {
    <tr height="30">
 		 <td width="120" nowrap="nowrap">Mobile No.</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" name="mobile_no" id="mobile_no" value="<?php echo $row_edit[mobile_number]; ?>" tabindex="14" autocomplete="off"  /></td>
+		 <td><input type="text" name="mobile_no" id="mobile_no" size="42" value="<?php echo $row_edit[mobile_number]; ?>" tabindex="14" autocomplete="off"  /></td>
 	</tr>
 	
    <tr height="30">
@@ -776,7 +779,7 @@ $('#picture').change(function() {
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("SELECT emp_code,first_name FROM pim_emp_info ORDER BY emp_id",$bd);
-			echo '<select name="incharge_empcode_alt" id="incharge_empcode_alt" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:100px;" tabindex="17" class="selectbox">';
+			echo '<select name="incharge_empcode_alt" id="incharge_empcode_alt" size="1" position="absolute" onclick="size=(size!=1)?2:1;" style="width:272px;" tabindex="17" class="selectbox">';
 			echo '<option value="0">--Employee--</option>';
 			while($row=mysql_fetch_array($result_emp_id)) {
 				if($row['emp_code'] == $row_edit['alt_lead_code']){

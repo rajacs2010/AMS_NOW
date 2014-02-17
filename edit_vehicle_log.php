@@ -445,7 +445,7 @@ $(document).live('ready',function() {
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     <td><?php
 		$result_state=mysql_query("select * from vehicle");
-		echo '<select name="vehicle_reg_no" id="vehicle_reg_no" tabindex="1">';
+		echo '<select name="vehicle_reg_no" id="vehicle_reg_no" tabindex="1" style="width:270px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{
@@ -468,7 +468,7 @@ $(document).live('ready',function() {
      	<input type='hidden' name='edit_id' id='edit_id' value="<?php echo $row_edit['id'];?>" />
 	<?php
 			$result_state=mysql_query("SELECT id,emp_name FROM driver");
-			echo '<select name="driver_code" id="driver_code" tabindex="3">';
+			echo '<select name="driver_code" id="driver_code" tabindex="3" style="width:270px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				if($row['id'] == $row_edit['driver_code']){

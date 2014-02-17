@@ -56,7 +56,7 @@ if($_GET["selvalue_request_type"]) {  // Ajax Replace of Employee/Guest Name
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by first_name",$bd) or die(mysql_error());
-		echo '<select name="emp_request_id" id="emp_request_id" tabindex="3" style="width:100px;" class="selectbox">';
+		echo '<select name="emp_request_id" id="emp_request_id" tabindex="3" style="width:210px;" class="selectbox">';
 		echo '<option value="0">--Employee--</option>';
 		while($row=mysql_fetch_array($result_emp_id))
 		{
@@ -66,7 +66,7 @@ if($_GET["selvalue_request_type"]) {  // Ajax Replace of Employee/Guest Name
 	}
 	if($selvalue==2) {
 		$result_state=mysql_query("select id,name from guest");
-		echo '<select name="guest_request_id" id="guest_request_id" tabindex="3" style="width:100px;" class="selectbox">';
+		echo '<select name="guest_request_id" id="guest_request_id" tabindex="3" style="width:210px;" class="selectbox">';
 		echo '<option value="0">--Guest--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{

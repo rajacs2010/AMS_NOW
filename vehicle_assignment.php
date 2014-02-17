@@ -238,7 +238,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 			<td>
 	<?php
 	$result_state=mysql_query("select * from driver");
-				echo '<select name="driver_id" id="driver_id" tabindex="2" style="width:100px;">';
+				echo '<select name="driver_id" id="driver_id" tabindex="2" style="width:270px;">';
 				echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{
@@ -265,7 +265,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 			</td>
 			</tr>
 			<tr height="30">
-			<td width="148">Assignment Description</td>
+			<td width="148">Assignment Desc.</td>
 			<td>
 		<input type='text' name='desc' id='desc' autocomplete="off" tabindex="7" size="30"/>
 		
@@ -276,13 +276,13 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 
 	 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-		<td width="180">Vehicle Registration No.*</td>
+		<td width="180">Vehicle Regn. No.*</td>
 	
 		<td>
 		<?php 
 		$fgmembersite->DBLogin();
 		$result_state=mysql_query("SELECT id,vehicle_regno from vehicle");
-							echo '<select name="vehicle_regno" id="vehicle_regno" style="width:100px;" tabindex="1" >';
+							echo '<select name="vehicle_regno" id="vehicle_regno" style="width:270px;" tabindex="1" >';
 							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{
@@ -307,7 +307,7 @@ $fgmembersite->RedirectToURL("view_vehicle_assignment.php?success=create");
 		<?php 
 		$fgmembersite->DBLogin();
 		$result_state=mysql_query("select * from assignment_type");
-							echo '<select name="assignment_type" id="assignment_type" style="width:100px;" tabindex="4">';
+							echo '<select name="assignment_type" id="assignment_type" style="width:270px;" tabindex="4">';
 							echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{

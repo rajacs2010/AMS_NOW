@@ -360,7 +360,7 @@ $(document).ready(function() {
     <td><?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("SELECT id,building_code,building_name from building");
-			echo '<select name="building_code" id="building_code" tabindex="1" >';
+			echo '<select name="building_code" id="building_code" tabindex="1" style="width:290px;" >';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state))
 			{
@@ -436,7 +436,7 @@ $(document).ready(function() {
 		 <td width="120" nowrap="nowrap">Generator Name*</td>
 		 <td><?php
 		$result_state=mysql_query("SELECT id,generator_code,description from generator");
-		echo '<select name="generator_code" id="generator_code" tabindex="2" >';
+		echo '<select name="generator_code" id="generator_code" tabindex="2" style="width:310px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state))
 		{

@@ -195,7 +195,7 @@ while($row = mysql_fetch_array($result))
 			<td>
 	<?php
 	$result_state=mysql_query("select * from driver");
-				echo '<select name="driver_id" id="driver_id" tabindex="1" style="width:100px;">';
+				echo '<select name="driver_id" id="driver_id" tabindex="1" style="width:270px;">';
 				echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{
@@ -213,14 +213,14 @@ while($row = mysql_fetch_array($result))
 			</tr>
 			
 			<tr height="30">
-		<td width="128">Employee Name*</td>
+		<td width="128" style="white-space:nowrap;">Employee Name*</td>
 		<td><?php
 			$fgmembersite->DBLogin();
 			$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
 			or die("Opps some thing went wrong");
 			mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 			$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info  order by emp_id",$bd);
-			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="3" style="width:100px;">';
+			echo '<select name="incharge_empcode" id="incharge_empcode" tabindex="3" style="width:270px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_emp_id))
 			{
@@ -247,7 +247,7 @@ while($row = mysql_fetch_array($result))
 		<?php 
 		$fgmembersite->DBLogin();
 		$result_state=mysql_query("select * from allocation_type");
-				echo '<select name="allocate_id" id="allocate_id" tabindex="2">';
+				echo '<select name="allocate_id" id="allocate_id" tabindex="2" style="width:260px;">';
 				echo '<option value="0">--Select--</option>';
 					while($row=mysql_fetch_array($result_state))
 					{

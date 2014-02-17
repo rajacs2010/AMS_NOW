@@ -60,6 +60,15 @@ $(function () {
     right: -220px;
     top: -35px;
 }
+.scroll_box {
+   height: 379px;
+   overflow: auto;
+}
+#mainarea {
+    background: none repeat scroll 0 0 #EBEBEB;
+    height: 510px;
+    width: 100%;
+}
 </style>
 <script>
 function validateForm() {
@@ -527,7 +536,7 @@ $renewaldate=$row['contract_renewaldate'];
 				<?php
 							
 									$result_state=mysql_query("SELECT id,building_name from building");
-							echo '<select name="building_code" id="building_code" tabindex="3" >';
+							echo '<select name="building_code" id="building_code" tabindex="3" style="width:220px;">';
 						echo '<option value="0">--Select--</option>';
 							while($row=mysql_fetch_array($result_state))
 							{
@@ -603,7 +612,7 @@ $renewaldate=$row['contract_renewaldate'];
   <legend><strong>Ownership</strong></legend>
   <table width="100%">
   <tr height="30">
-  <td width="142">Owned/Landlord's/Rented*</td>
+  <td width="142" nowrap="nowrap">Owned/Landlord's/Rented*</td>
   <td>
 		<?php 
 			if ($genrator_status=='1') 
@@ -651,7 +660,7 @@ $renewaldate=$row['contract_renewaldate'];
 			 </td>
 		   </tr>
 			<tr height="30">
-				<td width="120">Date Of Purchase*</td>
+				<td width="120">Purchase Date*</td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				<td>			
 					<input type='text' name='datepurchase' id='datepurchase' class="datepicker" size="10" tabindex="8" value="<?php echo $datepurchase;?>" autocomplete="off"/>			
@@ -666,7 +675,7 @@ $renewaldate=$row['contract_renewaldate'];
 				
 				<?php
 									$result_state=mysql_query("SELECT id,name from vendor_bms");
-									echo '<select name="vendor_code" id="vendor_code" tabindex="12" >';
+									echo '<select name="vendor_code" id="vendor_code" tabindex="12" style="width:240px;">';
 									echo '<option value="0">--Select--</option>';
 									while($row=mysql_fetch_array($result_state))
 									{
@@ -704,12 +713,10 @@ $renewaldate=$row['contract_renewaldate'];
 			</tr>
 			
 			<tr height="30">
-			 <td width="120">Contract Renewal Date*</td>
+			 <td width="120">Renewal Date*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-			 <td>
-				
-				<input type="text" name="renewaldate" id="renewaldate"  class="datepicker" size="10" autocomplete='off' tabindex="16" value="<?php echo $renewaldate;?>" />
-				
+			 <td>				
+				<input type="text" name="renewaldate" id="renewaldate"  class="datepicker" size="10" autocomplete='off' tabindex="16" value="<?php echo $renewaldate;?>" />				
 			  </td>
 			</tr>
 
@@ -731,7 +738,7 @@ $renewaldate=$row['contract_renewaldate'];
 				</td>
 			</tr>										
 			<tr height="30">
-				 <td width="120">Maintenance Contract No.*</td>
+				 <td width="120" style="white-space:nowrap;" >Maint. Contract No.*</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
 				 <input type='text' name='contract_number' id='contract_number' size="15" tabindex="11" value="<?php echo $contract_number;?>" autocomplete="off"/>
@@ -768,7 +775,7 @@ $renewaldate=$row['contract_renewaldate'];
 			</tr>
 			
 			<tr height="30">
-			 <td width="120">Maintenance Cost*</td>
+			 <td width="120">Maint. Cost*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				<input type='text' name='mcost' id='mcost' size="15" tabindex="14" style="text-align:right;" autocomplete="off" value="<?php echo $mcost;?>" />
@@ -803,7 +810,7 @@ $renewaldate=$row['contract_renewaldate'];
   <legend><strong>Landlord/Rented</strong></legend>
   <table width="100%">
   <tr>
-  <td width="50%">
+  <td width="39%">
 		<table align="left">
 		 <tr>
 		  <td>
@@ -818,7 +825,7 @@ $renewaldate=$row['contract_renewaldate'];
 			</td>
 			</tr>
 			<tr height="30">
-			 <td width="120">Maintenance Contract No.*</td>
+			 <td width="120" style="white-space:nowrap;">Maint. Contract No.*</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
 				 <input type='text' name='contract_number_landlord' id='contract_number_landlord' size="15" tabindex="10" autocomplete="off" value="<?php echo $contract_number;?>"/>
@@ -995,7 +1002,7 @@ $renewaldate=$row['contract_renewaldate'];
 				
 				<?php
 									$result_state=mysql_query("SELECT id,name from vendor_bms");
-									echo '<select name="vendor_code_landlord" id="vendor_code_landlord" tabindex="11" >';
+									echo '<select name="vendor_code_landlord" id="vendor_code_landlord" tabindex="11" style="width:250px;" >';
 									echo '<option value="0">--Select--</option>';
 									while($row=mysql_fetch_array($result_state))
 									{
@@ -1014,7 +1021,7 @@ $renewaldate=$row['contract_renewaldate'];
 			  </td>
 			</tr>
 			<tr height="30">
-				 <td width="120">Maintenance Cost*</td>
+				 <td width="120">Maint. Cost*</td>
 				 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 				 <td>
 					<input type='text' name='mcost_landlord' id='mcost_landlord' size="15" tabindex="13"  style="text-align:right;" autocomplete="off" value="<?php echo $mcost;?>"/>
@@ -1022,7 +1029,7 @@ $renewaldate=$row['contract_renewaldate'];
 				  </td>
 				</tr>
 			<tr height="30">
-			 <td width="120">Contract Renewal Date*</td>
+			 <td width="120">Renewal Date*</td>
 			 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			 <td>
 				

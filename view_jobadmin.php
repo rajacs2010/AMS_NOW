@@ -30,14 +30,14 @@ if(file_exists($header_file)) {
 }
 
 if($_REQUEST['job_name']!='') {
-	$var = @$_REQUEST['job_name'] ;
+	$var = @$_REQUEST['job_name'];
 	$trimmed = trim($var);	
-	$qry="SELECT rej.id AS REJID,re.req_number AS REQ_NUM, jobs.job_desc AS jobdesc,request_number,ar.lead_name AS admin_lead_name, job_assigned_name,start_date,rej.expected_date AS EXP_DATE,rej.completion_date AS COM_DATE,rej.est_cost EST_COST,rej.actual_cost AS ACT_COST,no_revision FROM `requestjobs` rej LEFT JOIN jobs ON rej.job_id = jobs.id LEFT JOIN admin_responsibility AS ar ON rej.admin_res_name = ar.id LEFT JOIN request re ON rej.request_number = re.id WHERE jobs.job_desc LIKE '%".$trimmed."%'";
+	$qry="SELECT ja.id AS JAID,j.job_desc,ja.job_code,ja.admin_res_code,ar.lead_name AS LNAME FROM `jobadmin` ja, jobs j, admin_responsibility ar WHERE ja.job_code = j.job_code AND ja.admin_res_code = ar.lead_code AND job_desc LIKE '%".$trimmed."%'";
 } else { 
-	$qry="SELECT rej.id AS REJID,re.req_number AS REQ_NUM, jobs.job_desc AS jobdesc,request_number,ar.lead_name AS admin_lead_name, job_assigned_name,start_date,rej.expected_date AS EXP_DATE,rej.completion_date AS COM_DATE,rej.est_cost EST_COST,rej.actual_cost AS ACT_COST,no_revision FROM `requestjobs` rej LEFT JOIN jobs ON rej.job_id = jobs.id LEFT JOIN admin_responsibility AS ar ON rej.admin_res_name = ar.id LEFT JOIN request re ON rej.request_number = re.id";
+	$qry="SELECT ja.id AS JAID,j.job_desc,ja.job_code,ja.admin_res_code,ar.lead_name AS LNAME FROM `jobadmin` ja, jobs j, admin_responsibility ar WHERE ja.job_code = j.job_code AND ja.admin_res_code = ar.lead_code";
 }
 $results=mysql_query($qry);
-$num_rows= mysql_num_rows($results);	
+$num_rows= mysql_num_rows($results);
 
 $params			=	$job_name."&".$sortorder."&".$ordercol;
 
@@ -77,7 +77,7 @@ $Num_Pages = (int)$Num_Pages;
 }
 if($sortorder == "")
 {
-	$orderby	=	"ORDER BY rej.id DESC";
+	$orderby	=	"ORDER BY ja.id DESC";
 } else {
 	$orderby	=	"ORDER BY $ordercol $sortorder";
 }
@@ -89,6 +89,24 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 
 ?>
 <style type="text/css">
+.buttonsbigja{
+	-webkit-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+	-moz-box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+	box-shadow:rgba(0,0,0,0.2) 0 1px 0 0;
+	border-bottom-color:#333;
+	border:1px solid #686868;
+	background-color:#c1c1c1;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	color:#000;
+	font-family:Calibri;
+	font-size:12px;
+	padding:3px;
+	cursor:pointer;
+	width: 177px;
+	height:25px;
+}
 #containerprforcd {
 	padding:0px;
 	width:100%;
@@ -105,7 +123,7 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 function delcall(id,name) {
 	var confirmdata		=	confirm("Are You Sure You Want to Delete : "+name);
 	if(confirmdata) {
-		window.location = "view_requestjobs.php?id="+id+"&del=del";
+		window.location = "view_jobadmin.php?id="+id+"&del=del";
 	}
 }
 function reqviewajax(page,params){   // For pagination and sorting of the Collection Deposited view page
@@ -114,7 +132,7 @@ function reqviewajax(page,params){   // For pagination and sorting of the Collec
 	var sortorder		=	splitparam[1];
 	var ordercol		=	splitparam[2];
 	$.ajax({
-		url : "ajax_viewrequestjobs.php",
+		url : "ajax_viewjobadmin.php",
 		type: "get",
 		dataType: "text",
 		data : { "job_name" : job_name, "sortorder" : sortorder, "ordercol" : ordercol, "page" : page },
@@ -129,7 +147,7 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 	var job_name	=	$("input[name='job_name']").val();
 	//alert(building_name);
 	$.ajax({
-		url : "ajax_viewrequestjobs.php",
+		url : "ajax_viewjobadmin.php",
 		type: "get",
 		dataType: "text",
 		data : { "job_name" : job_name, "page" : page },
@@ -144,11 +162,11 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 
 <div id="mainareadaily">
 <div class="mcf"></div>
-<div><h2 align="center">REQUEST-JOBS</h2></div> 
+<div><h2 align="center">JOB-ADMIN RESPONSIBILITY</h2></div> 
 
 <div id="containerprforcd">
 
-<span style="float:left;"><input type="button" name="kdproduct" value="Add Request-Jobs" class="buttonsbig" onclick="window.location='requestjobs.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=1'"></span>
+<span style="float:left;"><input type="button" name="kdproduct" value="Add Job-Admin Responsibility" class="buttonsbigja" onclick="window.location='job-admin.php'"></span><span style="float:right;"><input type="button" name="kdproduct" value="Close" class="buttons" onclick="window.location='ams_temp.php?id=1'"></span>
 
 <div class="clearfix"></div>
  <div id="search">
@@ -158,10 +176,10 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
  <div class="clearfix"></div>
         <?php
 		if($_GET['id']!='' && $_GET['del'] == 'del'){
-			$query = "DELETE FROM `requestjobs` WHERE id = $id";
+			$query = "DELETE FROM `jobadmin` WHERE id = $id";
 			//Run the query
 			$result = mysql_query($query) or die(mysql_error());
-			header("location:view_requestjobs.php?success=del");
+			header("location:view_jobadmin.php?success=del");
 		 }		
 		?>
 		<div id="colviewajaxid">
@@ -169,8 +187,8 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 			<table width="100%">
 			<thead>
 			<tr>
-				<th>Request Number</th>
 				<th>Job Name</th>
+				<th>Job Code</th>				
 				<?php //echo $sortorderby;
 				if($sortorder == 'ASC') {
 					$sortorderby = 'DESC';
@@ -179,15 +197,9 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 				} else {
 					$sortorderby = 'ASC';
 				}
-				$paramsval	=	$job_name."&".$sortorderby."&admin_lead_name"; ?>
-				<th nowrap="nowrap" class="rounded" onClick="reqviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Admin Responsibility<img src="images/sort.png" width="13" height="13" /></th>				
-				<th>Job Assigned To</th>
-				<th>Start Date</th>
-				<th>Expected Date</th>
-				<th>Completion Date</th>
-				<th>No. of Revisions</th>
-				<th >Estimated Cost</th>
-				<th >Actual Cost</th>
+				$paramsval	=	$job_name."&".$sortorderby."&ar.lead_name"; ?>
+				<th nowrap="nowrap" class="rounded" onClick="reqviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Leader Name<img src="images/sort.png" width="13" height="13" /></th>
+				<th>Leader Code</th>				
 				<th align="right">Edit/Del</th>
 			</tr>
 			</thead>
@@ -198,30 +210,16 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 				$c=0;$cc=1;
 				while($fetch = mysql_fetch_array($results_dsr)) {
 				if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
-				$id			=	$fetch['REJID'];
+				$id			=	$fetch['JAID'];
 			?>
-			<tr>
-				<td><?php echo $fetch['REQ_NUM']; ?></td>
-				<td><?php echo $fetch['jobdesc']; ?></td>
-				<td><?php echo $fetch['admin_lead_name']; ?></td>
-				<td><?php  
-					$fgmembersite->DBLogin();
-					$bd = mysql_connect($mysql_hostname, $mysql_user, $mysql_password) 
-					or die("Opps some thing went wrong");
-					mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
-					$result_emp_id=mysql_query("select first_name from pim_emp_info WHERE emp_code = '$fetch[job_assigned_name]' ",$bd) or die(mysql_error());
-					$row=mysql_fetch_array($result_emp_id);
-					echo $job_assigned_to	=	$fgmembersite->upperstate($row['first_name']);				
-				?></td>
-				<td><?php echo $fetch['start_date']; ?></td>
-				<td><?php echo $fetch['EXP_DATE']; ?></td>
-				<td><?php echo $fetch['COM_DATE']; ?></td>
-				<td><?php echo $fetch['no_revision']; ?></td>
-				<td><?php echo $fetch['EST_COST']; ?></td>
-				<td><?php echo $fetch['ACT_COST']; ?></td>
+			<tr>				
+				<td><?php echo $fetch['job_desc']; ?></td>
+				<td><?php echo $fetch['job_code']; ?></td>
+				<td><?php echo $fetch['LNAME']; ?></td>
+				<td><?php echo $fetch['admin_res_code']; ?></td>
 				<td nowrap="nowrap">
-				<a href="edit_requestjobs.php?id=<?php echo $fetch['REJID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['REJID']; ?>','<?php echo $fetch['REQ_NUM']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
+				<a href="edit_jobadmin.php?id=<?php echo $fetch['JAID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['JAID']; ?>','<?php echo $fetch['job_desc']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 
@@ -245,8 +243,7 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 		  </div>
 		  <?php if($_GET['success']=="create") { ?>
 			<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
-			?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></spa
-			n><span class="ui-button-text">Close</span></button></a></div>
+			?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
 			<?php } 
 			if($_GET['success']=="update") { ?>
 			<div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0002 : Data Updated Successfully "; 

@@ -10,8 +10,8 @@ if(!$fgmembersite->CheckLogin())
 $fgmembersite->DBLogin();
 
 if($_POST["landlordval"]) {
-	//echo "SELECT address1,address2,address3,city_id,contact_number,alt_contact_number,b.name as city_name, c.name as state_name FROM vendor a, city b, state c where a.city_id=b.id AND b.state_id=c.id AND a.id='$landlordval'";
-	$result		=	mysql_query("SELECT address1,address2,address3,city_id,contact_number,alt_contact_number,b.name as city_name, c.name as state_name FROM vendor a, city b, state c where a.city_id=b.id AND b.state_id=c.id AND a.id='$landlordval'") or die(mysql_error());
+	//echo "SELECT address1,address2,address3,city_id,contact_number,alt_contact_number,b.name as city_name, c.name as state_name FROM vendor_bms a, city b, state c where a.city_id=b.id AND b.state_id=c.id AND a.id='$landlordval'";
+	$result		=	mysql_query("SELECT address1,address2,address3,city_id,contact_number,alt_contact_number,b.name as city_name, c.name as state_name FROM vendor_bms a, city b, state c where a.city_id=b.id AND b.state_id=c.id AND a.id='$landlordval'") or die(mysql_error());
 	$row		=	mysql_fetch_array($result);
 	echo $row['address1']."~".$row['address2']."~".$row['address3']."~".$row['contact_number']."~".$row['alt_contact_number']."~".$row['city_name']."~".$row['state_name'];
 	exit(0);
@@ -20,10 +20,9 @@ if($_POST["landlordval"]) {
 if($_GET["selvalue"]) {
 $selvalue=$_GET["selvalue"];
 $result=mysql_query("SELECT a.id  as id ,a.name,b.name as state_name FROM city a, state b where a.state_id=b.id and a.id=$selvalue");
-						   while($row=mysql_fetch_array($result))
-							{
+						   while($row=mysql_fetch_array($result)) {
 								$state=$row['state_name'];
-							}
+						   }
 ?>
 <input type='text' name='state' id='state' class="textbox" value="<?php echo $state; ?>" readonly="true"/>
 <?php

@@ -196,19 +196,19 @@ $alt_contact_number=$row['alt_contact_number'];
   <legend><strong>Vendor</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="148">Vendor Code</td>
+			<td width="135">Vendor Code</td>
 			<td>
-	<input type='text' name='code' id='code'  value="<?php echo $vendor_code;?>" readonly="true" size="7"/>
+	<input type='text' name='code' id='code'  value="<?php echo $vendor_code;?>" readonly="true" size="4" />
 			</td>
 			</tr>
 </table><!-- end--->
 
 	 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-		<td width="128">Vendor Name*</td>
+		<td width="130">Vendor Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;</td>
 		<td>
-		<input type='text' name='name' id='name' tabindex="1" value="<?php echo $name;?>"/>
+		<input type='text' name='name' id='name' tabindex="1" size="40" value="<?php echo $name;?>"/>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -285,7 +285,7 @@ $alt_contact_number=$row['alt_contact_number'];
 <table width="50%" align="left"><!-- start--->
 		
   <tr height="30">
-    <td width="148">Contact Number*</td>
+    <td width="130">Contact Number*</td>
     <td><input type='text' name='contact_number' id='contact_number' tabindex="6" value="<?php echo $contact_number;?>"/></td>
     </tr>
 	

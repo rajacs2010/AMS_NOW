@@ -192,19 +192,20 @@ $alt_contact_number=$row['alt_contact_number'];
   <legend><strong>Vendor</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="148">Vendor Code</td>
+			<td width="105">Vendor Code</td>
+			<td >&nbsp;&nbsp;</td>
 			<td>
-	<input type='text' name='code' id='code'  value="<?php echo $vendor_code;?>" readonly="true" size="7"/>
+				<input type='text' name='code' id='code'  value="<?php echo $vendor_code;?>" readonly="true" size="7" />
 			</td>
 			</tr>
 </table><!-- end--->
 
 	 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-		<td width="128">Vendor Name*</td>
+		<td width="135">Vendor Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;</td>
 		<td>
-		<input type='text' name='name' id='name' tabindex="1" value="<?php echo $name;?>"/>
+		<input type='text' name='name' id='name' size="38" tabindex="1" value="<?php echo $name; ?>"/>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -220,19 +221,19 @@ $alt_contact_number=$row['alt_contact_number'];
     <tr height="30">
     <td width="111" >Address Line 1*</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type="text" id="address1" name="address1" size="35" autocomplete="off" maxlength="20" tabindex="2" value="<?php echo $address1;?>" /></td>
+    <td><input type="text" id="address1" name="address1" size="38" autocomplete="off" maxlength="20" tabindex="2" value="<?php echo $address1;?>" /></td>
     </tr>
     
 	<tr height="30">
      <td width="111"><span style="padding-left:55px;">Line 2</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address2" name="address2" size="35" autocomplete="off" tabindex="3" value="<?php echo $address2;?>" /></td>
+     <td><input type="text" id="address2" name="address2" size="38" autocomplete="off" tabindex="3" value="<?php echo $address2;?>" /></td>
 	</tr>
 
 	<tr height="30">
      <td width="111"><span style="padding-left:55px;">Line 3</span></td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type="text" id="address3" name="address3" size="35" autocomplete="off" tabindex="4" value="<?php echo $address3;?>" /></td>
+     <td><input type="text" id="address3" name="address3" size="38" autocomplete="off" tabindex="4" value="<?php echo $address3;?>" /></td>
 	</tr>
 </table>
    </td>
@@ -281,8 +282,8 @@ $alt_contact_number=$row['alt_contact_number'];
 <table width="50%" align="left"><!-- start--->
 		
   <tr height="30">
-    <td width="148">Contact Number*</td>
-    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" value="<?php echo $contact_number;?>"/></td>
+    <td width="130">Contact Number*</td>
+    <td><input type='text' name='contact_number' id='contact_number' tabindex="6" size="38" value="<?php echo $contact_number;?>"/></td>
     </tr>
 	
 </table><!-- end--->
@@ -291,7 +292,7 @@ $alt_contact_number=$row['alt_contact_number'];
 		
 <tr height="30">
      <td width="148" nowrap="nowrap">Alternate Contact No.</td>
-     <td><input type='text' name='alt_contact_number' id='alt_contact_number' tabindex="7" value="<?php echo $alt_contact_number;?>"/></td>
+     <td><input type='text' name='alt_contact_number' id='alt_contact_number' size="34" tabindex="7" value="<?php echo $alt_contact_number;?>"/></td>
 	</tr>
 	
 	

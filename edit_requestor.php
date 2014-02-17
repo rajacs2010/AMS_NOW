@@ -521,7 +521,7 @@ $('#req_picture').change(function() {
 				or die("Opps some thing went wrong");
 				mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 				$result_emp_id=mysql_query("select emp_code,first_name from pim_emp_info order by emp_id",$bd);
-				echo '<select name="emp_request_id" id="emp_request_id" style="width:100px;" tabindex="14" class="selectbox">';
+				echo '<select name="emp_request_id" id="emp_request_id" style="width:200px;" tabindex="14" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_emp_id)) {
 					if($row['emp_code'] == $row_edit['emp_request_id']){
@@ -536,7 +536,7 @@ $('#req_picture').change(function() {
 			}
 			if($selvalue==2) {
 				$result_state=mysql_query("select id,name,guest_code from guest");
-				echo '<select name="guest_request_id" id="guest_request_id" tabindex="14" style="width:100px;" class="selectbox">';
+				echo '<select name="guest_request_id" id="guest_request_id" tabindex="14" style="width:200px;" class="selectbox">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{	
@@ -586,7 +586,7 @@ $('#req_picture').change(function() {
 		or die("Opps some thing went wrong");
 		mysql_select_db($mysql_database, $bd) or die("Opps some thing went wrong");
 		$result_emp_id=mysql_query("select comp_id,comp_name from master_companies  order by comp_name",$bd);
-		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3">';
+		echo '<select name="comp_id" id="comp_id" class="selectbox" tabindex="3" style="width:270px;">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_emp_id)) {
 			if($row['comp_id'] == $row_edit['comp_id']){
@@ -629,12 +629,12 @@ $('#req_picture').change(function() {
 	</tr>
 
 	<tr height="30">
-		<td width="120" nowrap="nowrap">Office Bldg. Name*</td>
+		<td width="120" style="white-space:nowrap;">Office Bldg. Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("SELECT id,building_code,building_name FROM building WHERE building_type = '1'");
-			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" >';
+			echo '<select name="off_buil_id" id="off_buil_id" tabindex="9" style="width:270px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				if($row['id'] == $row_edit['off_buil_id']){
@@ -656,12 +656,12 @@ $('#req_picture').change(function() {
 	</tr>
 	
 	<tr height="30">
-		<td width="120" >Res. Bldg. Name*</td>
+		<td width="120" style="white-space:nowrap;">Res. Bldg. Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td><?php
 			$fgmembersite->DBLogin();
 			$result_state=mysql_query("SELECT id,building_code,building_name FROM building WHERE building_type = '2'");
-			echo '<select name="res_buil_id" id="res_buil_id" tabindex="13" >';
+			echo '<select name="res_buil_id" id="res_buil_id" tabindex="13" style="width:270px;">';
 			echo '<option value="0">--Select--</option>';
 			while($row=mysql_fetch_array($result_state)) {
 				if($row['id'] == $row_edit['res_buil_id']){
@@ -698,7 +698,7 @@ $('#req_picture').change(function() {
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		 <td><?php
 				$result_state=mysql_query("select id,name from department");
-				echo '<select name="division_id" id="division_id" tabindex="4">';
+				echo '<select name="division_id" id="division_id" tabindex="4" style="width:270px;">';
 				echo '<option value="0">--Select--</option>';
 				while($row=mysql_fetch_array($result_state))
 				{
@@ -728,9 +728,13 @@ $('#req_picture').change(function() {
    
    
 	<tr height="30">
-		 <td width="120" nowrap="nowrap">Office Bldg.</td>
+		 <td width="120" nowrap="nowrap">
+		 <!-- Office Bldg.-->
+		 </td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='off_buil' id='off_buil' tabindex="8" value="<?php echo $row_edit['off_buil']; ?>" class="textbox"/></td>
+		 <td>
+		 	<!-- <input type='text' name='off_buil' id='off_buil' tabindex="8" value="<?php echo $row_edit['off_buil']; ?>" class="textbox"/>-->
+		 </td>
 	</tr>
      
 	<tr height="30">
@@ -745,7 +749,7 @@ $('#req_picture').change(function() {
 	<tr height="30">
 		 <td width="120" nowrap="nowrap">Office</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type='text' name='office_val' id='office_val' value="<?php echo $row_edit[office_val]; ?>" class="textbox" tabindex="12" autocomplete="off" /></td>
+		 <td><input type='text' name='office_val' id='office_val' size="42" value="<?php echo $row_edit[office_val]; ?>" class="textbox" tabindex="12" autocomplete="off" /></td>
 	</tr>
 	
 	<tr height="30">
@@ -782,13 +786,13 @@ $('#req_picture').change(function() {
     <tr height="30">
      <td width="120">Email ID*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><input type='text' name='email_id' id='email_id' value="<?php echo $row_edit[email_id]; ?>" tabindex="16" autocomplete="off" class="textbox" /></td>
+     <td><input type='text' name='email_id' id='email_id' size="35" value="<?php echo $row_edit[email_id]; ?>" tabindex="16" autocomplete="off" class="textbox" /></td>
 	</tr>
     
     <tr height="30">
     <td width="120" nowrap="nowrap">Alternate No.</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-    <td><input type='text' name='alt_num' id='alt_num' value="<?php echo $row_edit[alt_num]; ?>" tabindex="18" autocomplete="off" class="textbox" /></td>
+    <td><input type='text' name='alt_num' id='alt_num' size="35" value="<?php echo $row_edit[alt_num]; ?>" tabindex="18" autocomplete="off" class="textbox" /></td>
     </tr>
    </table>
    </td>
@@ -805,7 +809,7 @@ $('#req_picture').change(function() {
    <tr height="30">
 		 <td width="120" nowrap="nowrap">Mobile No.</td>
 		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-		 <td><input type="text" name="mobile_no" id="mobile_no" value="<?php echo $row_edit[mobile_no]; ?>" tabindex="17" autocomplete="off" class="textbox" /></td>
+		 <td><input type="text" name="mobile_no" id="mobile_no" size="35" value="<?php echo $row_edit[mobile_no]; ?>" tabindex="17" autocomplete="off" class="textbox" /></td>
 	</tr>
 	
    <tr height="30">

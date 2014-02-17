@@ -149,7 +149,7 @@ die('Error: ' . mysql_error());
   <legend><strong>Vendor</strong></legend>
 <table width="50%" align="left"><!-- start--->
 			<tr height="30">
-			<td width="148">Vendor Code</td>
+			<td width="135">Vendor Code</td>
 			<td>
 			<?php
 		 if(!isset($_GET[id]) && $_GET[id] == '') {
@@ -186,7 +186,7 @@ die('Error: ' . mysql_error());
 			<tr height="30">
 		<td width="128">Vendor Name*</td>
 		<td>&nbsp;&nbsp;&nbsp;</td>
-		<td><input type='text' name='name' id='name' tabindex="1"/>
+		<td><input type='text' name='name' id='name' size="40" tabindex="1"/>
 		</td>
     </tr>
 		</table><!-- end--->		
@@ -258,7 +258,7 @@ die('Error: ' . mysql_error());
 <table width="50%" align="left"><!-- start--->
 		
   <tr height="30">
-    <td width="148">Contact Number*</td>
+    <td width="130">Contact Number*</td>
     <td><input type='text' name='contact_number' id='contact_number' tabindex="6" /></td>
     </tr>
 	
@@ -296,8 +296,7 @@ if($_GET['success']=="error") { ?>
   <tr>
   <td>
   <div id="errormsgbuild" style="display:none;"><h3 align="center" class="myalignbuild"></h3><button id="closebutton">Close</button></div>
-  <?php if($_GET['success']=="create") 
-{
+  <?php if($_GET['success']=="create")  {
 ?>
 <div id="errormsg" class="mydiv"><h3 align="center" class="myalignmsg"><?php echo "MSG 0001 : Data Entered Successfully"; 
 ?> </h3><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><button id="closebutton_blue" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Close"><span class="ui-button-icon-primary ui-icon ../images/close_pop.png"></span><span class="ui-button-text">Close</span></button></a></div>
