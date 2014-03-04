@@ -8,17 +8,17 @@ if(!$fgmembersite->CheckLogin())
     exit;
 }
 extract($_REQUEST);
-if($_REQUEST['job_name']!='') {
-	$var = @$_REQUEST['job_name'] ;
+if($_REQUEST['cost_element']!='') {
+	$var = @$_REQUEST['cost_element'] ;
 	$trimmed = trim($var);
-	$qry="SELECT ja.id AS JAID,j.job_desc,ja.job_code,ja.admin_res_code,ar.lead_name AS LNAME FROM `jobadmin` ja, jobs j, admin_responsibility ar WHERE ja.job_code = j.job_code AND ja.admin_res_code = ar.lead_code AND job_desc LIKE '%".$trimmed."%'";
+	$qry="SELECT cte.id AS CTEID,ce.name CENAME,ct.name CTNAME, ua.name AS UNAME FROM `costtypeelement` cte, costelement ce, costtype ct, uom_ams ua WHERE cte.cost_elementid = ce.id AND cte.cost_uom = ua.id AND cte.cost_typeid = ct.id AND ce.name LIKE '%".$trimmed."%'";
 } else { 
-	$qry="SELECT ja.id AS JAID,j.job_desc,ja.job_code,ja.admin_res_code,ar.lead_name AS LNAME FROM `jobadmin` ja, jobs j, admin_responsibility ar WHERE ja.job_code = j.job_code AND ja.admin_res_code = ar.lead_code";
+	$qry="SELECT cte.id AS CTEID,ce.name CENAME,ct.name CTNAME, ua.name AS UNAME FROM `costtypeelement` cte, costelement ce, costtype ct, uom_ams ua WHERE cte.cost_elementid = ce.id AND cte.cost_uom = ua.id AND cte.cost_typeid = ct.id";
 }
 $results=mysql_query($qry);
 $num_rows= mysql_num_rows($results);
 
-$params			=	$job_name."&".$sortorder."&".$ordercol;
+$params			=	$cost_element."&".$sortorder."&".$ordercol;
 
 /********************************pagination start***********************************/
 $strPage = $_REQUEST[page];
@@ -55,7 +55,7 @@ $Num_Pages = (int)$Num_Pages;
 }
 if($sortorder == "")
 {
-	$orderby	=	"ORDER BY ja.id DESC";
+	$orderby	=	"ORDER BY cte.id DESC";
 } else {
 	$orderby	=	"ORDER BY $ordercol $sortorder";
 }
@@ -70,8 +70,7 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 <table width="100%">
 <thead>
 <tr>
-	<th>Job Name</th>
-	<th>Job Code</th>				
+	<th>Cost Element</th>
 	<?php //echo $sortorderby;
 	if($sortorder == 'ASC') {
 		$sortorderby = 'DESC';
@@ -80,9 +79,9 @@ $results_dsr = mysql_query($qry) or die(mysql_error());
 	} else {
 		$sortorderby = 'ASC';
 	}
-	$paramsval	=	$job_name."&".$sortorderby."&ar.lead_name"; ?>
-	<th nowrap="nowrap" class="rounded" onClick="reqviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Leader Name<img src="images/sort.png" width="13" height="13" /></th>
-	<th>Leader Code</th>				
+	$paramsval	=	$cost_element."&".$sortorderby."&ct.name"; ?>
+	<th nowrap="nowrap" class="rounded" onClick="reqviewajax('<?php echo $Page; ?>','<?php echo $paramsval; ?>');">Cost Type<img src="images/sort.png" width="13" height="13" /></th>
+	<th>UOM</th>				
 	<th align="right">Edit/Del</th>
 </tr>
 </thead>
@@ -93,16 +92,15 @@ if(!empty($num_rows)){
 $c=0;$cc=1;
 while($fetch = mysql_fetch_array($results_dsr)) {
 if($c % 2 == 0){ $cls =""; } else{ $cls =" class='odd'"; }
-$id			=	$fetch['JAID'];
+$id			=	$fetch['CTEID'];
 ?>
 <tr>				
-	<td><?php echo $fetch['job_desc']; ?></td>
-	<td><?php echo $fetch['job_code']; ?></td>
-	<td><?php echo $fetch['LNAME']; ?></td>
-	<td><?php echo $fetch['admin_res_code']; ?></td>
+	<td><?php echo $fgmembersite->upperstate($fetch['CENAME']); ?></td>
+	<td><?php echo $fgmembersite->upperstate($fetch['CTNAME']); ?></td>
+	<td><?php echo $fgmembersite->upperstate($fetch['UNAME']); ?></td>
 	<td nowrap="nowrap">
-	<a href="edit_jobadmin.php?id=<?php echo $fetch['JAID'];?>" ><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['JAID']; ?>','<?php echo $fetch['job_desc']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
+	<a href="edit_ctelement.php?id=<?php echo $fetch['CTEID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['CTEID']; ?>','<?php echo $fgmembersite->upperstate($fetch['CENAME']); ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
 	</td>
 </tr><?php $c++; $cc++; $slno++; }		 
 }else{  echo "<tr><td align='center' colspan='13'><b>No records found</b></td></tr>";}  ?>

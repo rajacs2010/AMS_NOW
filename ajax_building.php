@@ -133,5 +133,4 @@ $postid=$_POST["edit_id"];
 	echo $num_rows;
 	}
 }
-
 ?>

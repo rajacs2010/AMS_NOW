@@ -32,7 +32,7 @@ if(file_exists($header_file)) {
 if($_REQUEST['cost_element']!='') {
 	$var = @$_REQUEST['cost_element'];
 	$trimmed = trim($var);	
-	$qry="SELECT cte.id AS CTEID,ce.name CENAME,ct.name CTNAME, ua.name AS UNAME FROM `costtypeelement` cte, costelement ce, costtype ct, uom_ams ua WHERE cte.cost_elementid = ce.id AND cte.cost_uom = ua.id AND cte.cost_typeid = ct.id AND job_desc LIKE '%".$trimmed."%'";
+	$qry="SELECT cte.id AS CTEID,ce.name CENAME,ct.name CTNAME, ua.name AS UNAME FROM `costtypeelement` cte, costelement ce, costtype ct, uom_ams ua WHERE cte.cost_elementid = ce.id AND cte.cost_uom = ua.id AND cte.cost_typeid = ct.id AND ce.name LIKE '%".$trimmed."%'";
 } else { 
 	$qry="SELECT cte.id AS CTEID,ce.name CENAME,ct.name CTNAME, ua.name AS UNAME FROM `costtypeelement` cte, costelement ce, costtype ct, uom_ams ua WHERE cte.cost_elementid = ce.id AND cte.cost_uom = ua.id AND cte.cost_typeid = ct.id";
 }
@@ -53,8 +53,7 @@ $strPage = $_REQUEST[page];
 $Per_Page = 1;   // Records Per Page
 
 $Page = $strPage;
-if(!$strPage)
-{
+if(!$strPage)	{
 	$Page=1;
 }
 
@@ -62,21 +61,16 @@ $Prev_Page = $Page-1;
 $Next_Page = $Page+1;
 
 $Page_Start = (($Per_Page*$Page)-$Per_Page);
-if($num_rows<=$Per_Page)
-{
-$Num_Pages =1;
+if($num_rows<=$Per_Page) {
+	$Num_Pages =1;
 }
-else if(($num_rows % $Per_Page)==0)
-{
-$Num_Pages =($num_rows/$Per_Page) ;
+else if(($num_rows % $Per_Page)==0) {
+	$Num_Pages =($num_rows/$Per_Page) ;
+} else {
+	$Num_Pages =($num_rows/$Per_Page)+1;
+	$Num_Pages = (int)$Num_Pages;
 }
-else
-{
-$Num_Pages =($num_rows/$Per_Page)+1;
-$Num_Pages = (int)$Num_Pages;
-}
-if($sortorder == "")
-{
+if($sortorder == "") {
 	$orderby	=	"ORDER BY cte.id DESC";
 } else {
 	$orderby	=	"ORDER BY $ordercol $sortorder";
@@ -86,7 +80,6 @@ $qry.=" $orderby LIMIT $Page_Start , $Per_Page";  //need to uncomment
 //exit;
 $results_dsr = mysql_query($qry) or die(mysql_error());
 /********************************pagination***********************************/
-
 ?>
 <style type="text/css">
 .buttonsbigja{
@@ -216,8 +209,8 @@ function searchreqviewajax(page) {  // For pagination and sorting of the Collect
 				<td><?php echo $fgmembersite->upperstate($fetch['CTNAME']); ?></td>
 				<td><?php echo $fgmembersite->upperstate($fetch['UNAME']); ?></td>
 				<td nowrap="nowrap">
-				<a href="edit_ctelement.php?id=<?php echo $fetch['JAID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['CTEID']; ?>','<?php echo $fetch['job_desc']; ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
+				<a href="edit_ctelement.php?id=<?php echo $fetch['CTEID'];?>"><img src="images/user_edit.png" alt="" title="" width="11" height="11"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void(0);" onclick="delcall('<?php echo $fetch['CTEID']; ?>','<?php echo $fgmembersite->upperstate($fetch['CENAME']); ?>')" ><img src="images/trash.png" alt="" title="" width="11" height="11" /></a>
 				</td>
 			</tr>
 			<?php $c++; $cc++; $slno++; }		 

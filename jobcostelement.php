@@ -39,15 +39,14 @@ if(isset($_POST['formsaveval']) && $_POST[formsaveval] == 800) {
 	
 	$fgmembersite->DBLogin();
 	$cost_elementid			=	$_POST['cost_elementid'];
-	$cost_uom				=	$_POST['cost_uom'];
-	$cost_typeid			=	$_POST['cost_typeid'];
+	$job_id					=	$_POST['job_id'];
 	$user_id				=	$_SESSION['user_id'];
 	//echo 'INSERT INTO costtypeelement SET cost_element="'.$cost_element.'",cost_uom="'.$cost_uom.'",cost_type="'.$cost_type.'",created_by="'.$user_id.'" '; 
 	//exit;
-	if(!mysql_query('INSERT INTO costtypeelement SET cost_elementid="'.$cost_elementid.'",cost_uom="'.$cost_uom.'",cost_typeid="'.$cost_typeid.'",created_by="'.$user_id.'" ')) {
+	if(!mysql_query('INSERT INTO jobcostelement SET cost_elementid="'.$cost_elementid.'",job_id="'.$job_id.'",created_by="'.$user_id.'" ')) {
 	die('Error: ' . mysql_error());
 }
-	echo'<script> window.location="view_ctelement.php?success=create"; </script> ';
+	echo'<script> window.location="view_jobcostelement.php?success=create"; </script> ';
 }
 ?>
 <style type="text/css">
@@ -173,8 +172,7 @@ $(document).live('ready',function() {
 	$("#part_save").on("click", function() {
 		//alert("232");
 		var cost_element		=	$("#cost_elementid").val();
-		var cost_uom			=	$("#cost_uom").val();
-		var cost_type			=	$("#cost_typeid").val();	
+		var job_id				=	$("#job_id").val();
 		if(cost_element == '0') {
 			$('.myalignbuild').html('ERR : Select Cost Element');
 			$('#errormsgbuild').css('display','block');
@@ -184,24 +182,15 @@ $(document).live('ready',function() {
 			$("#cost_element").focus();
 			return false;
 		}		
-		if(cost_type == '0') {
-			$('.myalignbuild').html('ERR : Select Cost Type');
+		if(job_id == '0') {
+			$('.myalignbuild').html('ERR : Select Jobs');
 			$('#errormsgbuild').css('display','block');
 			setTimeout(function() {
 				$('#errormsgbuild').hide();
 			},5000);
 			$("#cost_type").focus();
 			return false;
-		}
-		if(cost_uom == '0') {
-			$('.myalignbuild').html('ERR : Select UOM');
-			$('#errormsgbuild').css('display','block');
-			setTimeout(function() {
-				$('#errormsgbuild').hide();
-			},5000);
-			$("#cost_uom").focus();
-			return false;
-		}
+		}		
 		//return false;
 		$("#formsaveval").val('800');
 		$("#diesel_save").submit();
@@ -210,7 +199,7 @@ $(document).live('ready',function() {
 </script>
 <div id="mainareabuild">
 <div class="mcf"></div>
-<div align="center" class="headingsgr">COST ELEMENT</div>
+<div align="center" class="headingsgr">JOB-COST ELEMENTS</div>
 <div id="mytableformbuild" align="center">
 <form id='diesel_save' action="<?php echo $_SERVER['PHP_SELF'];?>" method='post' accept-charset='UTF-8' enctype="multipart/form-data">
 <div class="scroll_box">
@@ -220,7 +209,7 @@ $(document).live('ready',function() {
  <tr>
   <td>
 <fieldset align="left" class="alignment2">
-  <legend><strong>Cost Element</strong></legend>
+  <legend><strong>Job-Cost Elements</strong></legend>
 <table width="50%" align="left">
  <tr>
   <td>
@@ -232,22 +221,6 @@ $(document).live('ready',function() {
     	$fgmembersite->DBLogin();
 		$result_state=mysql_query("SELECT id,name FROM costelement");
 		echo '<select name="cost_elementid" id="cost_elementid" style="width:150px;" tabindex="3">';
-		echo '<option value="0">--Select--</option>';
-		while($row=mysql_fetch_array($result_state)) {
-			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
-		}
-		echo '</select>';
-	 ?>
-     </td>
-	</tr>
-	
-	<tr height="30">
-     <td width="120" class="nowrapcls">UOM*</td>
-	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-     <td><?php
-    	$fgmembersite->DBLogin();
-		$result_state=mysql_query("SELECT id,name FROM uom_ams");
-		echo '<select name="cost_uom" id="cost_uom" style="width:150px;" tabindex="3">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
 			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
@@ -269,15 +242,15 @@ $(document).live('ready',function() {
   <td>
    <table>
       
-    <td width="120" class="nowrapcls">Cost Type*</td>
+    <td width="120" class="nowrapcls">Jobs*</td>
 	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
      <td><?php
     	$fgmembersite->DBLogin();
-		$result_state=mysql_query("SELECT id,name FROM costtype");
-		echo '<select name="cost_typeid" id="cost_typeid" style="width:150px;" tabindex="3">';
+		$result_state=mysql_query("SELECT id,job_desc FROM jobs");
+		echo '<select name="job_id" id="job_id" style="width:150px;" tabindex="3">';
 		echo '<option value="0">--Select--</option>';
 		while($row=mysql_fetch_array($result_state)) {
-			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['name']).'</option>';
+			echo '<option value="'.$row['id'].'">'.$fgmembersite->upperstate($row['job_desc']).'</option>';
 		}
 		echo '</select>';
 	 ?>
@@ -310,7 +283,7 @@ $(document).live('ready',function() {
 	 <input type="hidden" name="edit_id" id="edit_id" /> <!-- This is the partial saved id of the building table when partial save is completed, it will get the id from the db (ajax) -->
      <input type="reset" name="reset" class="buttons" value="Clear" id="clear" />&nbsp;&nbsp;&nbsp;&nbsp;
      <input type="button" name="cancel" value="Cancel" class="buttons" onclick="window.location='ams_temp.php?id=1'"/>&nbsp;&nbsp;&nbsp;&nbsp;
-	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_ctelement.php'"/></td>
+	 <input type="button" name="View" value="View" class="buttons" onclick="window.location='view_jobcostelement.php'"/></td>
 	 </td>
      </tr>
   </table>
